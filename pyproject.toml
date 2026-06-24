@@ -6,11 +6,16 @@ build-backend = "setuptools.build_meta"
 name = "auditops"
 version = "0.1.0"
 description = "Open-source evidence collection framework."
+readme = "README.md"
 requires-python = ">=3.11"
 
 dependencies = [
     "boto3",
     "requests"
+]
+
+authors = [
+    {name = "AJ Dehn"}
 ]
 
 [tool.setuptools]
