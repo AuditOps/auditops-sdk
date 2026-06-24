@@ -1,4 +1,5 @@
 /examples/audit_evidence
+/examples/audit_evidence.zip
 dist/
 build/
 *.egg-info/
