@@ -9,6 +9,7 @@ from .testing.github_tester import GitHubTester
 from .testing.models import Test
 from .testing.models import Audit
 from .uploader import Uploader
+from .reporting.pdf_report_builder import PDFReportBuilder
 
 __all__ = [
     "EvidenceWriter",
@@ -16,5 +17,6 @@ __all__ = [
     "AWSCollector", "AWSTester",
     "GitHubCollector", "GitHubTester",
     "Uploader",
+    "PDFReportBuilder",
     "Test"
 ]
