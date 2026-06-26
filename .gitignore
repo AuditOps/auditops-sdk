@@ -1,5 +1,6 @@
-/examples/audit_evidence
-/examples/audit_evidence.zip
+/examples/audit_package.zip
+/examples/tmp
+/examples/audit_package/
 dist/
 build/
 *.egg-info/
@@ -7,3 +8,5 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+.env
+*.DS_Store

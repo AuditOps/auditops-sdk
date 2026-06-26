@@ -2,7 +2,7 @@ from pathlib import Path
 import json
 
 class EvidenceWriter:
-    def __init__(self, root_dir="audit_evidence"):
+    def __init__(self, root_dir="tmp/audit_evidence"):
         self.root_dir = Path(root_dir)
 
     def save_json(self, tool_name, relative_path, data):
