@@ -4,14 +4,15 @@ from datetime import date
 from datetime import datetime, timezone
 
 class Audit:
-    def __init__(self):
+    def __init__(self, title=None):
         self.test_results = None
+        self.title = title
 
     def to_dict(self):
         return {
             "metadata": {
                 "scope": {
-                    "IMPORTANT_SCOPING_INFO": "TBD"
+                    "IMPORTANT_SCOPING_INFO": "COMING SOON"
                 },
                 "report_date": datetime.now(timezone.utc).strftime('%Y-%m-%d')
             },
@@ -52,17 +53,12 @@ class Test:
     # Rating Matrix: 0 - Informational, 1 - Low, 2 - Medium, 3 - High.
     risk_rating: int
     table_headers: Optional[List[str]] = None
-    include_sample_number: bool = False
     samples: List["Sample"] = field(default_factory=list)
     is_passing: bool = True
     comments: str = ""
     num_findings: int = 0
     num_exclusions: int = 0
     total_population: int = 0
-    risk_rating_str: str = ""
-
-    def __post_init__(self):
-        self.risk_rating_str = self.create_risk_str()
 
     def __str__(self):
         return (
@@ -89,7 +85,7 @@ class Test:
 
         return result
 
-    def create_risk_str(self):
+    def get_risk_rating_str(self):
         if self.risk_rating == 0: return "Informational"
         elif self.risk_rating == 1: return "Low"
         elif self.risk_rating == 2: return "Medium"
