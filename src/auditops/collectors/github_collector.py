@@ -42,4 +42,4 @@ class GitHubCollector:
     def _collect_org_settings(self, writer):
         self._call_api(writer, "organization/settings.json",
             f"https://api.github.com/orgs/{self.org_name}"
-        )        
+        )
