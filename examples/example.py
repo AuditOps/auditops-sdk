@@ -4,6 +4,21 @@ GitHubCollector, GitHubTester, PDFReportBuilder)
 from auditops import GoogleWorkspaceCollector
 from dotenv import load_dotenv
 
+def main():
+    load_dotenv()
+    writer = EvidenceWriter()
+    reader = EvidenceReader()
+    report_builder = PDFReportBuilder()
+
+    # Run AWS Audit
+    session = boto3.Session()
+    run_audit(AWSCollector(session), AWSTester(reader), "aws_audit_report", 
+    writer, report_builder)
+
+    # Upload evidence to audit portal
+    uploader = Uploader("https://upload.auditops.io")
+    uploader.upload("audit_package.zip", "john.doe@client.com", "jane.doe@auditor.com")
+
 def run_audit(collector, tester, report_name, writer, report_builder):
     """Collect evidence, execute tests, and save the audit report."""
     collector.collect(writer)
@@ -27,6 +42,10 @@ def main():
     session = boto3.Session()
     run_audit(AWSCollector(session), AWSTester(reader), "aws_audit_report", 
     writer, report_builder)
+
+    # Upload evidence to audit portal
+    uploader = Uploader("https://upload.auditops.io")
+    uploader.upload("audit_package.zip", "john.doe@client.com", "jane.doe@auditor.com")
 
     # Run GitHub Audit
     run_audit(
