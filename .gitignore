@@ -1,5 +1,6 @@
 /examples/audit_package.zip
 /examples/tmp
+/examples/credentials
 /examples/audit_package/
 dist/
 build/

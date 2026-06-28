@@ -1,24 +1,16 @@
 from datetime import datetime, timezone
+from pathlib import Path
+import os
 from reportlab.lib.pagesizes import LETTER
 from reportlab.platypus import (
-    SimpleDocTemplate, Table, Paragraph,
-    Spacer, ListFlowable, ListItem, PageBreak,
-    KeepTogether, Image)
-
+    SimpleDocTemplate, Table, Paragraph, Spacer, ListFlowable, 
+    ListItem, PageBreak, KeepTogether, Image)
 from reportlab.lib.styles import getSampleStyleSheet
 
 from .styles import (
-    LABEL_STYLE,
-    VALUE_STYLE,
-    LARGE_VALUE_STYLE,
-    LIST_STYLE,
-    CENTER_STYLE,
-    PASS_COLOR,
-    FAIL_COLOR,
-    TABLE_STYLE_HIGHLIGHT_ROW,
-    TABLE_STYLE_HIGHLIGHT_COLUMN,
+    LABEL_STYLE, VALUE_STYLE, LARGE_VALUE_STYLE, LIST_STYLE, CENTER_STYLE, PASS_COLOR,
+    FAIL_COLOR, TABLE_STYLE_HIGHLIGHT_ROW, TABLE_STYLE_HIGHLIGHT_COLUMN,
 )
-
 
 class PDFReportBuilder:
 
@@ -26,16 +18,18 @@ class PDFReportBuilder:
         self.styles = getSampleStyleSheet()
         self.page_width, _ = LETTER
 
-    def _format_count_with_pct(self, count, total):
-        if total == 0:
+    def _format_pct(self, match_count, test_count):
+        # Formats percentage with one decimal point (ex. 99.9%) 
+        if test_count == 0:
             return f"{count} (0%)"
-        pct = (count / total) * 100
-        return f"{count} ({pct:.1f}%)"
+        pct = (match_count / test_count) * 100
+        return f"{match_count} ({pct:.1f}%)"
 
     def build(self, audit, filename):
         """Generate a PDF audit report."""
 
         self.audit = audit
+        # Sort test results based on risk-rating.
         self.tests = sorted(
             audit.test_results,
             key=lambda t: (t.is_passing, -t.risk_rating)
@@ -60,9 +54,7 @@ class PDFReportBuilder:
 
     def _build_cover_page(self):
         elements = []
-
-        """
-        logo = Image("src/reporting/assets/logo.png")
+        logo = Image(str(Path(__file__).resolve().parent / "assets" / "logo.png"))
 
         desired_width = 300
         aspect = logo.imageHeight / float(logo.imageWidth)
@@ -72,7 +64,6 @@ class PDFReportBuilder:
 
         elements.append(logo)
         elements.append(Spacer(1, 24))
-        """
 
         elements.append(
             Paragraph(
@@ -83,32 +74,29 @@ class PDFReportBuilder:
 
         elements.append(Spacer(1, 12))
 
-        total = len(self.tests)
+        test_count = len(self.tests)
         failed = sum(not t.is_passing for t in self.tests)
-        passed = total - failed
+        passed = test_count - failed
 
         metadata = [
-            [Paragraph("Prepared By", LABEL_STYLE),
-            Paragraph("AuditOps", VALUE_STYLE)],
+            [Paragraph("Prepared By", LABEL_STYLE), Paragraph("AuditOps", VALUE_STYLE)],
 
             [Paragraph("Report Date", LABEL_STYLE),
             Paragraph(datetime.now(timezone.utc).strftime("%Y-%m-%d"), VALUE_STYLE)],
 
-            [Paragraph("Tests", LABEL_STYLE),
-            Paragraph(str(total), VALUE_STYLE)],
+            [Paragraph("Tests", LABEL_STYLE), Paragraph(str(test_count), VALUE_STYLE)],
 
             [Paragraph("Passed", LABEL_STYLE),
-            Paragraph(self._format_count_with_pct(passed, total), VALUE_STYLE)],
+            Paragraph(self._format_pct(passed, test_count), VALUE_STYLE)],
 
             [Paragraph("Failed", LABEL_STYLE),
-            Paragraph(self._format_count_with_pct(failed, total), VALUE_STYLE)],
+            Paragraph(self._format_pct(failed, test_count), VALUE_STYLE)],
+
+            [Paragraph("Scope", LABEL_STYLE),
+            Paragraph("Coming Soon!", VALUE_STYLE)],
         ]
 
-        table = Table(
-            metadata,
-            colWidths=[200, 150],
-            hAlign="CENTER",
-        )
+        table = Table(metadata, colWidths=[200, 150], hAlign="CENTER")
 
         table.setStyle(TABLE_STYLE_HIGHLIGHT_COLUMN)
 
