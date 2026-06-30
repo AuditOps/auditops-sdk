@@ -29,9 +29,12 @@ class AWSTester:
                 "ServerSideEncryptionConfiguration is present."
             ],
             "procedures": [
-                "...",
-                "...",
-            ],
+                "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
+                "Saved the list of buckets: s3/buckets.json.",
+                "For each S3 bucket, obtained the encryption settings by calling the get_bucket_encryption() boto3 command.",
+                "For each S3 bucket, saved the encryption settings: s3/buckets/[bucket_name]/encryption.json.",
+                "For each S3 bucket, inspected the encryption settings to determine if they comply with the test attribute(s) below."
+            ],      
         }
         test = self._create_test(metadata)
 
