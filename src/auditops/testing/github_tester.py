@@ -17,11 +17,10 @@ class GitHubTester:
             table_headers=metadata.get("headers"), risk_rating=metadata.get("risk_rating"))
 
     def run_tests(self):
-        tests = [
+        return [
             self._test_org_mfa_settings(),
             self._test_org_members_create_public_resources()
-        ]
-        return tests        
+        ] 
 
     def _test_org_mfa_settings(self):
         metadata = {
