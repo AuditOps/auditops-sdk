@@ -70,7 +70,7 @@ class PDFReportBuilder:
 
         # Add title
         elements.append(self._value(f"{audit.title} Audit Report", style=self.styles["Title"]))
-        elements.append(Spacer(1, 12))
+        elements.append(Spacer(1, 18))
 
         # Add cover page table
         elements.append(self._render_cover_page_table(audit))
@@ -136,10 +136,6 @@ class PDFReportBuilder:
             self._value(f"{i+1}. {item}", LIST_STYLE)
             for i, item in enumerate(test.test_procedures)
         ]
-        test_attributes = [
-            self._value(f"• {item}", LIST_STYLE)
-            for item in test.test_attributes
-        ]
         
         # Build summary table
         table_data = [
@@ -150,7 +146,11 @@ class PDFReportBuilder:
             [self._label("Conclusion"), self._status_paragraph(test.is_passing)],
         ]
 
-        if test_attributes:
+        if test.test_attributes:
+            test_attributes = [
+                self._value(f"• {item}", LIST_STYLE)
+                for item in test.test_attributes
+            ]
             # Add test attributes only when populated.
             table_data.insert(4, [self._label("Test Attributes"), test_attributes])
 
