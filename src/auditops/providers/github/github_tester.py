@@ -4,6 +4,7 @@ from auditops.core.exclusions import ExclusionManager
 class GitHubTester:
     def __init__(self, reader, github_org_name: str, exclusions: ExclusionManager | None = None):
         self.provider = "github"
+        self.report_title = "GitHub Audit Report"
         self.reader = reader
         self.github_org_name = github_org_name
         self.exclusions = exclusions or ExclusionManager()
@@ -75,7 +76,7 @@ class GitHubTester:
     def _test_repository_visibility(self):
         metadata = {
             "id": "github-repo-001",
-            "description": "All repositories in the organization set set to private or restricted.",
+            "description": "All repositories in the organization are set to private or restricted.",
             "risk_rating": 0,
             "headers": ["Repository Name", "Conclusion", "Comments"],
             "procedures": [

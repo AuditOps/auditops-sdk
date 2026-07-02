@@ -5,6 +5,7 @@ from .aws_config import AWSConfig
 class AWSTester:
     def __init__(self, reader, config: AWSConfig, exclusions: ExclusionManager | None = None):
         self.provider = "aws"
+        self.report_title = "AWS Audit Report"
         self.reader = reader
         self.config = config
         self.exclusions = exclusions or ExclusionManager()
