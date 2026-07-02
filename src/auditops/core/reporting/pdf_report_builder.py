@@ -90,7 +90,7 @@ class PDFReportBuilder:
                 elements.append(Spacer(1, 12))
                 if test.table_headers:
                     # Build sample table
-                    elements.append(KeepTogether(self._render_test_sample_table(test)))
+                    elements.append(self._render_test_sample_table(test))
                     elements.append(PageBreak())
 
         doc.build(elements)
@@ -123,12 +123,13 @@ class PDFReportBuilder:
         ]]
 
         for test in tests:
-            rows.append([
+            new_row = [
                 self._value(test.test_description),
-                self._status_paragraph(test.is_passing),
+                self._value("Excluded") if test.is_excluded else self._status_paragraph(test.is_passing),
                 self._value(test.get_risk_rating_str()),
                 self._value(test.comments)
-            ])
+            ]
+            rows.append(new_row)
         
         return self._table(rows, col_widths=[220, 60, 70, 140], style=TABLE_STYLE_HIGHLIGHT_ROW)
 

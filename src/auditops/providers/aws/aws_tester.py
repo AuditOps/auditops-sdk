@@ -9,17 +9,24 @@ class AWSTester:
         self.config = config
         self.exclusions = exclusions or ExclusionManager()
 
-    def _read(self, path):
-        return self.reader.read_json("aws", path)
+    def _read(self, path, optional=False):
+        return self.reader.read_json("aws", path, optional=optional)
 
     def _create_test(self, metadata):
         return Test(test_id=metadata.get("id"), test_description=metadata.get("description"), 
             test_procedures=metadata.get("procedures"), test_attributes=metadata.get("attributes"), 
             table_headers=metadata.get("headers"), risk_rating=metadata.get("risk_rating"))
+    
+    def _fail_test(self, test, message):
+        test.is_passing = False
+        test.comments = message
+        return test
 
     def run_tests(self):
         return [
             self._run_test(self._test_iam_root_access_key),
+            self._run_test(self._test_iam_root_mfa),
+            self._run_test(self._test_iam_user_console_password_mfa),
             self._run_test(self._test_iam_password_policy),
             self._run_test(self._test_s3_encryption),
             self._run_test(self._test_s3_public_access),
@@ -53,16 +60,93 @@ class AWSTester:
         summary = self._read("iam/account_summary.json")
 
         if not summary:
-            test.is_passing = False
-            test.comments = "Unable to retrieve AWS account summary."
-            return test
+            return self._fail_test(test, "Unable to retrieve AWS account summary.")
 
-        account_summary = summary.get("SummaryMap", {})
-        root_keys = account_summary.get("AccountAccessKeysPresent", 0)
+        root_keys = summary.get("SummaryMap", {}).get("AccountAccessKeysPresent", 0)
 
         if root_keys > 0:
-            test.is_passing = False
-            test.comments = f"Root account has {root_keys} active access key(s)."
+            return self._fail_test(test, f"Exception Noted. Root account has {root_keys} active access key(s).")
+
+        return test
+
+    def _test_iam_root_mfa(self):
+        metadata = {
+            "id": "AWS-IAM-003",
+            "description": "Root account has MFA enabled.",
+            "risk_rating": 3,
+            "procedures": [
+                "Obtained the AWS account summary by calling the get_account_summary() boto3 command.",
+                "Saved the account summary: iam/account_summary.json",
+                "Inspected the account summary to determine if 'AccountMFAEnabled' is set to 1."
+            ],
+            "attributes": []
+        }
+
+        test = self._create_test(metadata)
+
+        summary = self._read("iam/account_summary.json")
+
+        mfa_enabled = summary.get("SummaryMap", {}).get("AccountMFAEnabled", 0)
+
+        if mfa_enabled != 1:
+            return self._fail_test(test, f"Exceptions Noted. Root account does not have MFA enabled.")
+
+        return test
+
+    def _test_iam_user_console_password_mfa(self):
+        metadata = {
+            "id": "AWS-IAM-004",
+            "description": "IAM users with an active console password have MFA enabled.",
+            "risk_rating": 3,
+            "headers": ["User Name", "Result", "Comments"],
+            "attributes": [
+                "Users with a login profile have at least one MFA device."
+            ],
+            "procedures": [
+                "Obtained a list of IAM users by calling the list_users() boto3 command.",
+                "Saved the list of users: iam/users.json.",
+                "For each user, obtained the login profile by calling the get_login_profile() boto3 command.",
+                "For each user with a login profile, obtained MFA devices by calling the list_mfa_devices() boto3 command.",
+                "Inspected the MFA device configuration to determine if at least one MFA device is assigned."
+            ]
+        }
+
+        test = self._create_test(metadata)
+
+        users = self._read("iam/users.json")
+
+        for user in users.get("Users", []):
+            username = user["UserName"]
+
+            login_profile = self._read(
+                f"iam/users/{username}/login_profile.json",
+                optional=True,
+            )
+
+            # Skip users without console access.
+            if not login_profile:
+                continue
+
+            sample = Sample(sample_id={"user_name": username})
+
+            mfa_devices = self._read(
+                f"iam/users/{username}/mfa_devices.json"
+            )
+
+            if len(mfa_devices.get("MFADevices", [])) == 0:
+                sample.comments = "Console password enabled but no MFA device assigned."
+
+            sample.is_passing = len(mfa_devices.get("MFADevices", [])) > 0
+
+            test.samples.append(sample)
+
+        test.evaluate_samples(self.exclusions, self.provider)
+
+        if not test.is_passing:
+            test.comments = (
+                f"Exceptions Noted. {test.num_findings} IAM user(s) "
+                "have an active console password but do not have MFA enabled."
+            )
 
         return test
 
@@ -98,12 +182,10 @@ class AWSTester:
 
         test = self._create_test(metadata)
 
-        policy = self._read("iam/password_policy.json")
+        policy = self._read("iam/password_policy.json", optional=True)
 
         if not policy:
-            test.is_passing = False
-            test.comments = "No password policy configured."
-            return test
+            return self._fail_test(test, "No password policy configured.")
 
         password_policy = policy.get("PasswordPolicy", {})
         failures = []
@@ -178,7 +260,7 @@ class AWSTester:
             bucket_name = bucket["Name"]
             sample = Sample(sample_id={"bucket_name": bucket_name})
 
-            public_access_block = self._read(f"s3/buckets/{bucket_name}/public_access_block.json")
+            public_access_block = self._read(f"s3/buckets/{bucket_name}/public_access_block.json", optional=True)
             
             if not public_access_block:
                 sample.comments = "No Public Access Block configuration found."
@@ -223,7 +305,13 @@ class AWSTester:
             bucket_name = bucket["Name"]
             sample = Sample(sample_id={"bucket_name": bucket_name})
 
-            encryption = self._read(f"s3/buckets/{bucket_name}/encryption.json")
+            encryption = self._read(f"s3/buckets/{bucket_name}/encryption.json", optional=True)
+
+            if not encryption:
+                sample.comments = "No encryption configuration found."
+                test.samples.append(sample)
+                continue
+            
             sample.is_passing = bool(encryption.get("ServerSideEncryptionConfiguration"))
 
             if not sample.is_passing:

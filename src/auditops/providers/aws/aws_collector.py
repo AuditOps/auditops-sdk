@@ -1,15 +1,17 @@
 from botocore.exceptions import ClientError
 
 class AWSCollector:
-    def __init__(self, session, config):
+    def __init__(self, session, writer, config):
+        self.provider = "aws"
         self.session = session
         self.config = config
+        self.writer = writer
 
-    def collect(self, writer):
-        self._collect_account_identity(writer)
-        self._collect_iam_evidence(writer)
-        self._collect_s3_evidence(writer)
-        self._collect_ec2_evidence(writer)
+    def collect(self):
+        self._collect_account_identity()
+        self._collect_iam_evidence()
+        self._collect_s3_evidence()
+        self._collect_ec2_evidence()
 
     def _call_api(self, client, method=None, method_kwargs=None, paginator_params=None,
                 ignore_codes=None, warn_codes=None):
@@ -32,28 +34,61 @@ class AWSCollector:
             if ignore_codes and code in ignore_codes:
                 return None
             raise
-        
-    def _collect_account_identity(self, writer):
+    
+    def _write(self, path, data):
+        return self.writer.save_json("aws", path, data)
+
+    def _collect_account_identity(self):
         sts_client = self.session.client("sts")
         identity = sts_client.get_caller_identity()
-        writer.save_json("aws", "account/account_identity.json", identity)
+        self._write("account/account_identity.json", identity)
 
-    def _collect_iam_evidence(self, writer):
+    def _collect_iam_evidence(self):
         iam_client = self.session.client("iam")
-        writer.save_json("aws", "iam/account_summary.json", iam_client.get_account_summary())
+        self._write("iam/account_summary.json", iam_client.get_account_summary())
         try:
             password_policy = iam_client.get_account_password_policy()
-            writer.save_json("aws", "iam/password_policy.json", password_policy)
+            self._write("iam/password_policy.json", password_policy)
         except ClientError as e:
             if e.response["Error"]["Code"] == "NoSuchEntity":
                 pass
             else:
                 raise
 
-    def _collect_s3_evidence(self, writer):
+        # Users
+        users = self._call_api(iam_client,
+            paginator_params={"method_name": "list_users", "pagination_key": "Users"},
+        )
+        self._write("iam/users.json", users)
+
+        for user in users.get("Users"):
+            user_name = user["UserName"]
+
+            login_profile = self._call_api(iam_client, method="get_login_profile", method_kwargs={"UserName": user_name},
+            ignore_codes=["NoSuchEntity"])
+            self._write(f"iam/users/{user_name}/login_profile.json", login_profile)
+
+            mfa_devices = self._call_api(iam_client, method="list_mfa_devices", method_kwargs={"UserName": user_name})
+            self._write(f"iam/users/{user_name}/mfa_devices.json", mfa_devices)
+
+        # Roles
+        roles = self._call_api(iam_client,
+            paginator_params={"method_name": "list_roles", "pagination_key": "Roles"},
+        )
+        self._write("iam/roles.json", roles)
+
+        # Groups
+        groups = self._call_api(
+            iam_client,
+            paginator_params={"method_name": "list_groups", "pagination_key": "Groups"}
+        )
+        self._write("iam/groups.json", groups)
+        
+
+    def _collect_s3_evidence(self):
         s3_client = self.session.client("s3")
         buckets = self._call_api(s3_client, method="list_buckets")
-        writer.save_json("aws", "s3/buckets.json", buckets)
+        self._write("s3/buckets.json", buckets)
 
         for bucket in buckets.get("Buckets", []):
             name = bucket["Name"]
@@ -63,19 +98,19 @@ class AWSCollector:
                 ignore_codes=["ServerSideEncryptionConfigurationNotFoundError"],
                 warn_codes=["AccessDenied"],
             )
-            writer.save_json("aws", f"s3/buckets/{name}/encryption.json", encryption)
+            self._write(f"s3/buckets/{name}/encryption.json", encryption)
 
             public_access_block = self._call_api(
                 s3_client, method="get_public_access_block", method_kwargs={"Bucket": name},
                 ignore_codes=["NoSuchPublicAccessBlockConfiguration"],
             )
-            writer.save_json("aws", f"s3/buckets/{name}/public_access_block.json", public_access_block)
+            self._write(f"s3/buckets/{name}/public_access_block.json", public_access_block)
 
-    def _collect_ec2_evidence(self, writer):
+    def _collect_ec2_evidence(self):
         for region in self.config.in_scope_regions:
             try:
                 ec2_client = self.session.client("ec2", region_name=region)
                 instances = ec2_client.describe_instances()
-                writer.save_json("aws", f"ec2/{region}/instances.json", instances)
+                self._write(f"ec2/{region}/instances.json", instances)
             except ClientError as e:
                 raise
