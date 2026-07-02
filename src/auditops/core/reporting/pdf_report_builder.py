@@ -66,11 +66,11 @@ class PDFReportBuilder:
         # Add logo
         logo_path = str(Path(__file__).resolve().parent / "assets" / "logo.png")
         elements.append(self._logo(logo_path))
-        elements.append(Spacer(1, 24))
+        elements.append(Spacer(1, 18))
 
         # Add title
-        elements.append(self._value(f"{audit.title} Audit Report", style=self.styles["Title"]))
-        elements.append(Spacer(1, 24))
+        elements.append(self._value(f"{audit.title}", style=self.styles["Title"]))
+        elements.append(Spacer(1, 18))
 
         # Add cover page table
         elements.append(self._render_cover_page_table(audit))
