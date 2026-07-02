@@ -6,9 +6,10 @@ class EvidenceWriter:
         self.root_dir = Path(root_dir)
 
     def save_json(self, tool_name, relative_path, data):
-        file_path = self.root_dir / tool_name / relative_path
+        if data:
+            file_path = self.root_dir / tool_name / relative_path
 
-        file_path.parent.mkdir(parents=True, exist_ok=True)
+            file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with file_path.open("w") as f:
-            json.dump(data, f, indent=4, default=str)
+            with file_path.open("w") as f:
+                json.dump(data, f, indent=4, default=str)
