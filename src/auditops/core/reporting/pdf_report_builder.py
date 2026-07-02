@@ -70,11 +70,11 @@ class PDFReportBuilder:
 
         # Add title
         elements.append(self._value(f"{audit.title} Audit Report", style=self.styles["Title"]))
-        elements.append(Spacer(1, 18))
+        elements.append(Spacer(1, 24))
 
         # Add cover page table
         elements.append(self._render_cover_page_table(audit))
-        elements.append(Spacer(1, 12))
+        elements.append(Spacer(1, 18))
 
         # Add test results summary (includes all tests in the audit)
         elements.append(Paragraph("Test Summary", self.styles["Heading1"]))
@@ -83,14 +83,15 @@ class PDFReportBuilder:
         elements.append(PageBreak())
 
         for test in tests:
-            # Build test summary
-            elements.append(Spacer(1, 18))
-            elements.append(KeepTogether(self._render_test_details_table(test)))
-            elements.append(Spacer(1, 12))
-            if test.table_headers:
-                # Build sample table
-                elements.append(KeepTogether(self._render_test_sample_table(test)))
-                elements.append(PageBreak())
+            if not test.is_excluded:
+                # Build test summary
+                elements.append(Spacer(1, 18))
+                elements.append(KeepTogether(self._render_test_details_table(test)))
+                elements.append(Spacer(1, 12))
+                if test.table_headers:
+                    # Build sample table
+                    elements.append(KeepTogether(self._render_test_sample_table(test)))
+                    elements.append(PageBreak())
 
         doc.build(elements)
 

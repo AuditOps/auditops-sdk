@@ -38,8 +38,14 @@ class GitHubCollector:
 
     def collect(self, writer):
         self._collect_org_settings(writer)
+        self._collect_repo_info(writer)
 
     def _collect_org_settings(self, writer):
         self._call_api(writer, "organization/settings.json",
             f"https://api.github.com/orgs/{self.org_name}"
+        )
+    
+    def _collect_repo_info(self, writer):
+        self._call_api(writer, "organization/all_repos.json",
+            f"https://api.github.com/orgs/{self.org_name}/repos", paginate=True
         )

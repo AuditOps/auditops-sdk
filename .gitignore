@@ -2,6 +2,7 @@
 /examples/tmp
 /examples/credentials
 /examples/audit_package/
+/examples/exclusions.json
 dist/
 build/
 *.egg-info/
@@ -11,3 +12,4 @@ __pycache__/
 *.pyd
 .env
 *.DS_Store
+.pytest_cache

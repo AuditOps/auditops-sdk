@@ -1,9 +1,9 @@
 from botocore.exceptions import ClientError
 
 class AWSCollector:
-    def __init__(self, session, in_scope_regions=None):
+    def __init__(self, session, config):
         self.session = session
-        self.in_scope_regions = in_scope_regions
+        self.config = config
 
     def collect(self, writer):
         """
@@ -12,9 +12,7 @@ class AWSCollector:
         self._collect_account_identity(writer)
         self._collect_iam_evidence(writer)
         self._collect_s3_evidence(writer)
-
-    def _get_service_regions(self, service_name):
-        return self.session.get_available_regions(service_name.lower())
+        self._collect_ec2_evidence(writer)
 
     def _collect_account_identity(self, writer):
         sts_client = self.session.client("sts")
@@ -23,6 +21,7 @@ class AWSCollector:
 
     def _collect_iam_evidence(self, writer):
         iam_client = self.session.client("iam")
+        writer.save_json("aws", "iam/account_summary.json", iam_client.get_account_summary())
         try:
             password_policy = iam_client.get_account_password_policy()
             writer.save_json("aws", "iam/password_policy.json", password_policy)
@@ -53,14 +52,10 @@ class AWSCollector:
                     raise e
 
     def _collect_ec2_evidence(self, writer):
-        regions = self.in_scope_regions or self._get_service_regions("ec2")
-
-        for region in regions:
+        for region in self.config.in_scope_regions:
             try:
                 ec2_client = self.session.client("ec2", region_name=region)
                 instances = ec2_client.describe_instances()
                 writer.save_json("aws", f"ec2/{region}/instances.json", instances)
             except ClientError as e:
-                if e.response["Error"]["Code"] == "AuthFailure":
-                    continue
                 raise

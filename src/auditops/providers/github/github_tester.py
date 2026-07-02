@@ -1,9 +1,12 @@
-from .models import Test, Sample
+from auditops.core.models import Test, Sample
+from auditops.core.exclusions import ExclusionManager
 
 class GitHubTester:
-    def __init__(self, reader, github_org_name):
+    def __init__(self, reader, github_org_name: str, exclusions: ExclusionManager | None = None):
+        self.provider = "github"
         self.reader = reader
         self.github_org_name = github_org_name
+        self.exclusions = exclusions or ExclusionManager()
         self.scope = [
             f"Organization Name: {github_org_name}"
         ]
@@ -19,7 +22,8 @@ class GitHubTester:
     def run_tests(self):
         return [
             self._test_org_mfa_settings(),
-            self._test_org_members_create_public_resources()
+            self._test_org_members_create_public_resources(),
+            self._test_repository_visibility()
         ] 
 
     def _test_org_mfa_settings(self):
@@ -66,4 +70,31 @@ class GitHubTester:
             and not org_settings.get("members_can_create_public_pages", True)
         )        
         
+        return test
+
+    def _test_repository_visibility(self):
+        metadata = {
+            "id": "github-repo-001",
+            "description": "All repositories in the organization set set to private or restricted.",
+            "risk_rating": 0,
+            "headers": ["Repository Name", "Conclusion", "Comments"],
+            "procedures": [
+                f"Obtained the GitHub organization settings by calling: https://api.github.com/orgs/{self.github_org_name}.",
+                "Saved the list of GitHub repos: org/all_repos.json.",
+                "???"        
+            ],
+        }
+
+        test = self._create_test(metadata)
+
+        repos = self._read("organization/all_repos.json")               
+
+        for repo in repos:
+            sample = Sample(sample_id={"repo_name": repo["name"]})
+            if repo.get("private", True):
+                sample.result = True
+            test.samples.append(sample)
+
+        test.evaluate_samples(self.exclusions, self.provider)
+
         return test

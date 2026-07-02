@@ -55,6 +55,7 @@ class Test:
     table_headers: Optional[List[str]] = None
     samples: List["Sample"] = field(default_factory=list)
     is_passing: bool = True
+    is_excluded: bool = False
     comments: str = ""
     num_findings: int = 0
     num_exclusions: int = 0
@@ -72,6 +73,7 @@ class Test:
     def to_dict(self):
         result = {
             "test_id": self.test_id,
+            "is_excluded": self.is_excluded,
             "test_description": self.test_description,
             "risk_rating": self.risk_rating,
             "is_passing": self.is_passing,
@@ -96,16 +98,23 @@ class Test:
     def add_sample(self, sample):
         self.samples.append(sample)
 
-    def evaluate_samples(self):
+    def evaluate_samples(self, exclusions=None, provider=None, test_id = None):
         self.total_population = len(self.samples)
         self.num_exclusions = 0
         self.num_findings = 0
 
-        for s in self.samples:
-            if s.is_excluded:
+        for sample in self.samples:
+            if exclusions:
+                exclusion = exclusions.get_sample_exclusion(provider, self.test_id, sample.sample_id)
+                if exclusion:
+                    sample.is_excluded = True
+                    sample.comments = exclusion.rationale
+
+            if sample.is_excluded:
                 self.num_exclusions += 1
-            elif not s.is_passing:
+                continue
+
+            if not sample.is_passing:
                 self.num_findings += 1
 
         self.is_passing = self.num_findings == 0
-        return self
