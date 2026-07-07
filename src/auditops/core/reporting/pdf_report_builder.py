@@ -55,10 +55,10 @@ class PDFReportBuilder:
 
         doc = SimpleDocTemplate(
             filename,
-            pagesize=LETTER,
-            title=f"{audit.title} Audit Report",
-            author="AuditOps",
-            subject=f"Audit report for {audit.title}",
+            pagesize= LETTER,
+            title= audit.title,
+            author= "AuditOps",
+            subject= f"Audit report findings and testing instruction for reperformance.",
         )
 
         elements = []

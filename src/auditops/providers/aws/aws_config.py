@@ -14,7 +14,7 @@ class AWSConfig:
 
     # Default tagging policy
     required_tags: list[str] = field(default_factory=lambda: ["Owner", "Description", "Classification"])
-    ec2_security_group_required_tags: list[str] = field(default_factory=lambda: ["Owner","Description","ReviewedBy","LastReviewedDate"])    
+    ec2_security_group_required_tags: list[str] = field(default_factory=lambda: ["Owner", "Description", "ReviewedBy", "LastReviewedDate"])    
 
     # Optional service-specific tag overrides
     s3_required_tags: list[str] | None = None
@@ -24,7 +24,7 @@ class AWSConfig:
     rds_required_tags: list[str] | None = None
 
     # IAM Password Policy
-    iam_minimum_password_length: int = 16
+    iam_minimum_password_length: int = 14
     iam_require_uppercase: bool = True
     iam_require_lowercase: bool = True
     iam_require_numbers: bool = True

@@ -258,23 +258,24 @@ class AWSCollector:
     ####################################################################
 
     def _collect_lambda_evidence(self):
-        lambda_client = self.session.client("lambda")
+        for region in self.config.in_scope_regions:
+            lambda_client = self.session.client("lambda", region_name=region)
 
-        functions = self._call_api(lambda_client, method="list_functions")
-        self._write("lambda/functions.json", functions)
+            functions = self._call_api(lambda_client, method="list_functions")
+            self._write(f"lambda/{region}/functions.json", functions)
 
-        for function in functions.get("Functions", []):
-            function_name = function["FunctionName"]
-            self._write(
-                f"lambda/functions/{function_name}/tags.json",
-                self._call_api(
-                    lambda_client,
-                    method="list_tags",
-                    method_kwargs={
-                        "Resource": function["FunctionArn"],
-                    },
-                ),
-            )
+            for function in functions.get("Functions", []):
+                function_name = function["FunctionName"]
+                self._write(
+                    f"lambda/{region}/functions/{function_name}/tags.json",
+                    self._call_api(
+                        lambda_client,
+                        method="list_tags",
+                        method_kwargs={
+                            "Resource": function["FunctionArn"],
+                        },
+                    ),
+                )
 
     ####################################################################
     #
@@ -283,23 +284,24 @@ class AWSCollector:
     ####################################################################
 
     def _collect_rds_evidence(self):
-        rds_client = self.session.client("rds")
+        for region in self.config.in_scope_regions:
+            rds_client = self.session.client("rds", region_name=region)
 
-        self._write(
-            "rds/db_instances.json",
-            self._call_api(
-                rds_client,
-                method="describe_db_instances",
-            ),
-        )
+            self._write(
+                (f"rds/{region}/db_instances.json"),
+                self._call_api(
+                    rds_client,
+                    method="describe_db_instances",
+                ),
+            )
 
-        self._write(
-            "rds/db_clusters.json",
-            self._call_api(
-                rds_client,
-                method="describe_db_clusters",
-            ),
-        )
+            self._write(
+                (f"rds/{region}/db_instances.json"),
+                self._call_api(
+                    rds_client,
+                    method="describe_db_clusters",
+                ),
+            )
 
     ####################################################################
     #
@@ -323,7 +325,7 @@ class AWSCollector:
             trail_name = trail["Name"]
 
             self._write(
-                f"cloudtrail/{trail_name}/status.json",
+                f"cloudtrail/trails/{trail_name}/trail_status.json",
                 self._call_api(
                     cloudtrail_client,
                     method="get_trail_status",
@@ -332,7 +334,6 @@ class AWSCollector:
                     },
                 ),
             )
-
     ####################################################################
     #
     # ELBv2
@@ -340,15 +341,19 @@ class AWSCollector:
     ####################################################################
 
     def _collect_elbv2_evidence(self):
-        elbv2_client = self.session.client("elbv2")
+        for region in self.config.in_scope_regions:
+            elbv2_client = self.session.client(
+                "elbv2",
+                region_name=region,
+            )
 
-        self._write(
-            "elbv2/load_balancers.json",
-            self._call_api(
-                elbv2_client,
-                method="describe_load_balancers",
-            ),
-        )
+            self._write(
+                f"elbv2/{region}/load_balancers.json",
+                self._call_api(
+                    elbv2_client,
+                    method="describe_load_balancers",
+                ),
+            )
 
     ####################################################################
     #
@@ -357,15 +362,19 @@ class AWSCollector:
     ####################################################################
 
     def _collect_apigateway_evidence(self):
-        apigateway_client = self.session.client("apigateway")
+        for region in self.config.in_scope_regions:
+            apigateway_client = self.session.client(
+                "apigateway",
+                region_name=region,
+            )
 
-        self._write(
-            "apigateway/rest_apis.json",
-            self._call_api(
-                apigateway_client,
-                method="get_rest_apis",
-            ),
-        )
+            self._write(
+                f"apigateway/{region}/rest_apis.json",
+                self._call_api(
+                    apigateway_client,
+                    method="get_rest_apis",
+                ),
+            )
 
     ####################################################################
     #
@@ -374,33 +383,36 @@ class AWSCollector:
     ####################################################################
 
     def _collect_wafv2_evidence(self):
-        wafv2_client = self.session.client("wafv2")
-
-        web_acls = self._call_api(
-            wafv2_client,
-            method="list_web_acls",
-            method_kwargs={
-                "Scope": "REGIONAL",
-            },
-        )
-
-        self._write("wafv2/web_acls.json", web_acls)
-
-        for web_acl in web_acls.get("WebACLs", []):
-            web_acl_id = web_acl["Id"]
-            web_acl_name = web_acl["Name"]
-
-            self._write(
-                f"wafv2/{web_acl_name}_{web_acl_id}/resources.json",
-                self._call_api(
-                    wafv2_client,
-                    method="list_resources_for_web_acl",
-                    method_kwargs={
-                        "WebACLArn": web_acl["ARN"],
-                    },
-                ),
+        for region in self.config.in_scope_regions:
+            wafv2_client = self.session.client(
+                "wafv2",
+                region_name=region,
             )
 
+            web_acls = self._call_api(
+                wafv2_client,
+                method="list_web_acls",
+                method_kwargs={
+                    "Scope": "REGIONAL",
+                },
+            )
+
+            self._write(
+                f"wafv2/{region}/web_acls.json",
+                web_acls,
+            )
+
+            for web_acl in web_acls.get("WebACLs", []):
+                self._write(
+                    f"wafv2/{region}/{web_acl['Name']}_{web_acl['Id']}/resources.json",
+                    self._call_api(
+                        wafv2_client,
+                        method="list_resources_for_web_acl",
+                        method_kwargs={
+                            "WebACLArn": web_acl["ARN"],
+                        },
+                    ),
+                )
 
     ####################################################################
     #
@@ -409,23 +421,30 @@ class AWSCollector:
     ####################################################################
 
     def _collect_guardduty_evidence(self):
-        guardduty_client = self.session.client("guardduty")
-
-        detectors = self._call_api(
-            guardduty_client,
-            method="list_detectors",
-        )
-
-        self._write("guardduty/detectors.json", detectors)
-
-        for detector_id in detectors.get("DetectorIds", []):
-            self._write(
-                f"guardduty/{detector_id}/detector.json",
-                self._call_api(
-                    guardduty_client,
-                    method="get_detector",
-                    method_kwargs={
-                        "DetectorId": detector_id,
-                    },
-                ),
+        for region in self.config.in_scope_regions:
+            guardduty_client = self.session.client(
+                "guardduty",
+                region_name=region,
             )
+
+            detectors = self._call_api(
+                guardduty_client,
+                method="list_detectors",
+            )
+
+            self._write(
+                f"guardduty/{region}/detectors.json",
+                detectors,
+            )
+
+            for detector_id in detectors.get("DetectorIds", []):
+                self._write(
+                    f"guardduty/{region}/{detector_id}/detector.json",
+                    self._call_api(
+                        guardduty_client,
+                        method="get_detector",
+                        method_kwargs={
+                            "DetectorId": detector_id,
+                        },
+                    ),
+                )
