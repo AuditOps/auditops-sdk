@@ -2,13 +2,7 @@ from auditops.core.models import Sample
 from auditops.core.utils import create_test, fail_test
 
 
-def run_cloudtrail_tests(tester):
-    return [
-        test_cloudtrail_multi_region(tester)
-    ]
-
-
-def test_cloudtrail_multi_region(tester):
+def check_cloudtrail_multi_region(tester):
     metadata = {
         "test_id": "aws-cloudtrail-001",
         "test_description": "At least one multi-region CloudTrail trail has logging enabled.",

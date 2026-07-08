@@ -4,11 +4,11 @@ from auditops.core.utils import create_test, fail_test
 
 def run_repo_tests(tester):
     return [
-        test_repository_visibility(tester)
+        repository_visibility(tester)
     ]
 
 
-def test_repository_visibility(tester):
+def repository_visibility(tester):
     metadata = {
         "test_id": "github-repo-001",
         "test_description": "All repositories in the organization are set to private or restricted.",

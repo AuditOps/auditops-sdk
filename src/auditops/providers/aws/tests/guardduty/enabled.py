@@ -2,13 +2,7 @@ from auditops.core.models import Sample
 from auditops.core.utils import create_test, fail_test
 
 
-def run_guardduty_tests(tester):
-    return [
-        test_guardduty_enabled(tester)
-    ]
-
-
-def test_guardduty_enabled(tester):
+def check_guardduty_enabled(tester):
     metadata = {
         "test_id": "aws-guardduty-001",
         "test_description": "GuardDuty is enabled for all in-scope regions.",

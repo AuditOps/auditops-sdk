@@ -77,14 +77,21 @@ class PDFReportBuilder:
         elements.append(Spacer(1, 18))
 
         # Add test results summary (includes all tests in the audit)
-        elements.append(Paragraph("Test Summary", self.styles["Heading1"]))
+        header_text = '<a name="test_summary_header"/>Test Summary'
+        elements.append(Paragraph(header_text, self.styles['Heading1']))
+
+        #elements.append(Paragraph("Test Summary", self.styles["Heading1"]))
         elements.append(Spacer(1, 12))
         elements.append(self._render_test_summary_table(tests))
         elements.append(PageBreak())
 
         for test in tests:
+            # Internal link definition using href="#anchor_name"
+            link_text = '<a href="#test_summary_header" color="blue"><b>BACK TO TEST SUMMARY</b></a>'
+            elements.append(Paragraph(link_text, self.styles['Normal']))
+
             if not test.is_excluded:
-                # Build test summary
+                # Build individual test summary
                 elements.append(Spacer(1, 18))
                 elements.append(KeepTogether(self._render_test_details_table(test)))
                 elements.append(Spacer(1, 12))

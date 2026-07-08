@@ -4,12 +4,12 @@ from auditops.core.utils import create_test, fail_test
 
 def run_org_tests(tester):
     return [
-        test_org_mfa_settings(tester),
-        test_org_members_create_public_resources(tester)
+        org_mfa_settings(tester),
+        org_members_create_public_resources(tester)
     ]
 
 
-def test_org_mfa_settings(tester):
+def org_mfa_settings(tester):
     metadata = {
         "test_id": "github-org-001",
         "test_description": "The GitHub organization settings require users to enable MFA.",
@@ -31,7 +31,7 @@ def test_org_mfa_settings(tester):
     return test
 
 
-def test_org_members_create_public_resources(tester):
+def org_members_create_public_resources(tester):
     metadata = {
         "test_id": "github-org-002",
         "test_description": "The GitHub organization settings prevent members from creating public resources.",

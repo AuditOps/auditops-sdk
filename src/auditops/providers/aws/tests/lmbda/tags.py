@@ -1,13 +1,8 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test, fail_test, evaluate_tags
 
 
-def run_lambda_tests(tester):
-    return [
-        test_lambda_tags(tester)
-    ]
-
-def test_lambda_tags(tester):
+def check_lambda_tags(tester):
     required_tags = tester.config.required_tags
 
     metadata = {
