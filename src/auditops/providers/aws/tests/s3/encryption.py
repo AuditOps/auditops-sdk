@@ -44,4 +44,9 @@ def check_s3_encryption(tester):
 
     test.evaluate_samples(tester.exclusions, tester.provider)
 
+    if not test.is_passing:
+        test.comments = (
+            f"Exceptions Noted. {test.num_findings} S3 bucket(s) do not have encryption enabled."
+        )
+
     return test

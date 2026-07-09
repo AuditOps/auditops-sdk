@@ -45,4 +45,9 @@ def check_s3_public_access(tester):
 
     test.evaluate_samples(tester.exclusions, tester.provider)
 
+    if not test.is_passing:
+        test.comments = (
+            f"Exceptions Noted. {test.num_findings} S3 bucket(s) are not configured to block public access."
+        )
+
     return test
