@@ -9,6 +9,7 @@ class Audit:
         self.title = title
         self.auditor_name = auditor_name
 
+
     def to_dict(self):
         return {
             "metadata": {
@@ -19,6 +20,7 @@ class Audit:
             },
             "test_results": [t.to_dict() for t in self.test_results]
         }
+
 
 # NOTE: Samples default to "is_passing: False" until logic determines sample passes the testing criteria.
 @dataclass
@@ -43,6 +45,7 @@ class Sample:
             "is_passing": self.is_passing,
             "comments": self.comments,
         }
+
 
 # NOTE: Tests default to "is_passing: True" until there is a failing sample or other logic determines the test has failed.
 @dataclass
@@ -71,6 +74,7 @@ class Test:
             f"comments: {self.comments}\n"         
         )
 
+
     def to_dict(self):
         result = {
             "test_id": self.test_id,
@@ -88,6 +92,7 @@ class Test:
 
         return result
 
+
     def get_risk_rating_str(self):
         if self.risk_rating == 0: return "Informational"
         elif self.risk_rating == 1: return "Low"
@@ -96,8 +101,10 @@ class Test:
         else:
             raise ValueError(f"Invalid risk rating: {self.risk_rating}. Accepted values are 0 - 3.")
 
+
     def add_sample(self, sample):
         self.samples.append(sample)
+
 
     def evaluate_samples(self, exclusions=None, provider=None, test_id = None):
         self.total_population = len(self.samples)
