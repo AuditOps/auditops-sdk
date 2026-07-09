@@ -4,9 +4,10 @@ from datetime import date
 from datetime import datetime, timezone
 
 class Audit:
-    def __init__(self, title=None):
+    def __init__(self, title=None, auditor_name="AuditOps"):
         self.test_results = None
         self.title = title
+        self.auditor_name = auditor_name
 
     def to_dict(self):
         return {

@@ -107,7 +107,7 @@ class PDFReportBuilder:
         failed = sum(not t.is_passing for t in audit.test_results)
         passed = test_count - failed
         rows = [
-            ("Prepared By", "AuditOps"),
+            ("Prepared By", audit.auditor_name),
             ("Report Date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
             ("Tests", test_count),
             ("Passed", self._format_pct(passed, test_count)),
@@ -173,7 +173,8 @@ class PDFReportBuilder:
 
     def _render_test_sample_table(self, test):
         # Sort failing samples to top of the table.
-        samples = sorted(test.samples, key=lambda s: (s.is_passing))
+        samples = sorted(test.samples, key=lambda s: (s.is_passing, s.is_excluded))
+        #samples = sorted(test.samples, key=lambda s: (s.is_passing))
 
         table_data = []
         # Build header row (Ex. ["Bucket Name", "Results", "Comments]")
