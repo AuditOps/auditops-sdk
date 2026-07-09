@@ -6,7 +6,7 @@ def check_lambda_tags(tester):
     required_tags = tester.config.required_tags
 
     metadata = {
-        "test_id": "aws-lambda-XXX",
+        "test_id": "aws-lambda-001",
         "test_description": (
             "Lambda functions must have required tags applied and tag values must not be empty."
         ),

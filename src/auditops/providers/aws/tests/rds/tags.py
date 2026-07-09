@@ -1,12 +1,13 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test
+from auditops.core.utils import create_test, evaluate_tags
+
 
 
 def check_rds_tags(tester):
     required_tags = tester.config.required_tags
 
     metadata = {
-        "test_id": "aws-rds-XXX",
+        "test_id": "aws-rds-006",
         "test_description": (
             "RDS instances must have required tags applied and tag values must not be empty."
         ),

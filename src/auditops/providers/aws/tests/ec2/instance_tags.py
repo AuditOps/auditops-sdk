@@ -6,7 +6,7 @@ def check_ec2_instance_tags(tester):
     required_tags = tester.config.required_tags
 
     metadata = {
-        "test_id": "aws-ec2-XXX",
+        "test_id": "aws-ec2-001",
         "test_description": (
             "EC2 instances must have required tags applied and tag values must not be empty."
         ),

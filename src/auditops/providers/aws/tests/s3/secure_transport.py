@@ -32,7 +32,7 @@ def check_s3_secure_transport(tester):
             }
         )
 
-        policy = tester.read(f"s3/buckets/{bucket_name}/policy.json")
+        policy = tester.read(f"s3/buckets/{bucket_name}/policy.json", optional=True)
 
         if not policy:
             sample.comments = "No bucket policy found."

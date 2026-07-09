@@ -8,7 +8,7 @@ def check_iam_user_access_key_age(tester):
     max_age_days = tester.config.iam_access_key_max_age
 
     metadata = {
-        "test_id": "aws-iam-XXX",
+        "test_id": "aws-iam-005",
         "test_description": f"IAM user access keys are rotated at least every {max_age_days} days.",
         "risk_rating": 3,
         "test_procedures": [
@@ -36,16 +36,16 @@ def check_iam_user_access_key_age(tester):
     now = datetime.now(timezone.utc)
 
     for user in users.get("Users", []):
-        username = user["UserName"]
+        user_name = user["UserName"]
 
         keys = tester.read(
-            f"iam/users/{username}/access_keys.json"
+            f"iam/users/{user_name}/access_keys.json"
         )
 
         for key in keys.get("AccessKeyMetadata", []):
             sample = Sample(
                 sample_id={
-                    "user": username,
+                    "user_name": user_name,
                     "access_key_id": key["AccessKeyId"],
                 }
             )
