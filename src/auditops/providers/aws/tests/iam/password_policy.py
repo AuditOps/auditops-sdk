@@ -70,7 +70,7 @@ def check_iam_password_policy(tester):
     
     if not test.is_passing:
         test.comments = (
-            "The AWS account password policy does not meet the configured requirements."
+            "Exception Noted. IAM password policy does not meet the complexity requirements."
         )
 
     return test
