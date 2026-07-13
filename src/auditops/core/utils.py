@@ -1,5 +1,15 @@
 from auditops.core.models import Test
+import boto3, os, shutil
 
+
+def delete_evidence_folder(path):
+    print(f"Deleting evidence: {path}.")
+    # Delete underlying folder structure
+    try:
+        if os.path.exists(path):
+            shutil.rmtree(path)
+    except OSError as e:
+        logger.error("Error: %s : %s" % (path, e.strerror))
 
 def fail_test(test, message):
     test.is_passing = False
@@ -50,3 +60,38 @@ def evaluate_tags(sample, required_tags, actual_resource_tags):
             sample.comments += f"Missing tags: {missing_tags}. "
         if empty_tags:
             sample.comments += f"Empty tag values: {empty_tags}."
+
+
+def aws_create_session(session_name="auditops-assume-role", role_arn=None, external_id=None):
+    # No role provided, use local credentials.
+    if not role_arn and not external_id:
+        return boto3.Session()
+
+    # Check if role_arn and external_id are set.
+    if not (role_arn and external_id):
+        raise ValueError("Both 'role_arn' and 'external_id' must be set in the environment to assume a role.")
+    
+    creds = aws_assume_role(role_arn, external_id, session_name)
+    
+    return boto3.Session(
+        aws_access_key_id=creds["AccessKeyId"],
+        aws_secret_access_key=creds["SecretAccessKey"],
+        aws_session_token=creds["SessionToken"]
+    )
+
+
+def aws_assume_role(role_arn, external_id, session_name):
+    sts = boto3.client("sts")
+    try:
+        response = sts.assume_role(
+            RoleArn=role_arn,
+            ExternalId=external_id,
+            RoleSessionName=session_name
+        )
+    except ClientError as e:
+        raise RuntimeError(
+            f"Failed to assume role {role_arn}: "
+            f"{e.response['Error']['Message']}"
+        ) from e
+
+    return response["Credentials"]
