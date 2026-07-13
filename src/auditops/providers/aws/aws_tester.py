@@ -18,12 +18,15 @@ from .tests.lmbda import (check_lambda_tags)
 
 
 class AWSTester:
-    def __init__(self, reader, config: AWSConfig, exclusions: ExclusionManager | None = None):
+    def __init__(self, reader, config: AWSConfig, exclusions: ExclusionManager | None = None,
+    subfolder: str | None = None,):
         self.provider = "aws"
         self.report_title = "AWS Audit Report"
         self.reader = reader
         self.config = config
         self.exclusions = exclusions or ExclusionManager()
+        # Using a subfolder allows testing of multiple AWS accounts.
+        self.subfolder = None # Ex. ("111222333444) This would be the individual AWS account ID.
 
     AWS_TESTS = [
         # IAM
@@ -67,12 +70,6 @@ class AWSTester:
     ]
 
 
-    ####################################################################
-    #
-    # Helpers
-    #
-    ####################################################################
-
     def run_tests(self):
         all_tests = []
         
@@ -80,6 +77,7 @@ class AWSTester:
             all_tests.append(test(self))
         
         return all_tests
+
 
     def read(self, path, optional=False):
         return self.reader.read_json("aws", path, optional=optional)
