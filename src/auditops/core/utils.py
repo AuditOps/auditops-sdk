@@ -1,5 +1,5 @@
-from auditops.core.models import Test
-import boto3, os, shutil
+from auditops.core.models import Test, Audit
+import boto3, os, shutil, json
 
 
 def delete_evidence_folder(path):
@@ -10,6 +10,7 @@ def delete_evidence_folder(path):
             shutil.rmtree(path)
     except OSError as e:
         logger.error("Error: %s : %s" % (path, e.strerror))
+
 
 def fail_test(test, message):
     test.is_passing = False
@@ -65,14 +66,18 @@ def evaluate_tags(sample, required_tags, actual_resource_tags):
 def aws_create_session(session_name="auditops-assume-role", role_arn=None, external_id=None):
     # No role provided, use local credentials.
     if not role_arn and not external_id:
+        logger.info(f"New session created using local Boto3 credentials.")
         return boto3.Session()
+
+    # TODO: Fail hard if role_arn doesn't work....
 
     # Check if role_arn and external_id are set.
     if not (role_arn and external_id):
         raise ValueError("Both 'role_arn' and 'external_id' must be set in the environment to assume a role.")
     
     creds = aws_assume_role(role_arn, external_id, session_name)
-    
+    logger.info(f"New session created using IAM role.")
+
     return boto3.Session(
         aws_access_key_id=creds["AccessKeyId"],
         aws_secret_access_key=creds["SecretAccessKey"],
@@ -95,3 +100,23 @@ def aws_assume_role(role_arn, external_id, session_name):
         ) from e
 
     return response["Credentials"]
+
+
+def run_audit(collector, tester, context):
+    """Collect evidence, execute tests, and save the audit report."""
+    collector.gather_evidence()
+
+    audit = Audit(title=tester.report_title, auditor_name=context.auditor_name)
+    audit.test_results = tester.run_tests()
+
+    save_path = "tmp/reports"
+    if context.evidence_folder:
+        save_path = f"{save_path}/{context.evidence_folder}"
+    os.makedirs(save_path, exist_ok=True)
+
+    # Save JSON report
+    with open(f"{save_path}/{context.report_name}.json", "w") as f:
+        json.dump(audit.to_dict(), f, indent=4, default=str)
+    
+    # Save PDF report
+    context.report_builder.build(audit, f"{save_path}/{context.report_name}.pdf")
