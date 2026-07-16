@@ -2,13 +2,64 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict, Any
 from datetime import date
 from datetime import datetime, timezone
+from pathlib import Path
+
+
+@dataclass
+class AuditContext:
+    provider: str
+    report_name: str
+    evidence_folder: str
+    reader: EvidenceReader
+    writer: EvidenceWriter
+    report_builder: ReportBuilder
+    auditor_name: str | "AJ Dehn"
+    delete_cached_evidence: bool | False
+    config: Any | None = None    
+    exclusions: ExclusionManager | None = None
+
+    @property
+    def report_dir(self) -> Path:
+        path = Path(self.reader.root_dir) / "reports"
+        if self.evidence_folder:
+            path /= self.evidence_folder
+        return path
+
+    @property
+    def json_report_path(self) -> Path:
+        return self.report_dir / f"{self.report_name}.json"
+
+    @property
+    def pdf_report_path(self) -> Path:
+        return self.report_dir / f"{self.report_name}.pdf"
+
 
 class Audit:
     def __init__(self, title=None, auditor_name="AuditOps"):
         self.test_results = None
         self.title = title
         self.auditor_name = auditor_name
+        self.scope = None
 
+    def update_scope(self, updated_scope):
+        self.scope = updated_scope
+
+    def get_scope(self):
+        return self.scope
+
+    def get_scope_formatted(self):
+        html = []
+
+        for item in self.scope:
+            if ":" in item:
+                label, value = item.split(":", 1)
+                html.append(f"<b>{label}:</b> {value}")
+            else:
+                html.append(item)
+
+        html_output = "<br/>".join(html)
+
+        return html_output
 
     def to_dict(self):
         return {
