@@ -31,11 +31,10 @@ def check_ebs_default_encryption(tester):
 
         test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} region(s) do not have EBS default encryption enabled."
-        )
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message="region(s) do not have EBS default encryption enabled."
+    )
 
     return test

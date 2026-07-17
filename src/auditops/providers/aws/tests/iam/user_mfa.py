@@ -51,12 +51,10 @@ def check_iam_user_mfa(tester):
 
         test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} IAM user(s) "
-            "have an active console password but do not have MFA enabled."
-        )
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message="IAM user(s) have an active console password but do not have MFA enabled."
+    )
 
     return test

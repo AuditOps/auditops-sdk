@@ -157,7 +157,7 @@ class Test:
         self.samples.append(sample)
 
 
-    def evaluate_samples(self, exclusions=None, provider=None, test_id = None):
+    def evaluate_samples(self, exclusions=None, provider=None, test_id = None, failure_message: str = None):
         self.total_population = len(self.samples)
         self.num_exclusions = 0
         self.num_findings = 0
@@ -177,3 +177,20 @@ class Test:
                 self.num_findings += 1
 
         self.is_passing = self.num_findings == 0
+
+        if failure_message:
+            self.set_failure_summary(failure_message)
+
+
+    def set_failure_summary(self, message: str):
+        if self.is_passing:
+            return
+
+        # Make sure message ends with a period.
+        message = message.rstrip()
+        if not message.endswith("."):
+            message += "."
+        
+        self.comments = (
+            f"Exceptions Noted. {self.num_findings} of {self.total_population} {message}"
+        )

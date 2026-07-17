@@ -36,11 +36,10 @@ def check_ebs_volume_encryption(tester):
 
             test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} EBS volume(s) are not encrypted."
-        )
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message="EBS volume(s) are not encrypted."
+    )
 
     return test

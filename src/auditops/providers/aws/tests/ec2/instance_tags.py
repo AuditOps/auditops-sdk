@@ -43,11 +43,10 @@ def check_ec2_instance_tags(tester):
 
                 test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} EC2 instance(s) are missing required tags or have empty values."
-        )
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message="EC2 instance(s) are missing required tags or have empty values."
+    )
 
     return test

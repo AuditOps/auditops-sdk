@@ -42,11 +42,10 @@ def check_ec2_security_group_tags(tester):
 
             test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} security group(s) are missing required tags or have empty values."
-        )
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message="security group(s) are missing required tags or have empty values."
+    )
 
     return test

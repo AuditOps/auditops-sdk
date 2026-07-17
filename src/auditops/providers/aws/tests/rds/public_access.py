@@ -37,11 +37,10 @@ def check_rds_public_access(tester):
 
             test.samples.append(sample)
 
-        test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} RDS instance(s) are publicly accessible."
+        test.evaluate_samples(
+            tester.exclusions,
+            tester.provider,
+            failure_message="RDS instance(s) are publicly accessible."    
         )
 
     return test

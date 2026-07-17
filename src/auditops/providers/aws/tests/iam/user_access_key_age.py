@@ -71,10 +71,10 @@ def check_iam_user_access_key_age(tester):
 
             test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message=f"IAM key(s) are active and over {max_age_days} days old."
+    )
 
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} of {test.total_population} IAM key(s) are active and over {max_age_days} days old."
-        )
     return test

@@ -52,11 +52,10 @@ def check_guardduty_enabled(tester):
 
         test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. GuardDuty is not enabled for {test.num_findings} in-scope region(s)."
-        )
+    test.evaluate_samples(
+        tester.exclusions, 
+        tester.provider,
+        failure_message="region(s) do not have GuardDuty enabled."
+    )
 
     return test

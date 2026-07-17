@@ -39,11 +39,10 @@ def check_rds_backup_retention(tester):
 
             test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.comments = (
-            f"Exceptions Noted. {test.num_findings} RDS instance(s) do not retain backups for at least {required_retention_days} days."
-        )
+    test.evaluate_samples(
+        tester.exclusions,
+        tester.provider,
+        failure_message=f"RDS instance(s) do not retain backups for at least {required_retention_days} days."
+    )
 
     return test
