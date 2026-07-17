@@ -9,7 +9,7 @@ def check_iam_user_access_key_age(tester):
 
     metadata = {
         "test_id": "aws-iam-005",
-        "test_description": f"IAM user access keys are rotated at least every {max_age_days} days.",
+        "test_description": f"Active IAM user access keys are rotated at least every {max_age_days} days.",
         "risk_rating": 3,
         "test_procedures": [
             "Obtained a list of IAM users by calling the list_users() boto3 command.",
@@ -51,7 +51,7 @@ def check_iam_user_access_key_age(tester):
             )
 
             if key["Status"] != "Active":
-                sample.is_excluded = True
+                sample.is_passing = True
                 sample.comments = "N/A - key is inactive."
                 test.samples.append(sample)
                 continue
@@ -75,7 +75,6 @@ def check_iam_user_access_key_age(tester):
 
     if not test.is_passing:
         test.comments = (
-            f"Exceptions Noted. {test.num_findings} IAM key(s) are over {max_age_days} days old."
+            f"Exceptions Noted. {test.num_findings} of {test.total_population} IAM key(s) are active and over {max_age_days} days old."
         )
-
     return test

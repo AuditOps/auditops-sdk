@@ -18,15 +18,14 @@ from .tests.lmbda import (check_lambda_tags)
 
 
 class AWSTester:
-    def __init__(self, reader, config: AWSConfig, exclusions: ExclusionManager | None = None,
-    subfolder: str | None = None,):
-        self.provider = "aws"
-        self.report_title = "AWS Audit Report"
-        self.reader = reader
-        self.config = config
-        self.exclusions = exclusions or ExclusionManager()
-        # Using a subfolder allows testing of multiple AWS accounts.
-        self.subfolder = None # Ex. ("111222333444) This would be the individual AWS account ID.
+    def __init__(self, context):
+        self.report_title = "AWS Audit Report"          # Used when building the PDF.
+        self.provider = context.provider                # Used when searching for exclusions.
+        self.reader = context.reader
+        self.config = context.config
+        self.exclusions = context.exclusions
+        self.evidence_folder = context.evidence_folder
+
 
     AWS_TESTS = [
         # IAM
@@ -69,6 +68,13 @@ class AWSTester:
         check_lambda_tags,
     ]
 
+    def get_scope(self):
+        aws_account_id = self.read("account/account_identity.json")["Account"]
+        return [
+            f"AWS Account ID: {aws_account_id}",
+            f"In-Scope Regions: {self.config.in_scope_regions}",
+        ]
+
 
     def run_tests(self):
         all_tests = []
@@ -79,5 +85,5 @@ class AWSTester:
         return all_tests
 
 
-    def read(self, path, optional=False):
-        return self.reader.read_json("aws", path, optional=optional)
+    def read(self, relative_path, optional=False):
+        return self.reader.read_json(f"{self.evidence_folder}/{relative_path}", optional=optional)

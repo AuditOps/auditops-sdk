@@ -52,7 +52,7 @@ def check_guardduty_enabled(tester):
 
         test.samples.append(sample)
 
-    test.evaluate_samples()
+    test.evaluate_samples(tester.exclusions, tester.provider)
 
     if not test.is_passing:
         test.comments = (

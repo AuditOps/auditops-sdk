@@ -1,10 +1,15 @@
 import requests
+from pathlib import Path
 
 class GitHubCollector:
-    def __init__(self, token, org_name, writer):
+    def __init__(self, token, org_name, context):
         self.token = token
         self.org_name = org_name
-        self.writer = writer
+        self.evidence_folder = context.evidence_folder
+        self.writer = context.writer
+        self.reader = context.reader
+        self.delete_cached_evidence = context.delete_cached_evidence
+
 
     def _call_api(self, relative_path, github_url, params=None, paginate=False, handle_404=False):
         # Return cached evidence if it exists
@@ -28,16 +33,21 @@ class GitHubCollector:
 
                 all_data.extend(page_data)
                 page += 1
-            self.writer.save_json("github", relative_path, all_data)
+            self.writer.save_json(f"{self.evidence_folder}/{relative_path}", all_data)
 
         else:
             res = requests.get(github_url, headers=headers, params=params)
             if handle_404 and res.status_code == 404:
                 return None
             res.raise_for_status()
-            self.writer.save_json("github", relative_path, res.json())
+            self.writer.save_json(f"{self.evidence_folder}/{relative_path}", res.json())
 
-    def collect(self):
+    def gather_evidence(self):
+        if self.delete_cached_evidence:
+            delete_evidence_folder(Path(self.reader.evidence_dir / self.evidence_folder))
+        else:
+            print(f"Using cached evidence in: {Path(self.reader.evidence_dir / self.evidence_folder)}")
+        
         self._collect_org_settings()
         self._collect_repo_info()
 

@@ -1,29 +1,30 @@
 from pathlib import Path
 import json
 
+
 class EvidenceReader:
-    def __init__(self, root_dir="tmp/audit_evidence"):
+    def __init__(self, root_dir="tmp"):
         self.root_dir = Path(root_dir)
+        self.evidence_dir = self.root_dir / "audit_evidence"
 
-    def _path(self, provider, relative_path):
-        return self.root_dir / provider / relative_path
+    def _path(self, relative_path):
+        return self.evidence_dir / relative_path
 
-    def read_json(self, provider, relative_path, optional=False):
+    def read_json(self, relative_path, optional=False):
         """
         Read a JSON evidence file.
 
         Args:
-            provider: Evidence provider (aws, github, google_workspace).
-            relative_path: Path relative to the provider directory.
+            relative_path: Path relative from the audit's evidence folder.
             optional: Return None instead of raising if the file is missing.
         """
-        path = self._path(provider, relative_path)
+        path = self._path(relative_path)
 
         if not path.exists():
             if optional:
                 return None
             
-            raise FileNotFoundError(f"Missing required evidence: {provider}/{relative_path}")
+            raise FileNotFoundError(f"Missing required evidence: {relative_path}")
 
         with path.open() as f:
             return json.load(f)

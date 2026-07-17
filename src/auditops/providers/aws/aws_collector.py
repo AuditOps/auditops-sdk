@@ -5,26 +5,29 @@ from .collectors import (collect_account_identity, collect_iam_evidence,
     collect_wafv2_evidence, collect_apigateway_evidence, collect_guardduty_evidence)
 from auditops.core.utils import delete_evidence_folder
 from pathlib import Path
+import logging
+logger = logging.getLogger(__name__)
 
 
 class AWSCollector:
-    def __init__(self, session, writer, config, reader, 
-        subfolder: str | None = None, delete_cached_evidence = True):
-        self.provider = "aws"
+    def __init__(self, session, context):
         self.session = session
-        self.config = config
-        self.writer = writer
-        self.reader = reader
-        # Using a subfolder allows testing of multiple AWS accounts.
-        self.subfolder = None # Ex. ("111222333444) This would be the individual AWS account ID.
-        self.delete_cached_evidence = delete_cached_evidence
+        self.evidence_folder = context.evidence_folder
+        self.config = context.config
+        self.writer = context.writer
+        self.reader = context.reader
+        self.delete_cached_evidence = context.delete_cached_evidence
 
 
     def gather_evidence(self):
+
+        evidence_path = self.reader.evidence_dir / self.evidence_folder
+
         if self.delete_cached_evidence:
-            delete_evidence_folder(Path(self.reader.root_dir / self.provider))
-        else:
-            print(f"Using cached evidence in: {Path(self.reader.root_dir / self.provider)}")
+            delete_evidence_folder(evidence_path)
+        elif evidence_path.exists():
+            logger.info(f"Using cached evidence in: {evidence_path}")
+
         collect_lambda_evidence(self)
         collect_account_identity(self)
         collect_iam_evidence(self)
@@ -57,7 +60,8 @@ class AWSCollector:
             - params: dict (parameters to pass to the AWS method)
         """
         # Check if evidence already exists
-        evidence = self.reader.read_json("aws", evidence_path, optional=True)
+        evidence = self.reader.read_json(f"{self.evidence_folder}/{evidence_path}", optional=True)
+
         if evidence is not None:
             # Return cached evidence. 
             return evidence
@@ -70,8 +74,15 @@ class AWSCollector:
             ignore_codes=ignore_codes,
             warn_codes=warn_codes
         )
+        """
+        Saves JSON evidence to the requested folder (Ex. tmp/audit_evidence/aws/us_prod/s3/buckets.json).
 
-        self._write(evidence_path, evidence)
+        NOTE: The string below is made up of the following attributes:
+            - writer.evidence_dir: "tmp/audit_evidence"
+            - self.evidence_folder: "aws/us_prod"
+            - evidence_path: "s3/buckets.json"
+        """
+        self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", evidence)
         return evidence
 
 
@@ -101,6 +112,3 @@ class AWSCollector:
             if ignore_codes and code in ignore_codes:
                 return None
             raise
-    
-    def _write(self, path, data):
-        return self.writer.save_json("aws", path, data)

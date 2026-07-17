@@ -1,9 +1,11 @@
 from auditops.core.models import Test, Audit
 import boto3, os, shutil, json
+import logging
 
+logger = logging.getLogger(__name__)
 
 def delete_evidence_folder(path):
-    print(f"Deleting evidence: {path}.")
+    logger.info(f"Deleting evidence: {path}.")
     # Delete underlying folder structure
     try:
         if os.path.exists(path):
@@ -101,7 +103,6 @@ def aws_assume_role(role_arn, external_id, session_name):
 
     return response["Credentials"]
 
-
 def run_audit(collector, tester, context):
     """Collect evidence, execute tests, and save the audit report."""
     collector.gather_evidence()
@@ -109,14 +110,13 @@ def run_audit(collector, tester, context):
     audit = Audit(title=tester.report_title, auditor_name=context.auditor_name)
     audit.test_results = tester.run_tests()
 
-    save_path = "tmp/reports"
-    if context.evidence_folder:
-        save_path = f"{save_path}/{context.evidence_folder}"
-    os.makedirs(save_path, exist_ok=True)
+    audit.update_scope(tester.get_scope())
+
+    context.report_dir.mkdir(parents=True, exist_ok=True)
 
     # Save JSON report
-    with open(f"{save_path}/{context.report_name}.json", "w") as f:
+    with context.json_report_path.open("w", encoding="utf-8") as f:
         json.dump(audit.to_dict(), f, indent=4, default=str)
-    
+
     # Save PDF report
-    context.report_builder.build(audit, f"{save_path}/{context.report_name}.pdf")
+    context.report_builder.build(audit, str(context.pdf_report_path))

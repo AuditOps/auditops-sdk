@@ -87,7 +87,14 @@ class PDFReportBuilder:
 
         for test in tests:
             # Internal link definition using href="#anchor_name"
-            link_text = '<a href="#test_summary_header" color="blue"><b>BACK TO TEST SUMMARY</b></a>'
+            # Anchor for this test
+            anchor = test.test_id.replace(" ", "_")
+            link_text = (
+                f'<a name="{anchor}"/>'
+                f'<a href="#test_summary_header" color="blue">'
+                f'<b>BACK TO TEST SUMMARY</b></a>'
+            )
+            #link_text = f'<a href="#test_summary_header" name="{anchor}" color="blue"><b>BACK TO TEST SUMMARY</b></a>'
             elements.append(Paragraph(link_text, self.styles['Normal']))
 
             if not test.is_excluded:
@@ -111,17 +118,17 @@ class PDFReportBuilder:
             ("Report Date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
             ("Tests", test_count),
             ("Passed", self._format_pct(passed, test_count)),
-            ("Failed", self._format_pct(failed, test_count))
+            ("Failed", self._format_pct(failed, test_count)),
+            ("Scope", audit.get_scope_formatted()),
         ]
         metadata = [
             [self._label(k), self._value(v)]
             for k, v in rows
         ]
-        return self._table(metadata, col_widths=[200, 150], style=TABLE_STYLE_HIGHLIGHT_COLUMN, h_align="CENTER")
+        return self._table(metadata, col_widths=[150, 200], style=TABLE_STYLE_HIGHLIGHT_COLUMN, h_align="CENTER")
 
     def _render_test_summary_table(self, tests):
         # Creates a table summarizing the results of all tests performed in the audit.
-
         rows = [[
             self._label("Test"),
             self._label("Result"),
@@ -130,8 +137,29 @@ class PDFReportBuilder:
         ]]
 
         for test in tests:
+            # Creates a link to each test summary.
+            anchor = test.test_id.replace(" ", "_")
+            test_desc_str = (
+                f'<a href="#{anchor}" color="blue"><b>{test.test_id}</b></a>: '
+                f'{test.test_description}'
+            )
+
+            if test.num_exclusions > 0:
+                # Add transparency for the number of exclusions.
+                if not test.comments:
+                    # No comments have been populated. Add note for transparency.
+                    if test.num_exclusions > 1:
+                        test.comments = f"<b>NOTE:</b> {test.num_exclusions} samples were excluded by management."
+                    else:
+                        test.comments = f"<b>NOTE:</b> {test.num_exclusions} sample was excluded by management."
+                else:
+                    if test.num_exclusions > 1:
+                        test.comments = test.comments + f"<br/><br/><b>NOTE:</b> {test.num_exclusions} samples were excluded by management."
+                    else:
+                        test.comments = test.comments + f"<br/><br/><b>NOTE:</b> {test.num_exclusions} sample was excluded by management."
+            
             new_row = [
-                self._value(test.test_description),
+                self._value(test_desc_str),
                 self._value("Excluded") if test.is_excluded else self._status_paragraph(test.is_passing),
                 self._value(test.get_risk_rating_str()),
                 self._value(test.comments)

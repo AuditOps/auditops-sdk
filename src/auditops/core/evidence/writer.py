@@ -1,13 +1,21 @@
 from pathlib import Path
 import json
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s"
+)
 
 class EvidenceWriter:
-    def __init__(self, root_dir="tmp/audit_evidence"):
+    def __init__(self, root_dir="tmp"):
         self.root_dir = Path(root_dir)
+        self.evidence_dir = self.root_dir / "audit_evidence"
 
-    def save_json(self, tool_name, relative_path, data):
+
+    def save_json(self, relative_path, data):
         if data:
-            file_path = self.root_dir / tool_name / relative_path
+            file_path = self.evidence_dir / relative_path
 
             file_path.parent.mkdir(parents=True, exist_ok=True)
 
