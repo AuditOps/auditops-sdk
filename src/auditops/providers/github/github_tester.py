@@ -16,7 +16,7 @@ class GitHubTester:
 
     def get_scope(self):
         return [
-            f"GitHub Organization Name: {self.github_org_name}"
+            f"Organization Name: {self.github_org_name}"
         ]
 
 
