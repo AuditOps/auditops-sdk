@@ -114,6 +114,7 @@ class Test:
     comments: str = ""
     num_findings: int = 0
     num_exclusions: int = 0
+    num_passing: int = 0
     total_population: int = 0
 
     def __str__(self):
@@ -161,6 +162,7 @@ class Test:
         self.total_population = len(self.samples)
         self.num_exclusions = 0
         self.num_findings = 0
+        self.num_passing = 0
 
         for sample in self.samples:
             if exclusions:
@@ -177,6 +179,8 @@ class Test:
                 self.num_findings += 1
 
         self.is_passing = self.num_findings == 0
+        
+        self.num_passing = self.total_population - self.num_findings - self.num_exclusions
 
         if failure_message:
             self.set_failure_summary(failure_message)
