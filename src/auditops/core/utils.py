@@ -1,8 +1,8 @@
 from auditops.core.models import Test, Audit
-import boto3, os, shutil, json
-import logging
+import boto3, os, shutil, json, logging
 
 logger = logging.getLogger(__name__)
+
 
 def delete_evidence_folder(path):
     logger.info(f"Deleting evidence: {path}.")
@@ -119,4 +119,4 @@ def run_audit(collector, tester, context):
         json.dump(audit.to_dict(), f, indent=4, default=str)
 
     # Save PDF report
-    context.report_builder.build(audit, str(context.pdf_report_path))
+    context.report_builder.build(audit, str(context.pdf_report_path), summary_mode=context.summary_mode)

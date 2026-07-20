@@ -3,20 +3,60 @@ from typing import List, Optional, Dict, Any
 from datetime import date
 from datetime import datetime, timezone
 from pathlib import Path
+from .reporting.pdf_report_builder import PDFReportBuilder
+from .evidence.reader import EvidenceReader
+from .evidence.writer import EvidenceWriter
+from .exclusions import ExclusionManager
 
 
 @dataclass
-class AuditContext:
-    provider: str
-    report_name: str
-    evidence_folder: str
+class AuditHelpers:
     reader: EvidenceReader
     writer: EvidenceWriter
-    report_builder: ReportBuilder
-    auditor_name: str | "AJ Dehn"
-    delete_cached_evidence: bool | False
-    config: Any | None = None    
-    exclusions: ExclusionManager | None = None
+    exclusions: ExclusionManager
+    report_builder: PDFReportBuilder
+
+    @classmethod
+    def create(cls, exclusions_file: str | None = None):
+        return cls(
+            reader=EvidenceReader(),
+            writer=EvidenceWriter(),
+            exclusions=(
+                ExclusionManager.load_exclusions(exclusions_file)
+                if exclusions_file
+                else ExclusionManager()
+            ),
+            report_builder=PDFReportBuilder(),
+        )
+
+
+@dataclass(slots=True)
+class AuditContext:
+    provider: str
+    helpers: AuditHelpers
+
+    config: object | None = None
+    evidence_folder: str = ""
+    report_name: str = ""
+    auditor_name: str = "AJ Dehn"
+    delete_cached_evidence: bool = True
+    summary_mode: bool = False
+
+    @property
+    def reader(self):
+        return self.helpers.reader
+
+    @property
+    def writer(self):
+        return self.helpers.writer
+
+    @property
+    def exclusions(self):
+        return self.helpers.exclusions
+
+    @property
+    def report_builder(self):
+        return self.helpers.report_builder
 
     @property
     def report_dir(self) -> Path:
@@ -64,9 +104,7 @@ class Audit:
     def to_dict(self):
         return {
             "metadata": {
-                "scope": {
-                    "IMPORTANT_SCOPING_INFO": "COMING SOON"
-                },
+                "scope": self.scope,
                 "report_date": datetime.now(timezone.utc).strftime('%Y-%m-%d')
             },
             "test_results": [t.to_dict() for t in self.test_results]

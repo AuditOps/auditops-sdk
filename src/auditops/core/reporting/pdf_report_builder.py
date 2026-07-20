@@ -7,6 +7,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from .styles import (LABEL_STYLE, VALUE_STYLE, LIST_STYLE, CENTER_STYLE, PASS_COLOR,
     FAIL_COLOR, TABLE_STYLE_HIGHLIGHT_ROW, TABLE_STYLE_HIGHLIGHT_COLUMN)
 
+
 class PDFReportBuilder:
     def __init__(self):
         self.styles = getSampleStyleSheet()
@@ -15,9 +16,9 @@ class PDFReportBuilder:
     def _format_pct(self, match_count, test_count):
         # Formats percentage with one decimal point (ex. 99.9%)
         if test_count == 0:
-            return f"{match_count} (0%)"
+            return f"0%"
         pct = (match_count / test_count) * 100
-        return f"{match_count} ({pct:.1f}%)"
+        return f"{pct:.1f}%"
 
     def _label(self, text, style=LABEL_STYLE):
         return Paragraph(text, style)
@@ -47,7 +48,8 @@ class PDFReportBuilder:
         text = "Pass" if passed else "Fail"
         return self._value(f"<font color='{color}'>{text}</font>", style=style)
 
-    def build(self, audit, filename):
+
+    def build(self, audit, filename, summary_mode=False):
         """Generate a PDF audit report."""
 
         # Sort test results based on risk-rating.
@@ -104,7 +106,7 @@ class PDFReportBuilder:
                 elements.append(Spacer(1, 12))
                 if test.table_headers:
                     # Build sample table
-                    elements.append(self._render_test_sample_table(test))
+                    elements.append(self._render_test_sample_table(test, summary_mode=summary_mode))
                     elements.append(PageBreak())
 
         doc.build(elements)
@@ -117,8 +119,8 @@ class PDFReportBuilder:
             ("Prepared By", audit.auditor_name),
             ("Report Date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
             ("Tests", test_count),
-            ("Passed", self._format_pct(passed, test_count)),
-            ("Failed", self._format_pct(failed, test_count)),
+            ("Passed", f"{passed} ({self._format_pct(passed, test_count)})"),
+            ("Failed", f"{failed} ({self._format_pct(failed, test_count)})"),
             ("Scope", audit.get_scope_formatted()),
         ]
         metadata = [
@@ -144,6 +146,8 @@ class PDFReportBuilder:
                 f'{test.test_description}'
             )
 
+            """
+            TODO: Consider removing full summary (population, passing, failing, excluded from passing tests.)
             if test.num_exclusions > 0:
                 # Add transparency for the number of exclusions.
                 if not test.comments:
@@ -157,12 +161,13 @@ class PDFReportBuilder:
                         test.comments = test.comments + f"<br/><br/><b>NOTE:</b> {test.num_exclusions} samples were excluded by management."
                     else:
                         test.comments = test.comments + f"<br/><br/><b>NOTE:</b> {test.num_exclusions} sample was excluded by management."
-            
+            """
             new_row = [
                 self._value(test_desc_str),
                 self._value("Excluded") if test.is_excluded else self._status_paragraph(test.is_passing),
                 self._value(test.get_risk_rating_str()),
-                self._value(test.comments)
+                # self._value(test.comments)
+                self._value(self._create_test_summary_formatted(test))
             ]
             rows.append(new_row)
         
@@ -199,7 +204,7 @@ class PDFReportBuilder:
         return self._table(table_data, col_widths=[table_width * 0.25, table_width * 0.75],
          style=TABLE_STYLE_HIGHLIGHT_COLUMN)
 
-    def _render_test_sample_table(self, test):
+    def _render_test_sample_table(self, test, summary_mode=False):
         # Sort failing samples to top of the table.
         samples = sorted(test.samples, key=lambda s: (s.is_passing, s.is_excluded))
         #samples = sorted(test.samples, key=lambda s: (s.is_passing))
@@ -210,7 +215,10 @@ class PDFReportBuilder:
         for i, sample in enumerate(samples, 1):
             row = []
             for val in sample.sample_id.values():
-                row.append(self._value(val))
+                if summary_mode:
+                    row.append(self._value(f"Sample: {i}"))
+                else:
+                    row.append(self._value(val))
 
             # Document Result
             if sample.is_excluded:
@@ -228,3 +236,28 @@ class PDFReportBuilder:
         col_width = table_width / len(table_data[0]) # divide evenly across columns
         col_widths = [col_width] * len(table_data[0])
         return self._table(table_data, col_widths=col_widths, style=TABLE_STYLE_HIGHLIGHT_ROW)
+
+
+    
+    def _create_test_summary_formatted(self, test):
+        test_summary = ""
+
+        """
+        if test.is_passing:
+            test_summary = "No Exceptions Noted."
+        else:
+            test_summary = "Exceptions Noted."
+        """
+
+        if test.total_population > 0:
+            test_summary += f"- Population: {test.total_population}"
+            passing_pct = self._format_pct(test.num_passing, test.total_population)
+            test_summary += f"<br/>- Passing: {test.num_passing} ({passing_pct})"
+            if test.num_findings > 0:
+                failing_pct = self._format_pct(test.num_findings, test.total_population)
+                test_summary += f"<br/>- Failing: {test.num_findings} ({failing_pct})"
+            if test.num_exclusions > 0:
+                exclusion_pct = self._format_pct(test.num_exclusions, test.total_population)
+                test_summary += f"<br/>- Excluded: {test.num_exclusions} ({exclusion_pct})"
+        
+        return test_summary

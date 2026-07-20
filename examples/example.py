@@ -1,72 +1,65 @@
 import boto3, shutil, json, os
-from auditops.core import (EvidenceReader, EvidenceWriter, Uploader, Audit, PDFReportBuilder, ExclusionManager)
+from auditops.core import (EvidenceReader, EvidenceWriter, Uploader, PDFReportBuilder, ExclusionManager)
+from auditops.core.models import AuditContext, AuditHelpers
 from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
 from auditops.providers.github import GitHubCollector, GitHubTester
-#from auditops.providers.google_workspace import GoogleWorkspaceCollector
+from auditops.core.utils import aws_create_session, run_audit
 from dotenv import load_dotenv
 
-def run_audit(collector, tester, report_name, writer, report_builder, tool_name=None):
-    """Collect evidence, execute tests, and save the audit report."""
-    collector.collect(writer)
-
-    audit = Audit(title=tool_name)
-    audit.test_results = tester.run_tests()
-
-    os.makedirs("tmp/reports", exist_ok=True)
-    with open(f"tmp/reports/{report_name}.json", "w") as f:
-        json.dump(audit.to_dict(), f, indent=4, default=str)
-    # Build pdf report
-    report_builder.build(audit,f"tmp/reports/{report_name}.pdf")
 
 def main():
     load_dotenv()
-    writer = EvidenceWriter()
-    reader = EvidenceReader()
-    exclusions = ExclusionManager.load_exclusions("exclusions.json")
-    
-    report_builder = PDFReportBuilder()
 
-    # Run AWS Audit
-    session = boto3.Session()
-    aws_config = AWSConfig(in_scope_regions=['us-east-1', 'us-east-2'])
-    # Update default settings
-    aws_config.update(iam_minimum_password_length=12)
-    """
-    aws_audit = Audit(
-        config=aws_config, reader=reader, writer=writer,
-        exclusions=audit_exclusions
-    )
-    """
-    """
+    helpers = AuditHelpers.create("exclusions.json")
+
+    # Audit AWS Account (US Prod)
+    us_prod_session = aws_create_session(role_arn=os.getenv("aws_us_prod_role_arn"), external_id=os.getenv("aws_us_prod_external_id"))
+    us_prod_aws_config = AWSConfig(in_scope_regions=['us-east-1', 'us-east-2'])
+    
+    aws_us_prod_context = AuditContext(provider="aws", helpers=helpers, config=us_prod_aws_config, evidence_folder="aws/us_prod", 
+        report_name="aws_us_prod", auditor_name="AJ Dehn", delete_cached_evidence = False, summary_mode = True,)
+
+    # Decrease minimum password length requirement from 14 -> 12 characters
+    us_prod_aws_config.update(iam_minimum_password_length=12)
+
     run_audit(
-        AWSCollector(session, aws_config),
-        AWSTester(reader, aws_config, exclusions),
-        "aws_audit_report",
-        writer,
-        report_builder,
-        tool_name = "AWS"
+        AWSCollector(us_prod_session, aws_us_prod_context),
+        AWSTester(aws_us_prod_context),
+        aws_us_prod_context
     )
-    """
+
+    # Audit AWS Account (EU Prod)
+    eu_prod_session = aws_create_session(role_arn=os.getenv("aws_eu_prod_role_arn"), external_id=os.getenv("aws_eu_prod_external_id"))
+    eu_prod_aws_config = AWSConfig(in_scope_regions=['eu-west-1'])
+    aws_eu_prod_context = AuditContext(provider="aws", helpers=helpers, config=us_prod_aws_config, evidence_folder="aws/eu_prod", 
+        report_name="aws_eu_prod", auditor_name="AJ Dehn",)
+
+    # Decrease minimum password length requirements from 14 -> 12 characters
+    eu_prod_aws_config.update(iam_minimum_password_length=12)
+
+    run_audit(
+        AWSCollector(eu_prod_session, aws_eu_prod_context),
+        AWSTester(aws_eu_prod_context),
+        aws_eu_prod_context
+    )
+
+    github_context = AuditContext(provider="github", helpers=helpers, evidence_folder="github",
+        report_name="github_audit_report", auditor_name="AJ Dehn", delete_cached_evidence = False,
+    )
 
     # Run GitHub Audit
     run_audit(
-        GitHubCollector(os.getenv("github_token"), os.getenv("github_org_name")),
-        GitHubTester(reader, os.getenv("github_org_name"), exclusions),
-        "github_audit_report", writer, report_builder, tool_name="GitHub"
+        GitHubCollector(os.getenv("github_token"), os.getenv("github_org_name"), github_context),
+        GitHubTester(os.getenv("github_org_name"), github_context),
+        github_context
     )
-
-    """
-    # Run Google Workspace Audit
-    gw_admin_email = os.getenv("google_workspace_admin_email")
-    GoogleWorkspaceCollector("credentials/google_credentials.json", gw_admin_email).collect(writer)
-    """
 
     # Create zip file
     shutil.make_archive("audit_package", "zip", "tmp")
 
     # Upload evidence to audit portal
-    uploader = Uploader("https://upload.auditops.io")
-    #uploader.upload("audit_package.zip", "john.doe@client.com", "jane.doe@auditor.com")
+    # uploader = Uploader("https://upload.auditops.io")
+    # uploader.upload("audit_package.zip", "john.doe@client.com", "jane.doe@auditor.com")
 
 if __name__ == "__main__":
     main()
