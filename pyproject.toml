@@ -8,18 +8,39 @@ version = "0.1.0"
 description = "Open-source evidence collection framework."
 readme = "README.md"
 requires-python = ">=3.11"
+license = "MIT"
+
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Information Technology",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+]
 
 dependencies = [
-    "boto3",
-    "requests"
+    "boto3>=1.40",
+    "reportlab>=4.0",
+    "requests>=2.34"
 ]
 
 authors = [
     {name = "AJ Dehn"}
 ]
 
+[project.urls]
+Repository = "https://github.com/AuditOps/auditops-sdk"
+Issues = "https://github.com/AuditOps/auditops-sdk/issues"
+
 [tool.setuptools]
 package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
+exclude = ["tests*", "docs*", "env*", "venv*"]
+
+[tool.setuptools.exclude-package-data]
+"*" = [".env", "*.pyc", "__pycache__", "config.json"]
