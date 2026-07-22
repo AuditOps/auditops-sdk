@@ -45,7 +45,6 @@ def check_ebs_volume_tags(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="EBS volume(s) are missing required tags or have empty values."
     )
 

@@ -57,11 +57,8 @@ def check_rds_deletion_protection(tester):
 
             test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="RDS instance(s) do not have deletion protection enabled."    
     )
 

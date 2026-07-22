@@ -37,8 +37,7 @@ def check_rds_auto_minor_version_upgrade(tester):
             test.samples.append(sample)
 
     test.evaluate_samples(
-        tester.exclusions, 
-        tester.provider,
+        tester.exclusions,
         failure_message = "RDS instance(s) do not have automatic minor version upgrades enabled."
     )
 

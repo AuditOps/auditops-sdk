@@ -38,7 +38,6 @@ def check_rds_encryption(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="RDS instance(s) are not encrypted."    
     )
 

@@ -38,7 +38,6 @@ def check_ebs_volume_encryption(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="EBS volume(s) are not encrypted."
     )
 

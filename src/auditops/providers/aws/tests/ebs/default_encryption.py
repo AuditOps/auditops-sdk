@@ -33,7 +33,6 @@ def check_ebs_default_encryption(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="region(s) do not have EBS default encryption enabled."
     )
 

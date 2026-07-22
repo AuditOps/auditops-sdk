@@ -39,7 +39,6 @@ def check_rds_public_access(tester):
 
         test.evaluate_samples(
             tester.exclusions,
-            tester.provider,
             failure_message="RDS instance(s) are publicly accessible."    
         )
 

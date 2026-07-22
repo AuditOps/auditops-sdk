@@ -1,5 +1,4 @@
 from datetime import datetime, timezone
-
 from auditops.core.models import Sample
 from auditops.core.utils import create_test
 
@@ -53,7 +52,6 @@ def check_iam_user_mfa(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="IAM user(s) have an active console password but do not have MFA enabled."
     )
 

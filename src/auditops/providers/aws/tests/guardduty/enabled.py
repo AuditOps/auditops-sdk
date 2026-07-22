@@ -53,8 +53,7 @@ def check_guardduty_enabled(tester):
         test.samples.append(sample)
 
     test.evaluate_samples(
-        tester.exclusions, 
-        tester.provider,
+        tester.exclusions,
         failure_message="region(s) do not have GuardDuty enabled."
     )
 

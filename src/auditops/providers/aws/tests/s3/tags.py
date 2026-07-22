@@ -51,9 +51,9 @@ def check_s3_tags(tester):
 
         test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider)
-
-    if not test.is_passing:
-        test.set_failure_summary("S3 bucket(s) are missing required tags or have empty values.")
+    test.evaluate_samples(
+        tester.exclusions, 
+        failure_message="S3 bucket(s) are missing required tags or have empty values."
+    )
 
     return test

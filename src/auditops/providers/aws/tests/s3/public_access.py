@@ -42,12 +42,9 @@ def check_s3_public_access(tester):
             sample.comments = "One or more public access settings are disabled."
 
         test.samples.append(sample)
-
-    test.evaluate_samples(tester.exclusions, tester.provider)
     
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="S3 bucket(s) are not configured to block public access."
     )
 

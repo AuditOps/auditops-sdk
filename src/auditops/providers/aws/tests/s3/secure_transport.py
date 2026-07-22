@@ -64,7 +64,6 @@ def check_s3_secure_transport(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="S3 bucket(s) do not enforce secure transport (HTTPS)."
     )
 

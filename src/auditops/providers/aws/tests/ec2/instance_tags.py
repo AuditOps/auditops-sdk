@@ -45,7 +45,6 @@ def check_ec2_instance_tags(tester):
 
     test.evaluate_samples(
         tester.exclusions,
-        tester.provider,
         failure_message="EC2 instance(s) are missing required tags or have empty values."
     )
 
