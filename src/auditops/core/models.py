@@ -13,7 +13,6 @@ from .exclusions import ExclusionManager
 class AuditHelpers:
     reader: EvidenceReader
     writer: EvidenceWriter
-    exclusions: ExclusionManager
     report_builder: PDFReportBuilder
 
     @classmethod
@@ -21,71 +20,38 @@ class AuditHelpers:
         return cls(
             reader=EvidenceReader(),
             writer=EvidenceWriter(),
-            exclusions=(
-                ExclusionManager.load_exclusions(exclusions_file)
-                if exclusions_file
-                else ExclusionManager()
-            ),
             report_builder=PDFReportBuilder(),
         )
 
-
 @dataclass(slots=True)
-class AuditContext:
-    provider: str
-    helpers: AuditHelpers
-
-    config: object | None = None
-    evidence_folder: str = ""
-    report_name: str = ""
-    auditor_name: str = "AJ Dehn"
-    delete_cached_evidence: bool = True
-    summary_mode: bool = False
-
-    @property
-    def reader(self):
-        return self.helpers.reader
-
-    @property
-    def writer(self):
-        return self.helpers.writer
-
-    @property
-    def exclusions(self):
-        return self.helpers.exclusions
-
-    @property
-    def report_builder(self):
-        return self.helpers.report_builder
-
-    @property
-    def report_dir(self) -> Path:
-        path = Path(self.reader.root_dir) / "reports"
-        if self.evidence_folder:
-            path /= self.evidence_folder
-        return path
-
-    @property
-    def json_report_path(self) -> Path:
-        return self.report_dir / f"{self.report_name}.json"
-
-    @property
-    def pdf_report_path(self) -> Path:
-        return self.report_dir / f"{self.report_name}.pdf"
-
-
 class Audit:
-    def __init__(self, title=None, auditor_name="AuditOps"):
-        self.test_results = None
-        self.title = title
-        self.auditor_name = auditor_name
-        self.scope = None
+    # Required fields
+    helpers: AuditHelpers
+    title: str
 
-    def update_scope(self, updated_scope):
-        self.scope = updated_scope
+    # Audit configuration
+    config: object | None = None            # Defines key variables for audit testing (ex. minimum password length)
+    exclusions: ExclusionManager = field(default_factory=ExclusionManager)
 
-    def get_scope(self):
-        return self.scope
+    # Report metadata
+    auditor_name: str = "AuditOps"
+    report_name: str | None = None          # Defines the file name of the PDF and JSON report (ex. "aws_us_prod").
+    summary_mode: bool = False              # Anonymizes sample data when set to true.
+    report_date: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    )
+
+    # Execution
+    evidence_folder: str | None = None      # Subfolder location for audit evidence and reports.
+    delete_cached_evidence: bool = True     # Deletes previously gathered evidence (set to "False" when troubleshooting)
+
+    # Results
+    scope: list[str] = field(default_factory=list)
+    test_results: list[Test] = field(default_factory=list)
+
+
+    def __post_init__(self):
+        self.report_name = self.report_name or self.title
 
     def get_scope_formatted(self):
         html = []
@@ -105,10 +71,37 @@ class Audit:
         return {
             "metadata": {
                 "scope": self.scope,
-                "report_date": datetime.now(timezone.utc).strftime('%Y-%m-%d')
+                "report_date": self.report_date
             },
             "test_results": [t.to_dict() for t in self.test_results]
         }
+    
+    @property
+    def reader(self):
+        return self.helpers.reader
+
+    @property
+    def writer(self):
+        return self.helpers.writer
+
+    @property
+    def report_builder(self):
+        return self.helpers.report_builder
+
+    @property
+    def report_dir(self) -> Path:
+        path = Path(self.reader.root_dir) / "reports"
+        if self.evidence_folder:
+            path /= self.evidence_folder
+        return path
+
+    @property
+    def json_report_path(self) -> Path:
+        return self.report_dir / f"{self.report_name}.json"
+
+    @property
+    def pdf_report_path(self) -> Path:
+        return self.report_dir / f"{self.report_name}.pdf"
 
 
 # NOTE: Samples default to "is_passing: False" until logic determines sample passes the testing criteria.
@@ -195,8 +188,7 @@ class Test:
     def add_sample(self, sample):
         self.samples.append(sample)
 
-
-    def evaluate_samples(self, exclusions=None, provider=None, test_id = None, failure_message: str = None):
+    def evaluate_samples(self, exclusions=None, test_id = None, failure_message: str = None):
         self.total_population = len(self.samples)
         self.num_exclusions = 0
         self.num_findings = 0
@@ -204,7 +196,7 @@ class Test:
 
         for sample in self.samples:
             if exclusions:
-                exclusion = exclusions.get_sample_exclusion(provider, self.test_id, sample.sample_id)
+                exclusion = exclusions.get_sample_exclusion(self.test_id, sample.sample_id)
                 if exclusion:
                     sample.is_excluded = True
                     sample.comments = exclusion.rationale

@@ -6,7 +6,10 @@ from reportlab.platypus import (
 from reportlab.lib.styles import getSampleStyleSheet
 from .styles import (LABEL_STYLE, VALUE_STYLE, LIST_STYLE, CENTER_STYLE, PASS_COLOR,
     FAIL_COLOR, TABLE_STYLE_HIGHLIGHT_ROW, TABLE_STYLE_HIGHLIGHT_COLUMN)
+from importlib.resources import files
+import logging
 
+logger = logging.getLogger(__name__)
 
 class PDFReportBuilder:
     def __init__(self):
@@ -59,16 +62,23 @@ class PDFReportBuilder:
             filename,
             pagesize= LETTER,
             title= audit.title,
-            author= "AuditOps",
+            author= audit.auditor_name,
             subject= f"Audit report findings and testing instruction for reperformance.",
         )
 
         elements = []
 
         # Add logo
-        logo_path = str(Path(__file__).resolve().parent / "assets" / "logo.png")
-        elements.append(self._logo(logo_path))
-        elements.append(Spacer(1, 18))
+        try:
+            logo_path = files("auditops.core.reporting.assets").joinpath("logo.png")
+
+            if logo_path.is_file():
+                elements.append(self._logo(logo_path))
+                elements.append(Spacer(1, 18))
+        except (ModuleNotFoundError, FileNotFoundError):
+            # Logo is optional
+            logger.warning(f"Unable to add AuditOps logo.")
+            pass
 
         # Add title
         elements.append(self._value(f"{audit.title}", style=self.styles["Title"]))
@@ -146,27 +156,10 @@ class PDFReportBuilder:
                 f'{test.test_description}'
             )
 
-            """
-            TODO: Consider removing full summary (population, passing, failing, excluded from passing tests.)
-            if test.num_exclusions > 0:
-                # Add transparency for the number of exclusions.
-                if not test.comments:
-                    # No comments have been populated. Add note for transparency.
-                    if test.num_exclusions > 1:
-                        test.comments = f"<b>NOTE:</b> {test.num_exclusions} samples were excluded by management."
-                    else:
-                        test.comments = f"<b>NOTE:</b> {test.num_exclusions} sample was excluded by management."
-                else:
-                    if test.num_exclusions > 1:
-                        test.comments = test.comments + f"<br/><br/><b>NOTE:</b> {test.num_exclusions} samples were excluded by management."
-                    else:
-                        test.comments = test.comments + f"<br/><br/><b>NOTE:</b> {test.num_exclusions} sample was excluded by management."
-            """
             new_row = [
                 self._value(test_desc_str),
                 self._value("Excluded") if test.is_excluded else self._status_paragraph(test.is_passing),
                 self._value(test.get_risk_rating_str()),
-                # self._value(test.comments)
                 self._value(self._create_test_summary_formatted(test))
             ]
             rows.append(new_row)
@@ -241,13 +234,6 @@ class PDFReportBuilder:
     
     def _create_test_summary_formatted(self, test):
         test_summary = ""
-
-        """
-        if test.is_passing:
-            test_summary = "No Exceptions Noted."
-        else:
-            test_summary = "Exceptions Noted."
-        """
 
         if test.total_population > 0:
             test_summary += f"- Population: {test.total_population}"
