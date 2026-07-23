@@ -2,7 +2,7 @@
 /examples/tmp
 /examples/credentials
 /examples/audit_package/
-/examples/exclusions.json
+/examples/*_exclusions.json
 dist/
 build/
 *.egg-info/

@@ -18,13 +18,11 @@ from .tests.lmbda import (check_lambda_tags)
 
 
 class AWSTester:
-    def __init__(self, context):
-        self.report_title = "AWS Audit Report"          # Used when building the PDF.
-        self.provider = context.provider                # Used when searching for exclusions.
-        self.reader = context.reader
-        self.config = context.config
-        self.exclusions = context.exclusions
-        self.evidence_folder = context.evidence_folder
+    def __init__(self, audit):
+        self.reader = audit.reader
+        self.config = audit.config
+        self.exclusions = audit.exclusions
+        self.evidence_folder = audit.evidence_folder
 
 
     AWS_TESTS = [

@@ -6,21 +6,22 @@ from .collectors import (collect_account_identity, collect_iam_evidence,
 from auditops.core.utils import delete_evidence_folder
 from pathlib import Path
 import logging
+
 logger = logging.getLogger(__name__)
 
 
 class AWSCollector:
-    def __init__(self, session, context):
+    def __init__(self, session, audit):
         self.session = session
-        self.evidence_folder = context.evidence_folder
-        self.config = context.config
-        self.writer = context.writer
-        self.reader = context.reader
-        self.delete_cached_evidence = context.delete_cached_evidence
+        self.evidence_folder = audit.evidence_folder
+        self.config = audit.config
+        self.writer = audit.writer
+        self.reader = audit.reader
+        self.delete_cached_evidence = audit.delete_cached_evidence
 
 
     def gather_evidence(self):
-
+        # TODO: Move delete folder to utils.
         evidence_path = self.reader.evidence_dir / self.evidence_folder
 
         if self.delete_cached_evidence:
