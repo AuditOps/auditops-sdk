@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "auditops"
-version = "0.1.0"
+version = "0.1.4"
 description = "Open-source evidence collection framework."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -41,6 +41,9 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 exclude = ["tests*", "docs*", "env*", "venv*"]
+
+[tool.setuptools.package-data]
+"auditops.core.reporting" = ["assets/*.png"]
 
 [tool.setuptools.exclude-package-data]
 "*" = [".env", "*.pyc", "__pycache__", "config.json"]
