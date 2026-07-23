@@ -24,6 +24,5 @@ def main():
         GitHubTester(os.getenv("github_org_name"), audit)
     )
 
-
 if __name__ == "__main__":
     main()
