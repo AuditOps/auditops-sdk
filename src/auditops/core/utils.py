@@ -23,7 +23,7 @@ def fail_test(test, message):
 def create_test(tester, metadata):
     test = Test(**metadata)
 
-    exclusion = tester.exclusions.get_test_exclusion(tester.provider, test.test_id)
+    exclusion = tester.exclusions.get_test_exclusion(test.test_id)
     if exclusion:
         test.is_excluded = True
         test.comments = exclusion.rationale
@@ -103,20 +103,20 @@ def aws_assume_role(role_arn, external_id, session_name):
 
     return response["Credentials"]
 
-def run_audit(collector, tester, context):
+def run_audit(audit, collector, tester):
     """Collect evidence, execute tests, and save the audit report."""
+
     collector.gather_evidence()
 
-    audit = Audit(title=tester.report_title, auditor_name=context.auditor_name)
     audit.test_results = tester.run_tests()
 
-    audit.update_scope(tester.get_scope())
+    audit.scope = tester.get_scope()
 
-    context.report_dir.mkdir(parents=True, exist_ok=True)
+    audit.report_dir.mkdir(parents=True, exist_ok=True)
 
     # Save JSON report
-    with context.json_report_path.open("w", encoding="utf-8") as f:
+    with audit.json_report_path.open("w", encoding="utf-8") as f:
         json.dump(audit.to_dict(), f, indent=4, default=str)
 
     # Save PDF report
-    context.report_builder.build(audit, str(context.pdf_report_path), summary_mode=context.summary_mode)
+    audit.report_builder.build(audit, str(audit.pdf_report_path), summary_mode=audit.summary_mode)
