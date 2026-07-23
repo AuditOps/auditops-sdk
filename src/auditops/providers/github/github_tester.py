@@ -5,13 +5,11 @@ from .tests.repos import run_repo_tests
 
 
 class GitHubTester:
-    def __init__(self, github_org_name: str, context):
-        self.provider = "github"
-        self.report_title = "GitHub Audit Report"
-        self.reader = context.reader
+    def __init__(self, github_org_name: str, audit):
+        self.reader = audit.reader
         self.github_org_name = github_org_name
-        self.exclusions = context.exclusions or ExclusionManager()
-        self.evidence_folder = context.evidence_folder
+        self.exclusions = audit.exclusions
+        self.evidence_folder = audit.evidence_folder
 
 
     def get_scope(self):

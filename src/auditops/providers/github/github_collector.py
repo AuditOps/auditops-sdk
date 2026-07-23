@@ -1,14 +1,15 @@
 import requests
 from pathlib import Path
+from auditops.core.utils import delete_evidence_folder
 
 class GitHubCollector:
-    def __init__(self, token, org_name, context):
+    def __init__(self, token, org_name, audit):
         self.token = token
         self.org_name = org_name
-        self.evidence_folder = context.evidence_folder
-        self.writer = context.writer
-        self.reader = context.reader
-        self.delete_cached_evidence = context.delete_cached_evidence
+        self.evidence_folder = audit.evidence_folder
+        self.writer = audit.writer
+        self.reader = audit.reader
+        self.delete_cached_evidence = audit.delete_cached_evidence
 
 
     def _call_api(self, relative_path, github_url, params=None, paginate=False, handle_404=False):
@@ -43,10 +44,13 @@ class GitHubCollector:
             self.writer.save_json(f"{self.evidence_folder}/{relative_path}", res.json())
 
     def gather_evidence(self):
+        # TODO: Move delete folder to utils.
+        evidence_path = self.reader.evidence_dir / self.evidence_folder
+
         if self.delete_cached_evidence:
-            delete_evidence_folder(Path(self.reader.evidence_dir / self.evidence_folder))
-        else:
-            print(f"Using cached evidence in: {Path(self.reader.evidence_dir / self.evidence_folder)}")
+            delete_evidence_folder(evidence_path)
+        elif evidence_path.exists():
+            logger.info(f"Using cached evidence in: {evidence_path}")
         
         self._collect_org_settings()
         self._collect_repo_info()

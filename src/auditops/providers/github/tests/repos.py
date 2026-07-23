@@ -32,6 +32,6 @@ def repository_visibility(tester):
             sample.result = True
         test.samples.append(sample)
 
-    test.evaluate_samples(tester.exclusions, tester.provider, failure_message="repositories were not set to private.")
+    test.evaluate_samples(tester.exclusions, failure_message="repositories were not set to private.")
 
     return test
