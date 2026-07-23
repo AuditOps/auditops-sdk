@@ -2,25 +2,34 @@ import boto3, shutil, json, os
 from auditops.core import (EvidenceReader, EvidenceWriter, Uploader, PDFReportBuilder, ExclusionManager)
 from auditops.core.models import AuditContext, AuditHelpers
 from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
-from auditops.providers.github import GitHubCollector, GitHubTester
 from auditops.core.utils import aws_create_session, run_audit
 from dotenv import load_dotenv
+
+"""
+    Author: AJ Dehn (Creator of AuditOps)
+
+    Example of a more complex AWS environment.
+    - Scans multiple AWS accounts (Ex. US prod & EU prod)
+    - Uses IAM roles (assumed through local credentials)
+    - Updates configuration (US Prod: Changes minimum password length)
+    - Adds exclusions (US Prod: Adds one test exclusion and one sample exclusion)
+"""
 
 
 def main():
     load_dotenv()
 
-    helpers = AuditHelpers.create("exclusions.json")
+    helpers = AuditHelpers.create()
 
-    # Audit AWS Account (US Prod)
+    # Create session using an IAM role.
     us_prod_session = aws_create_session(role_arn=os.getenv("aws_us_prod_role_arn"), external_id=os.getenv("aws_us_prod_external_id"))
+
+    # Create AWS configuration and decrease min. password length from 14 -> 12 characters
     us_prod_aws_config = AWSConfig(in_scope_regions=['us-east-1', 'us-east-2'])
+    us_prod_aws_config.update(iam_minimum_password_length=12)
     
     aws_us_prod_context = AuditContext(provider="aws", helpers=helpers, config=us_prod_aws_config, evidence_folder="aws/us_prod", 
         report_name="aws_us_prod", auditor_name="AJ Dehn", delete_cached_evidence = False, summary_mode = True,)
-
-    # Decrease minimum password length requirement from 14 -> 12 characters
-    us_prod_aws_config.update(iam_minimum_password_length=12)
 
     run_audit(
         AWSCollector(us_prod_session, aws_us_prod_context),
