@@ -1,5 +1,5 @@
 # Purpose
-Gather evidence, perform testing, and create audit reports in ~25 lines of code per tool.
+Gather evidence, perform testing, and create audit reports in ~25 lines of code per provider (AWS, GitHub, etc).
 
 ## Use cases:
 - Vendor Due Diligence: Evaluate your vendors actual security posture (transparent and timely reports allows you to truly evaluate risk).
