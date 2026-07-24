@@ -1,6 +1,7 @@
 /examples/audit_package.zip
 /examples/tmp
 /examples/*/*/tmp/
+/examples/*/tmp/
 /examples/credentials
 /examples/audit_package/
 /examples/*_exclusions.json
