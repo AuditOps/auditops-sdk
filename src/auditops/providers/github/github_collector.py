@@ -12,8 +12,14 @@ class GitHubCollector:
         self.delete_cached_evidence = audit.delete_cached_evidence
 
 
-    def _call_api(self, relative_path, github_url, params=None, paginate=False, handle_404=False):
-        # Return cached evidence if it exists
+    def _call_api(self, evidence_path, github_url, params=None, paginate=False, handle_404=False):
+        # Check if evidence already exists
+        evidence = self.reader.read_json(f"{self.evidence_folder}/{evidence_path}", optional=True)
+
+        if evidence is not None:
+            # Return cached evidence. 
+            return evidence
+
         headers = {"Authorization": f"token {self.token}"}
 
         if paginate:
@@ -34,33 +40,26 @@ class GitHubCollector:
 
                 all_data.extend(page_data)
                 page += 1
-            self.writer.save_json(f"{self.evidence_folder}/{relative_path}", all_data)
+            self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", all_data)
 
         else:
             res = requests.get(github_url, headers=headers, params=params)
             if handle_404 and res.status_code == 404:
                 return None
             res.raise_for_status()
-            self.writer.save_json(f"{self.evidence_folder}/{relative_path}", res.json())
+            self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", res.json())
 
     def gather_evidence(self):
-        # TODO: Move delete folder to utils.
-        evidence_path = self.reader.evidence_dir / self.evidence_folder
-
-        if self.delete_cached_evidence:
-            delete_evidence_folder(evidence_path)
-        elif evidence_path.exists():
-            logger.info(f"Using cached evidence in: {evidence_path}")
-        
+        # NOTE: Consider moving this to multiple collector files (similar to AWS) as this gets more complex.
         self._collect_org_settings()
         self._collect_repo_info()
 
     def _collect_org_settings(self):
-        self._call_api("organization/settings.json",
+        self._call_api("orgs/org_settings.json",
             f"https://api.github.com/orgs/{self.org_name}"
         )
     
     def _collect_repo_info(self):
-        self._call_api("organization/all_repos.json",
+        self._call_api("orgs/repos.json",
             f"https://api.github.com/orgs/{self.org_name}/repos", paginate=True
         )

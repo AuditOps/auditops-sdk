@@ -21,14 +21,6 @@ class AWSCollector:
 
 
     def gather_evidence(self):
-        # TODO: Move delete folder to utils.
-        evidence_path = self.reader.evidence_dir / self.evidence_folder
-
-        if self.delete_cached_evidence:
-            delete_evidence_folder(evidence_path)
-        elif evidence_path.exists():
-            logger.info(f"Using cached evidence in: {evidence_path}")
-
         collect_lambda_evidence(self)
         collect_account_identity(self)
         collect_iam_evidence(self)
