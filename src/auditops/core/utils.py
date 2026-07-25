@@ -5,7 +5,6 @@ logger = logging.getLogger(__name__)
 
 
 def delete_evidence_folder(path):
-    logger.info(f"Deleting evidence: {path}.")
     # Delete underlying folder structure
     try:
         if os.path.exists(path):
@@ -105,6 +104,14 @@ def aws_assume_role(role_arn, external_id, session_name):
 
 def run_audit(audit, collector, tester):
     """Collect evidence, execute tests, and save the audit report."""
+
+    evidence_path = audit.reader.evidence_dir / audit.evidence_folder
+
+    if audit.delete_cached_evidence:
+        logger.info(f"Deleting evidence in: {path}.")
+        delete_evidence_folder(evidence_path)
+    elif evidence_path.exists():
+        logger.info(f"Using cached evidence in: {evidence_path}")
 
     collector.gather_evidence()
 
