@@ -11,6 +11,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class PDFReportBuilder:
     def __init__(self):
         self.styles = getSampleStyleSheet()
@@ -51,13 +52,12 @@ class PDFReportBuilder:
         text = "Pass" if passed else "Fail"
         return self._value(f"<font color='{color}'>{text}</font>", style=style)
 
-
     def build(self, audit, filename, summary_mode=False):
         """Generate a PDF audit report."""
 
         # Sort test results based on risk-rating.
         tests = sorted(audit.test_results, key=lambda t: (t.is_passing, -t.risk_rating))
-
+        elements = []
         doc = SimpleDocTemplate(
             filename,
             pagesize= LETTER,
@@ -65,8 +65,6 @@ class PDFReportBuilder:
             author= audit.auditor_name,
             subject= f"Audit report findings and testing instruction for reperformance.",
         )
-
-        elements = []
 
         # Add logo
         try:
@@ -76,7 +74,7 @@ class PDFReportBuilder:
                 elements.append(self._logo(logo_path))
                 elements.append(Spacer(1, 18))
         except (ModuleNotFoundError, FileNotFoundError):
-            # Logo is optional
+            # Note: Logo is optional.
             logger.warning(f"Unable to add AuditOps logo.")
             pass
 
@@ -229,8 +227,6 @@ class PDFReportBuilder:
         col_width = table_width / len(table_data[0]) # divide evenly across columns
         col_widths = [col_width] * len(table_data[0])
         return self._table(table_data, col_widths=col_widths, style=TABLE_STYLE_HIGHLIGHT_ROW)
-
-
     
     def _create_test_summary_formatted(self, test):
         test_summary = ""

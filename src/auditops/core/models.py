@@ -23,6 +23,7 @@ class AuditHelpers:
             report_builder=PDFReportBuilder(),
         )
 
+
 @dataclass(slots=True)
 class Audit:
     # Required fields
@@ -36,19 +37,18 @@ class Audit:
     # Report metadata
     auditor_name: str = "AuditOps"
     report_name: str | None = None          # Defines the file name of the PDF and JSON report (ex. "aws_us_prod").
-    summary_mode: bool = False              # Anonymizes sample data when set to true.
     report_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).strftime("%Y-%m-%d")
     )
 
     # Execution
+    summary_mode: bool = False              # Anonymizes sample data when set to true.
     evidence_folder: str | None = None      # Subfolder location for audit evidence and reports.
     delete_cached_evidence: bool = True     # Deletes previously gathered evidence (set to "False" when troubleshooting)
 
     # Results
     scope: list[str] = field(default_factory=list)
     test_results: list[Test] = field(default_factory=list)
-
 
     def __post_init__(self):
         self.report_name = self.report_name or self.title
@@ -104,12 +104,11 @@ class Audit:
         return self.report_dir / f"{self.report_name}.pdf"
 
 
-# NOTE: Samples default to "is_passing: False" until logic determines sample passes the testing criteria.
 @dataclass
 class Sample:
     sample_id: Dict[str, Any]
     is_excluded: bool = False
-    is_passing: bool = False
+    is_passing: bool = False        # NOTE: Default is "False" until logic determines the sample passes the testing criteria.
     comments: str = ""
 
     def __str__(self):
@@ -129,7 +128,6 @@ class Sample:
         }
 
 
-# NOTE: Tests default to "is_passing: True" until there is a failing sample or other logic determines the test has failed.
 @dataclass
 class Test:
     test_id: str
@@ -140,6 +138,7 @@ class Test:
     risk_rating: int
     table_headers: Optional[List[str]] = None
     samples: List["Sample"] = field(default_factory=list)
+    # NOTE: Default is "True" until there is a failing sample or other logic determines the test has failed.
     is_passing: bool = True
     is_excluded: bool = False
     comments: str = ""
@@ -156,7 +155,6 @@ class Test:
             f"is_passing: {self.is_passing}\n"
             f"comments: {self.comments}\n"         
         )
-
 
     def to_dict(self):
         result = {
@@ -175,7 +173,6 @@ class Test:
 
         return result
 
-
     def get_risk_rating_str(self):
         if self.risk_rating == 0: return "Informational"
         elif self.risk_rating == 1: return "Low"
@@ -183,7 +180,6 @@ class Test:
         elif self.risk_rating == 3: return "High"
         else:
             raise ValueError(f"Invalid risk rating: {self.risk_rating}. Accepted values are 0 - 3.")
-
 
     def add_sample(self, sample):
         self.samples.append(sample)
@@ -214,7 +210,6 @@ class Test:
 
         if failure_message:
             self.set_failure_summary(failure_message)
-
 
     def set_failure_summary(self, message: str):
         if self.is_passing:

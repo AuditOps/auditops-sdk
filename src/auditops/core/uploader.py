@@ -1,5 +1,6 @@
 import requests
 
+
 class Uploader:
     def __init__(self, upload_url, timeout=30):
         self.upload_url = upload_url

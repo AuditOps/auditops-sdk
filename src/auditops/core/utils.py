@@ -12,12 +12,10 @@ def delete_evidence_folder(path):
     except OSError as e:
         logger.error("Error: %s : %s" % (path, e.strerror))
 
-
 def fail_test(test, message):
     test.is_passing = False
     test.comments = message
     return test
-
 
 def create_test(tester, metadata):
     test = Test(**metadata)
@@ -28,7 +26,6 @@ def create_test(tester, metadata):
         test.comments = exclusion.rationale
 
     return test
-
 
 def evaluate_tags(sample, required_tags, actual_resource_tags):
     """
@@ -63,7 +60,6 @@ def evaluate_tags(sample, required_tags, actual_resource_tags):
         if empty_tags:
             sample.comments += f"Empty tag values: {empty_tags}."
 
-
 def aws_create_session(session_name="auditops-assume-role", role_arn=None, external_id=None):
     # No role provided, use local credentials.
     if not role_arn and not external_id:
@@ -85,7 +81,6 @@ def aws_create_session(session_name="auditops-assume-role", role_arn=None, exter
         aws_session_token=creds["SessionToken"]
     )
 
-
 def aws_assume_role(role_arn, external_id, session_name):
     sts = boto3.client("sts")
     try:
@@ -103,12 +98,12 @@ def aws_assume_role(role_arn, external_id, session_name):
     return response["Credentials"]
 
 def run_audit(audit, collector, tester):
-    """Collect evidence, execute tests, and save the audit report."""
+    """Collect evidence, execute tests, and save the audit reports."""
 
     evidence_path = audit.reader.evidence_dir / audit.evidence_folder
 
     if audit.delete_cached_evidence:
-        logger.info(f"Deleting evidence in: {path}.")
+        logger.info(f"Deleting evidence in: {evidence_path}.")
         delete_evidence_folder(evidence_path)
     elif evidence_path.exists():
         logger.info(f"Using cached evidence in: {evidence_path}")
@@ -116,9 +111,7 @@ def run_audit(audit, collector, tester):
     collector.gather_evidence()
 
     audit.test_results = tester.run_tests()
-
     audit.scope = tester.get_scope()
-
     audit.report_dir.mkdir(parents=True, exist_ok=True)
 
     # Save JSON report

@@ -7,11 +7,11 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s: %(message)s"
 )
 
+
 class EvidenceWriter:
     def __init__(self, root_dir="tmp"):
         self.root_dir = Path(root_dir)
         self.evidence_dir = self.root_dir / "audit_evidence"
-
 
     def save_json(self, relative_path, data):
         if data:

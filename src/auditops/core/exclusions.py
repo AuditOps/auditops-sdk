@@ -5,6 +5,7 @@ from datetime import date
 from pathlib import Path
 import fnmatch
 
+
 @dataclass(slots=True)
 class Exclusion:
     test_id: str

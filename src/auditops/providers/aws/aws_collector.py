@@ -17,8 +17,6 @@ class AWSCollector:
         self.config = audit.config
         self.writer = audit.writer
         self.reader = audit.reader
-        self.delete_cached_evidence = audit.delete_cached_evidence
-
 
     def gather_evidence(self):
         collect_lambda_evidence(self)
@@ -32,7 +30,6 @@ class AWSCollector:
         collect_apigateway_evidence(self)
         collect_wafv2_evidence(self)
         collect_guardduty_evidence(self)
-
 
     def collect(self, evidence_path, client, *, method=None, method_kwargs=None, paginator_params=None,
     ignore_codes=None, warn_codes=None):
@@ -77,7 +74,6 @@ class AWSCollector:
         """
         self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", evidence)
         return evidence
-
 
     def _call_api(self, client, method=None, method_kwargs=None, paginator_params=None,
                 ignore_codes=None, warn_codes=None):

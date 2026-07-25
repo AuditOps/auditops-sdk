@@ -2,6 +2,7 @@ import requests
 from pathlib import Path
 from auditops.core.utils import delete_evidence_folder
 
+
 class GitHubCollector:
     def __init__(self, token, org_name, audit):
         self.token = token
@@ -9,8 +10,6 @@ class GitHubCollector:
         self.evidence_folder = audit.evidence_folder
         self.writer = audit.writer
         self.reader = audit.reader
-        self.delete_cached_evidence = audit.delete_cached_evidence
-
 
     def _call_api(self, evidence_path, github_url, params=None, paginate=False, handle_404=False):
         # Check if evidence already exists

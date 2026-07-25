@@ -2,6 +2,7 @@ from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.platypus import TableStyle
 
+
 # Base styles
 BASE_STYLES = getSampleStyleSheet()
 
