@@ -1,7 +1,7 @@
 from auditops.core.models import Test, Sample
 from auditops.core.exclusions import ExclusionManager
-from .tests.org import run_org_tests
-from .tests.repos import run_repo_tests
+from .tests.orgs import (check_orgs_mfa_settings, check_orgs_members_create_public_resources)
+from .tests.repos import (check_repos_visibility)
 
 
 class GitHubTester:
@@ -11,21 +11,27 @@ class GitHubTester:
         self.exclusions = audit.exclusions
         self.evidence_folder = audit.evidence_folder
 
+    GITHUB_TESTS = [
+        # Organization Settings
+        check_orgs_mfa_settings,
+        check_orgs_members_create_public_resources,
+
+        # Repos
+        check_repos_visibility
+    ]
 
     def get_scope(self):
         return [
             f"Organization Name: {self.github_org_name}"
         ]
 
-
     def read(self, relative_path, optional=False):
         return self.reader.read_json(f"{self.evidence_folder}/{relative_path}", optional=optional)
 
-
     def run_tests(self):
-        tests = []
-
-        tests.extend(run_org_tests(self))
-        tests.extend(run_repo_tests(self))
-
-        return tests
+        all_tests = []
+        
+        for test in self.GITHUB_TESTS:
+            all_tests.append(test(self))
+        
+        return all_tests
