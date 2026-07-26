@@ -19,6 +19,10 @@ def check_orgs_members_create_public_resources(tester):
 
     test = create_test(tester, metadata)
     org_settings = tester.read("orgs/org_settings.json")
+
+    if not org_settings:
+        return fail_test(test, "Missing required evidence: 'orgs/org_settings.json'.")
+
     test.is_passing = (
         not org_settings.get("members_can_create_public_repositories", True)
         and not org_settings.get("members_can_create_public_pages", True)
