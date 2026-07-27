@@ -20,6 +20,10 @@ def fail_test(test, message):
 def create_test(tester, metadata):
     test = Test(**metadata)
 
+    if not tester.exclusions:
+        # Exclusions file was not set. Proceed with test
+        return test
+    
     exclusion = tester.exclusions.get_test_exclusion(test.test_id)
     if exclusion:
         test.is_excluded = True

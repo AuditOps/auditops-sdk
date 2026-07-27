@@ -18,12 +18,12 @@ def check_repos_visibility(tester):
 
     test = create_test(tester, metadata)
 
-    repos = tester.read("orgs/repos.json")               
+    repos = tester.read("orgs/repos.json")
 
     for repo in repos:
         sample = Sample(sample_id={"repo_name": repo["name"]})
         if repo.get("private", True):
-            sample.result = True
+            sample.is_passing = True
         test.samples.append(sample)
 
     test.evaluate_samples(tester.exclusions, failure_message="repositories were not set to private.")

@@ -73,7 +73,7 @@ class Audit:
                 "scope": self.scope,
                 "report_date": self.report_date
             },
-            "test_results": [t.to_dict() for t in self.test_results]
+            "test_results": [t.to_dict(summary_mode=self.summary_mode) for t in self.test_results]
         }
     
     @property
@@ -119,9 +119,16 @@ class Sample:
             f"comments: {self.comments}\n"
         )
 
-    def to_dict(self):
+    def to_dict(self, sample_number=None):
+        # NOTE: sample_number is used if the audit is performed in "summary_mode".
+        if sample_number:
+            # Anonymyze the sample_id.
+            sample_id = "Sample " + str(sample_number)
+        else:
+            sample_id = self.sample_id
+        
         return {
-            "sample_id": self.sample_id,
+            "sample_id": sample_id,
             "is_excluded": self.is_excluded,
             "is_passing": self.is_passing,
             "comments": self.comments,
@@ -156,20 +163,27 @@ class Test:
             f"comments: {self.comments}\n"         
         )
 
-    def to_dict(self):
+    def to_dict(self, summary_mode=False):
         result = {
             "test_id": self.test_id,
             "is_excluded": self.is_excluded,
+            "is_passing": self.is_passing,            
             "test_description": self.test_description,
             "risk_rating": self.risk_rating,
-            "is_passing": self.is_passing,
             "comments": self.comments,
             "test_procedures": self.test_procedures,
             "test_attributes": self.test_attributes,
         }
         # Include samples, if present.
-        if self.samples:  
-            result["samples"] = [s.to_dict() for s in self.samples]
+        if self.samples:          
+            if summary_mode:
+                # Anonymize samples when using summary mode.
+                anonymized_samples = []
+                for i, sample in enumerate(self.samples, start=1):
+                    anonymized_samples.append(sample.to_dict(sample_number=i))
+                result["samples"] = anonymized_samples
+            else:
+                result["samples"] = [s.to_dict() for s in self.samples]
 
         return result
 

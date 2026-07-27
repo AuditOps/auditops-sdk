@@ -40,6 +40,7 @@ class GitHubCollector:
                 all_data.extend(page_data)
                 page += 1
             self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", all_data)
+            return all_data
 
         else:
             res = requests.get(github_url, headers=headers, params=params)
@@ -47,6 +48,7 @@ class GitHubCollector:
                 return None
             res.raise_for_status()
             self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", res.json())
+            return res.json()
 
     def gather_evidence(self):
         # NOTE: Consider moving this to multiple collector files (similar to AWS) as this gets more complex.
@@ -59,6 +61,25 @@ class GitHubCollector:
         )
     
     def _collect_repo_info(self):
-        self._call_api("orgs/repos.json",
+        repos = self._call_api("orgs/repos.json",
             f"https://api.github.com/orgs/{self.org_name}/repos", paginate=True
         )
+
+        for repo in repos:
+            repo_name = repo["name"]
+            # TODO: Make dynamic based on the name of the default branch.
+
+            # Gather evidence for each repo's branch protection rules.
+            url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/branches/main/protection"
+            branch_protection_rules = self._call_api(f"repos/{repo_name}/branch_protection_rules.json", url, handle_404=True)
+
+            # Gather evidence for each repo ruleset.
+            url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets"
+            rulesets = self._call_api(f"repos/{repo_name}/rulesets.json", url, handle_404=True)
+
+            for rule in rulesets:
+                rule_id = rule["id"]
+                settings = self._call_api(
+                    f"repos/{repo_name}/rulesets/{rule_id}.json",
+                    f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets/{rule_id}"
+                )

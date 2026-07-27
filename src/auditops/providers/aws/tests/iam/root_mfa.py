@@ -19,7 +19,7 @@ def check_iam_root_mfa(tester):
     summary = tester.read("iam/account_summary.json")
     
     if not summary:
-        return fail_test(test, "Unable to retrieve AWS account summary.")    
+        return fail_test(test, "Missing required evidence: iam/account_summary.json.")
 
     mfa_enabled = summary.get("SummaryMap", {}).get("AccountMFAEnabled", 0)
 
