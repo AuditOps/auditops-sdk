@@ -23,6 +23,7 @@ class AWSTester:
         self.config = audit.config
         self.exclusions = audit.exclusions
         self.evidence_folder = audit.evidence_folder
+        self.summary_mode = audit.summary_mode
 
 
     AWS_TESTS = [
@@ -68,6 +69,9 @@ class AWSTester:
 
     def get_scope(self):
         aws_account_id = self.read("account/account_identity.json")["Account"]
+        if self.summary_mode:
+            # Anonymize AWS Account ID when in summary_mode.
+            aws_account_id = "*" + aws_account_id[-4:]
         return [
             f"AWS Account ID: {aws_account_id}",
             f"In-Scope Regions: {self.config.in_scope_regions}",
