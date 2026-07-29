@@ -1,4 +1,4 @@
-# 📧 How to Request an AuditOps Report
+# How to Request an AuditOps-SDK Report
 
 Send your vendor an email similar to the example below. Sit back, grab a coffee, and wait for them to share the report.
 
@@ -15,7 +15,7 @@ Hey [Vendor Contact Name],
 
 I hope you’re doing well! 
 
-We are interested in moving forward with [Vendor Company Name]. We understand that you will be hosting our company’s data in Amazon Web Services. As part of our due diligence, we would like to see your most recent AuditOps PDF report. Please make sure it is generated using “summary_mode” to anonymize the report. 
+We are interested in moving forward with [Vendor Company Name]. We understand that you will be hosting our company’s data in Amazon Web Services. As part of our due diligence, we would like to see your most recent AuditOps report (we accept either the PDF or JSON versions). Please make sure it is generated using “summary_mode” to anonymize the report.
 
 AuditOps is an open-source Python library that verifies your team is following AWS best practices (MFA, access key rotation, etc). This allows us to make an informed decision before we move forward with purchasing your service. 
 
@@ -27,6 +27,5 @@ Below are some resources to explain more about AuditOps, and help you generate t
 We really appreciate your help here. Please let us know if you need anything from us.
 
 Best,
-
 [Your Name]
 ```
