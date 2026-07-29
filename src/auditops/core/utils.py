@@ -1,4 +1,4 @@
-from auditops.core.models import Test, Audit
+from auditops.core.models import Test
 import boto3, os, shutil, json, logging
 
 logger = logging.getLogger(__name__)
@@ -100,27 +100,3 @@ def aws_assume_role(role_arn, external_id, session_name):
         ) from e
 
     return response["Credentials"]
-
-def run_audit(audit, collector, tester):
-    """Collect evidence, execute tests, and save the audit reports."""
-
-    evidence_path = audit.reader.evidence_dir / audit.evidence_folder
-
-    if audit.delete_cached_evidence:
-        logger.info(f"Deleting evidence in: {evidence_path}.")
-        delete_evidence_folder(evidence_path)
-    elif evidence_path.exists():
-        logger.info(f"Using cached evidence in: {evidence_path}")
-
-    collector.gather_evidence()
-
-    audit.test_results = tester.run_tests()
-    audit.scope = tester.get_scope()
-    audit.report_dir.mkdir(parents=True, exist_ok=True)
-
-    # Save JSON report
-    with audit.json_report_path.open("w", encoding="utf-8") as f:
-        json.dump(audit.to_dict(), f, indent=4, default=str)
-
-    # Save PDF report
-    audit.report_builder.build(audit, str(audit.pdf_report_path), summary_mode=audit.summary_mode)

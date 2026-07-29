@@ -18,13 +18,12 @@ from .tests.lmbda import (check_lambda_tags)
 
 
 class AWSTester:
-    def __init__(self, audit):
-        self.reader = audit.reader
-        self.config = audit.config
-        self.exclusions = audit.exclusions
-        self.evidence_folder = audit.evidence_folder
-        self.summary_mode = audit.summary_mode
-
+    def __init__(self):
+        self.reader = None
+        self.config = None
+        self.exclusions = None
+        self.evidence_folder = None
+        self.summary_mode = None
 
     AWS_TESTS = [
         # IAM
@@ -78,13 +77,20 @@ class AWSTester:
         ]
 
 
-    def run_tests(self):
+    def run_tests(self, audit):
+        self.reader = audit.reader
+        self.config = audit.config
+        self.exclusions = audit.exclusions
+        self.evidence_folder = audit.evidence_folder
+        self.summary_mode = audit.summary_mode
+
         all_tests = []
         
         for test in self.AWS_TESTS:
             all_tests.append(test(self))
         
-        return all_tests
+        audit.test_results = all_tests
+        audit.scope = self.get_scope()
 
 
     def read(self, relative_path, optional=False):

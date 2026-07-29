@@ -11,14 +11,19 @@ logger = logging.getLogger(__name__)
 
 
 class AWSCollector:
-    def __init__(self, session, audit):
+    def __init__(self, session):
         self.session = session
+        self.evidence_folder = None
+        self.config = None
+        self.writer = None
+        self.reader = None
+
+    def gather_evidence(self, audit):
         self.evidence_folder = audit.evidence_folder
         self.config = audit.config
         self.writer = audit.writer
         self.reader = audit.reader
 
-    def gather_evidence(self):
         collect_lambda_evidence(self)
         collect_account_identity(self)
         collect_iam_evidence(self)

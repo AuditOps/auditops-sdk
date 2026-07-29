@@ -7,6 +7,9 @@ from .reporting.pdf_report_builder import PDFReportBuilder
 from .evidence.reader import EvidenceReader
 from .evidence.writer import EvidenceWriter
 from .exclusions import ExclusionManager
+import json, logging, os, shutil
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -76,6 +79,49 @@ class Audit:
             "test_results": [t.to_dict(summary_mode=self.summary_mode) for t in self.test_results]
         }
     
+    def run(self, collector, tester):
+        self.collect_evidence(collector)
+        self.perform_testing(tester)
+        self.save_reports()
+
+    def collect_evidence(self, collector):
+        evidence_path = self.reader.evidence_dir / self.evidence_folder
+
+        if self.delete_cached_evidence:
+            if evidence_path.exists():
+                logger.info(f"Deleting evidence in: {evidence_path}.")
+
+                # Delete underlying folder structure
+                try:
+                    if os.path.exists(evidence_path):
+                        shutil.rmtree(evidence_path)
+                except OSError as e:
+                    logger.error("Error: %s : %s" % (evidence_path, e.strerror))
+
+        elif evidence_path.exists():
+            logger.info(f"Using cached evidence in: {evidence_path}")
+        
+        logger.info(f"Gathering evidence for: {self.report_name}")
+        
+        collector.gather_evidence(self)
+
+    def perform_testing(self, tester):
+        logger.info(f"Performing testing for: {self.report_name}")
+        tester.run_tests(self)
+
+    def save_reports(self):
+        # Saves a JSON and PDF report to the "reports" folder.
+        self.report_dir.mkdir(parents=True, exist_ok=True)
+
+        with self.json_report_path.open("w", encoding="utf-8") as f:
+            json.dump(self.to_dict(), f, indent=4, default=str)
+
+        self.report_builder.build(
+            self,
+            str(self.pdf_report_path),
+            summary_mode=self.summary_mode,
+        )
+
     @property
     def reader(self):
         return self.helpers.reader
