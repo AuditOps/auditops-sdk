@@ -20,9 +20,9 @@ We are interested in moving forward with [Vendor Company Name]. We understand th
 AuditOps is an open-source Python library that verifies your team is following AWS best practices (MFA, access key rotation, etc). This allows us to make an informed decision before we move forward with purchasing your service. 
 
 Below are some resources to explain more about AuditOps, and help you generate the report:
-* **[AuditOps GitHub Project](https://github.com/AuditOps/auditops-sdk)**
-* **[AuditOps FAQs](https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/github.md)**
-* **[AWS Setup Instructions](https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws.md)**
+* AuditOps GitHub Project: https://github.com/AuditOps/auditops-sdk
+* AuditOps FAQs: https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/github.md
+* AWS Setup Instructions: https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws.md
 
 We really appreciate your help here. Please let us know if you need anything from us.
 
