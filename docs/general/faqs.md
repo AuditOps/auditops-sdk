@@ -16,13 +16,13 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
 
 ### How can I support this project?
 1. Free: Incorporate the AuditOps-SDK into your vendor due diligence process. It's free, holds vendors accountable, and helps your team evaluate risk.
-2. Free: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't give you a sales pitch. Email us at info@auditops.io for more information.
+2. Free: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch. Email us at info@auditops.io for more information.
 3. Paid: Sign-up for the AuditOps vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
 
 ### How is this different from a vendor’s Trust Center?
-If you're buying a house, would you let the seller pick the home inspector? I certainly wouldn't recommend it!
+If you're buying a house, would you let the seller pick the home inspector? I didn't think so!
 
-Trust Centers are great for sharing information, but they aren't transparent and allow companies to hide real risks.
+Trust Centers are great for sharing information, but lack transparency and could provide a false sense of security.
 * **Transparency:** Exclusions can be added to Trust Centers with no oversight. An AuditOps report can be run in "summary_mode" to let you evaluate risk while still protecting sensitive data.
 * **Repeatability:** Test procedures are clearly defined, and backed by real evidence.
 * **Cost:** Running the AuditOps-SDK is free and takes less than 5 minutes to set up.
@@ -33,5 +33,5 @@ This project does not replace SOC 2 or other audit efforts. Think of the AuditOp
 * **Setup Time:** Less than 5 minutes
 * **Frequency:** Run daily (instead of once per year)
 
-### Do AuditOps reports contain sensitive data?
+### Do reports from the AuditOps-SDK contain sensitive data?
 It is completely up to you! Use `summary_mode` to anonymize sensitive data (e.g., changing sample id's to "Sample 1", "Sample 2", etc.).
