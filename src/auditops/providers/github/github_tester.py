@@ -5,11 +5,10 @@ from .tests.repos import (check_repos_visibility, check_branch_protection_rules)
 
 
 class GitHubTester:
-    def __init__(self, github_org_name: str, audit):
-        self.reader = audit.reader
-        self.github_org_name = github_org_name
-        self.exclusions = audit.exclusions
-        self.evidence_folder = audit.evidence_folder
+    def __init__(self):
+        self.reader = None
+        self.exclusions = None
+        self.evidence_folder = None
 
     GITHUB_TESTS = [
         # Organization Settings
@@ -22,14 +21,19 @@ class GitHubTester:
     ]
 
     def get_scope(self):
+        github_org_name = self.read("orgs/org_settings.json").get("login", "ERROR: Unable to retrieve organization name.")
         return [
-            f"Organization Name: {self.github_org_name}"
+            f"Organization Name: {github_org_name}"
         ]
 
     def read(self, relative_path, optional=False):
         return self.reader.read_json(f"{self.evidence_folder}/{relative_path}", optional=optional)
 
-    def run_tests(self):
+    def run_tests(self, audit):
+        self.reader = audit.reader
+        self.exclusions = audit.exclusions
+        self.evidence_folder = audit.evidence_folder
+
         all_tests = []
         
         for test in self.GITHUB_TESTS:
