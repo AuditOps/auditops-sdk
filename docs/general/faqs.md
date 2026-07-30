@@ -20,15 +20,15 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
 3. Paid: Sign-up for the AuditOps vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
 
 ### How is this different from a vendor’s Trust Center?
-If you're buying a house, would you let the seller pick the home inspector? I didn't think so!
+When buying a house, you wouldn't let the seller pick the home inspector. The same applies to third-party risk management.
 
 Trust Centers are great for sharing information, but lack transparency and could provide a false sense of security.
-* **Transparency:** Exclusions can be added to Trust Centers with no oversight. An AuditOps report can be run in "summary_mode" to let you evaluate risk while still protecting sensitive data.
+* **Transparency:** Exclusions can be added to Trust Centers with no oversight. An AuditOps report can be run in "summary_mode" to let you evaluate what vendors excluded from the requirements without sharing sensitive data.
 * **Repeatability:** Test procedures are clearly defined, and backed by real evidence.
 * **Cost:** Running the AuditOps-SDK is free and takes less than 5 minutes to set up.
 
 ### I already have a SOC 2 report, why do I need this?
-This project does not replace SOC 2 or other audit efforts. Think of the AuditOps-SDK as an add-on to your SOC 2 with the following benefits:
+This project does not replace SOC 2 or other audit efforts. Think of the AuditOps-SDK as an add-on to SOC 2 with the following benefits:
 * **Cost:** Free
 * **Setup Time:** Less than 5 minutes
 * **Frequency:** Run daily (instead of once per year)
