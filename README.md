@@ -41,7 +41,7 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
        helpers = AuditHelpers.create()
    
        audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "AJ Dehn",
-       audit_folder = "aws/us_prod_2", delete_cached_evidence=False, summary_mode=True, exclusions=None)
+       audit_folder = "aws", delete_cached_evidence=False, summary_mode=True, exclusions=None)
    
        audit.run(collector=AWSCollector(session), tester=AWSTester())
    
