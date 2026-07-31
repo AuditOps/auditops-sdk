@@ -89,8 +89,7 @@ class AWSTester:
         for test in self.AWS_TESTS:
             all_tests.append(test(self))
         
-        audit.test_results = all_tests
-        audit.scope = self.get_scope()
+        return all_tests
 
 
     def read(self, relative_path, optional=False):

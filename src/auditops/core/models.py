@@ -85,14 +85,13 @@ class Audit:
         }
     
     def run(self, collector, tester):
+        # NOTE: Creating folders is prioritized for demonstrations.
+        self.report_dir.mkdir(parents=True, exist_ok=True)
+        self.evidence_dir.mkdir(parents=True, exist_ok=True)
+        
         self.collect_evidence(collector)
         self.perform_testing(tester)
         self.save_reports()
-
-
-    def upload(self, destination: str, **kwargs):
-        logger.info(f"Uploading to {destination}.")
-        return self.publisher.publish(self, destination=destination, **kwargs)
 
     def collect_evidence(self, collector):
         audit_folder = self.reader.root_dir / self.audit_folder
@@ -119,7 +118,9 @@ class Audit:
 
     def perform_testing(self, tester):
         logger.info(f"Performing testing for: {self.report_name}")
-        tester.run_tests(self)
+
+        self.test_results = tester.run_tests(self)
+        self.scope = tester.get_scope()        
 
     def save_reports(self):
         # Saves a JSON and PDF report to the "reports" folder.
@@ -133,6 +134,10 @@ class Audit:
             str(self.pdf_report_path),
             summary_mode=self.summary_mode,
         )
+
+    def upload(self, destination: str, **kwargs):
+        logger.info(f"Uploading to {destination}.")
+        return self.publisher.publish(self, destination=destination, **kwargs)
 
     @property
     def reader(self):
@@ -153,6 +158,11 @@ class Audit:
     @property
     def report_dir(self) -> Path:
         path = Path(self.reader.root_dir) / self.audit_folder / "reports"
+        return path
+
+    @property
+    def evidence_dir(self) -> Path:
+        path = Path(self.reader.root_dir) / self.audit_folder / "audit_evidence"
         return path
 
     @property

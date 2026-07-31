@@ -26,14 +26,14 @@ def main():
     audit.run(collector=AWSCollector(session), tester=AWSTester())
 
     # Upload to AuditOps (for vendor due diligence and/or audit requests)
-    audit.upload(destination="auditops", package="json", client_email="aj@auditops.io")
+    audit.upload(destination="auditops", package="pdf", client_email="john@acme.com")
 
     # Upload to an auditor's portal. NOTE: Please replace the "upload_url".
-    #audit.upload(destination="portal", package="pdf", upload_url="https://upload.auditops.io", client_email="aj@auditops.io")
+    audit.upload(destination="portal", package="json", upload_url="https://upload.acme.com", client_email="john@acme.com")
 
-    # Upload to S3 (for data retention)
+    # Upload to S3 (for data retention). NOTE: Please replace the "BUCKET_NAME".
     bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
-    #audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="bad-bucket-54321", key=bucket_save_path)
+    audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
 
 if __name__ == "__main__":
     main()

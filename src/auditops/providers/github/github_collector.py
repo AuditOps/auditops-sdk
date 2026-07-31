@@ -1,6 +1,4 @@
 import requests
-from pathlib import Path
-from auditops.core.utils import delete_evidence_folder
 
 
 class GitHubCollector:
@@ -8,12 +6,12 @@ class GitHubCollector:
         self.token = token
         self.org_name = org_name
 
-        self.evidence_folder = None
+        self.audit_folder = None
         self.writer = None
         self.reader = None
 
     def gather_evidence(self, audit):
-        self.evidence_folder = audit.evidence_folder
+        self.audit_folder = audit.audit_folder
         self.writer = audit.writer
         self.reader = audit.reader
 
@@ -23,7 +21,7 @@ class GitHubCollector:
 
     def _call_api(self, evidence_path, github_url, params=None, paginate=False, handle_404=False):
         # Check if evidence already exists
-        evidence = self.reader.read_json(f"{self.evidence_folder}/{evidence_path}", optional=True)
+        evidence = self.reader.read_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", optional=True)
 
         if evidence is not None:
             # Return cached evidence. 
@@ -49,7 +47,7 @@ class GitHubCollector:
 
                 all_data.extend(page_data)
                 page += 1
-            self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", all_data)
+            self.writer.save_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", all_data)
             return all_data
 
         else:
@@ -57,7 +55,7 @@ class GitHubCollector:
             if handle_404 and res.status_code == 404:
                 return None
             res.raise_for_status()
-            self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", res.json())
+            self.writer.save_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", res.json())
             return res.json()
 
     def _collect_org_settings(self):

@@ -8,7 +8,7 @@ class GitHubTester:
     def __init__(self):
         self.reader = None
         self.exclusions = None
-        self.evidence_folder = None
+        self.audit_folder = None
 
     GITHUB_TESTS = [
         # Organization Settings
@@ -27,16 +27,16 @@ class GitHubTester:
         ]
 
     def read(self, relative_path, optional=False):
-        return self.reader.read_json(f"{self.evidence_folder}/{relative_path}", optional=optional)
+        return self.reader.read_json(f"{self.audit_folder}/audit_evidence/{relative_path}", optional=optional)
 
     def run_tests(self, audit):
         self.reader = audit.reader
         self.exclusions = audit.exclusions
-        self.evidence_folder = audit.evidence_folder
+        self.audit_folder = audit.audit_folder
 
         all_tests = []
         
         for test in self.GITHUB_TESTS:
             all_tests.append(test(self))
-        
+
         return all_tests
