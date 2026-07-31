@@ -27,7 +27,7 @@ def main():
     aws_exclusions = ExclusionManager.load_exclusions("aws_exclusions.json")
 
     audit = Audit(helpers = helpers, title = "AWS Audit Report (US Prod)", auditor_name = "AJ Dehn", config = us_prod_aws_config,
-    evidence_folder = "aws/us_prod", exclusions = aws_exclusions, delete_cached_evidence = False, summary_mode = True)
+    audit_folder = "aws/us_prod_3", exclusions = aws_exclusions, delete_cached_evidence = False, summary_mode = True)
 
     audit.run(collector=AWSCollector(us_prod_session), tester=AWSTester())
 

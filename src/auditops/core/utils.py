@@ -4,14 +4,6 @@ import boto3, os, shutil, json, logging
 logger = logging.getLogger(__name__)
 
 
-def delete_evidence_folder(path):
-    # Delete underlying folder structure
-    try:
-        if os.path.exists(path):
-            shutil.rmtree(path)
-    except OSError as e:
-        logger.error("Error: %s : %s" % (path, e.strerror))
-
 def fail_test(test, message):
     test.is_passing = False
     test.comments = message
