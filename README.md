@@ -44,7 +44,10 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
        audit_folder = "aws", delete_cached_evidence=False, summary_mode=True, exclusions=None)
    
        audit.run(collector=AWSCollector(session), tester=AWSTester())
-   
+
+       # Upload to AuditOps (for vendor due diligence and/or audit requests)
+       audit.upload(destination="auditops", package="pdf", client_email="john@acme.com")    
+
        # OPTIONAL: Upload to S3 (for data retention). NOTE: Please replace the "BUCKET_NAME".
        bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
        audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
@@ -53,11 +56,11 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
        main()
 
     ```
-8. Run the code:
+7. Run the code:
     ```
         python auditops_example.py
     ```
-9. A new folder will be created for the audit. Within that folder, the library will collect and store the evidence in the 'audit_evidence' folder. Once collected, it will begin performing the testing and the audit reports will be stored in the 'reports' folder.
+8. A new folder will be created for the audit. Within that folder, the library will collect and store the evidence in the 'audit_evidence' folder. Once collected, it will begin performing the testing and the audit reports will be stored in the 'reports' folder.
 
 
 ## Design Philosophy:
