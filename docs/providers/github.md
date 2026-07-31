@@ -1,4 +1,4 @@
-# AWS Setup Instructions
+# GitHub Setup Instructions:
 1. Install pre-requisites:
     * Python [Tutorial](https://www.youtube.com/watch?v=D2cwvpJSBX4)
 2. Run these commands to check if everything is installed correctly. If you receive an error, go back to the videos in Step 1.
@@ -9,3 +9,5 @@
     ```
     pip install auditops
     ```
+
+More details coming soon!
