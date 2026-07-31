@@ -16,8 +16,12 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
 
 ### How can I support this project?
 1. Free: Incorporate the AuditOps-SDK into your vendor due diligence process. It's free, holds vendors accountable, and helps your team evaluate risk.
-2. Free: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch. Email us at info@auditops.io for more information.
-3. Paid: Sign-up for the AuditOps vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
+   - Check out these **[instructions](request_report.md)** to request a report from your vendor.
+2. Free: Share an AuditOps report with prospective customers to brag about your security posture. It's free, secure (sensitive data is anonymized), and helps build trust prospective clients.
+3. Free: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch.
+   - Email info@auditops.io for more information.
+5. Paid: Reach out to AuditOps to learn about our vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
+   - Email info@auditops.io for more information.
 
 ### How is this different from a vendor’s Trust Center?
 When buying a house, you wouldn't let the seller pick the home inspector. The same applies to third-party risk management.
@@ -31,7 +35,7 @@ Trust Centers are great for sharing information, but lack transparency and could
 This project does not replace SOC 2 or other audit efforts. Think of the AuditOps-SDK as an add-on to SOC 2 with the following benefits:
 * **Cost:** Free
 * **Setup Time:** Less than 5 minutes
-* **Frequency:** Run daily (instead of once per year)
+* **Transparency:** Clear instructions of how testing was performed, and what was excluded.
 
 ### Do reports from the AuditOps-SDK contain sensitive data?
 It is completely up to you! Use `summary_mode` to anonymize sensitive data (e.g., changing sample id's to "Sample 1", "Sample 2", etc.).
