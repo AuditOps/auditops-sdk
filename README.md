@@ -18,9 +18,9 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
     python --version
     aws --version
     ```
-4. Install the auditops library
+4. Install the latest version of the AuditOps-SDK python library
     ```
-    pip install auditops
+    pip install -U <package_name>
     ```
 5. Create an IAM user (or Identity Center user) in the AWS management console.
     * The user needs [Security Audit](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SecurityAudit.html) permissions.
@@ -29,28 +29,35 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
     * NOTE: Access keys can only be viewed once, at the time of creation.  They must be stored securely elsewhere for future use.
 7. Copy the code below and name the file *auditops_example.py*.
     ```
-    from auditops.core.models import Audit, AuditHelpers
-    from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
-    from auditops.core.utils import aws_create_session, run_audit
+   from auditops.core.models import Audit, AuditHelpers
+   from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
+   from auditops.core.utils import aws_create_session
+   import boto3
+   from datetime import datetime
+   
+   def main():
+       session = aws_create_session()
+       aws_config = AWSConfig(in_scope_regions=['us-east-1'])
+       helpers = AuditHelpers.create()
+   
+       audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "AJ Dehn",
+       audit_folder = "aws/us_prod_2", delete_cached_evidence=False, summary_mode=True, exclusions=None)
+   
+       audit.run(collector=AWSCollector(session), tester=AWSTester())
+   
+       # OPTIONAL: Upload to S3 (for data retention). NOTE: Please replace the "BUCKET_NAME".
+       bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
+       audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
+   
+   if __name__ == "__main__":
+       main()
 
-    def main():
-        session = aws_create_session()
-        aws_config = AWSConfig(in_scope_regions=['us-east-1'])
-        helpers = AuditHelpers.create()
-
-        audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config,
-        auditor_name = "AJ Dehn", evidence_folder = "aws")
-
-        run_audit(audit, AWSCollector(session, audit), AWSTester(audit))
-
-    if __name__ == "__main__":
-        main()
     ```
 8. Run the code:
     ```
         python auditops_example.py
     ```
-9. The library will create a new 'tmp' folder containing audit_evidence and reports.
+9. A new folder will be created for the audit. Within that folder, the library will collect and store the evidence in the 'audit_evidence' folder. Once collected, it will begin performing the testing and the audit reports will be stored in the 'reports' folder.
 
 
 ## Design Philosophy:
