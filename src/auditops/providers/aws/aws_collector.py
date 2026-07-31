@@ -3,7 +3,6 @@ from .collectors import (collect_account_identity, collect_iam_evidence,
     collect_s3_evidence, collect_lambda_evidence, collect_ec2_ebs_evidence,
     collect_rds_evidence, collect_cloudtrail_evidence, collect_elbv2_evidence,
     collect_wafv2_evidence, collect_apigateway_evidence, collect_guardduty_evidence)
-from auditops.core.utils import delete_evidence_folder
 from pathlib import Path
 import logging
 
@@ -11,14 +10,19 @@ logger = logging.getLogger(__name__)
 
 
 class AWSCollector:
-    def __init__(self, session, audit):
+    def __init__(self, session):
         self.session = session
-        self.evidence_folder = audit.evidence_folder
+        self.audit_folder = None
+        self.config = None
+        self.writer = None
+        self.reader = None
+
+    def gather_evidence(self, audit):
+        self.audit_folder = audit.audit_folder
         self.config = audit.config
         self.writer = audit.writer
         self.reader = audit.reader
 
-    def gather_evidence(self):
         collect_lambda_evidence(self)
         collect_account_identity(self)
         collect_iam_evidence(self)
@@ -50,10 +54,10 @@ class AWSCollector:
             - params: dict (parameters to pass to the AWS method)
         """
         # Check if evidence already exists
-        evidence = self.reader.read_json(f"{self.evidence_folder}/{evidence_path}", optional=True)
+        evidence = self.reader.read_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", optional=True)
 
         if evidence is not None:
-            # Return cached evidence. 
+            # Return cached evidence.
             return evidence
 
         evidence = self._call_api(
@@ -64,15 +68,9 @@ class AWSCollector:
             ignore_codes=ignore_codes,
             warn_codes=warn_codes
         )
-        """
-        Saves JSON evidence to the requested folder (Ex. tmp/audit_evidence/aws/us_prod/s3/buckets.json).
 
-        NOTE: The string below is made up of the following attributes:
-            - writer.evidence_dir: "tmp/audit_evidence"
-            - self.evidence_folder: "aws/us_prod"
-            - evidence_path: "s3/buckets.json"
-        """
-        self.writer.save_json(f"{self.evidence_folder}/{evidence_path}", evidence)
+        # Save JSON evidence to the requested folder (Ex. tmp/aws/us_prod/audit_evidence/s3/buckets.json).
+        self.writer.save_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", evidence)
         return evidence
 
     def _call_api(self, client, method=None, method_kwargs=None, paginator_params=None,

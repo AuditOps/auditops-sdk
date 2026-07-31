@@ -1,0 +1,27 @@
+{
+  "test_exclusions": [
+    {
+      "test_id": "aws-iam-002",
+      "rationale": "Demo AWS test exclusion.",
+      "expires": null
+    }
+  ],
+  "sample_exclusions": [
+    {
+      "test_id": "aws-s3-002",
+      "sample_id": {
+        "bucket_name": "bad-bucket-54321"
+      },
+      "rationale": "This bucket is designed for public access.",
+      "expires": null
+    },
+    {
+      "test_id": "aws-iam-004",
+      "sample_id": {
+        "user_name": "*"
+      },
+      "rationale": "This IAM user has student level access (limited permissions). Management has accepted the risk of not requiring MFA.",
+      "expires": null
+    }
+  ]
+}

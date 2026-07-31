@@ -9,17 +9,31 @@
 
 from auditops.core.models import Audit, AuditHelpers
 from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
-from auditops.core.utils import aws_create_session, run_audit
+from auditops.core.utils import aws_create_session
+import boto3
+from datetime import datetime
 
 def main():
     session = aws_create_session()
     aws_config = AWSConfig(in_scope_regions=['us-east-1'])
     helpers = AuditHelpers.create()
 
-    audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config,
-    auditor_name = "AJ Dehn", evidence_folder = "aws")
+    # NOTE: Setting summary_mode to 'True' will anonymize the sample ID's in the PDF & JSON reports (ex. "Sample 1", "Sample 2", "Sample 3").
+    # NOTE: Setting delete_cached_evidence to 'True' will allow you re-run the scan using previously collected evidence.
+    audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "AJ Dehn",
+    audit_folder = "aws/us_prod_2", delete_cached_evidence=False, summary_mode=True, exclusions=None)
 
-    run_audit(audit, AWSCollector(session, audit), AWSTester(audit))
+    audit.run(collector=AWSCollector(session), tester=AWSTester())
+
+    # Upload to AuditOps (for vendor due diligence and/or audit requests)
+    audit.upload(destination="auditops", package="pdf", client_email="john@acme.com")
+
+    # Upload to an auditor's portal. NOTE: Please replace the "upload_url".
+    audit.upload(destination="portal", package="json", upload_url="https://upload.acme.com", client_email="john@acme.com")
+
+    # Upload to S3 (for data retention). NOTE: Please replace the "BUCKET_NAME".
+    bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
+    audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
 
 if __name__ == "__main__":
     main()

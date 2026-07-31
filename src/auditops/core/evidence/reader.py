@@ -5,10 +5,9 @@ import json
 class EvidenceReader:
     def __init__(self, root_dir="tmp"):
         self.root_dir = Path(root_dir)
-        self.evidence_dir = self.root_dir / "audit_evidence"
 
     def _path(self, relative_path):
-        return self.evidence_dir / relative_path
+        return self.root_dir / relative_path
 
     def read_json(self, relative_path, optional=False):
         """
