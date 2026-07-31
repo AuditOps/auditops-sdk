@@ -15,12 +15,13 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
 * **Sales teams:** Share reports that build trust with prospective customers and demonstrate your commitment to security & compliance.
 
 ### How can I support this project?
-1. Free: Incorporate the AuditOps-SDK into your vendor due diligence process. It's free, holds vendors accountable, and helps your team evaluate risk.
-   - Check out these **[instructions](request_report.md)** to request a report from your vendor.
-2. Free: Share an AuditOps report with prospective customers to brag about your security posture. It's free, secure (sensitive data is anonymized), and helps build trust prospective clients.
-3. Free: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch.
+1. **Free**: Incorporate the AuditOps-SDK into your vendor due diligence process. It's free, holds vendors accountable, and helps your team evaluate risk.
+   - Check out these [instructions](request_report.md) to request a report from your vendor.
+2. **Free**: Share an AuditOps report with prospective customers to brag about your security posture. It's free, secure (sensitive data is anonymized), and helps build trust prospective clients.
+   - Check out these [instructions](share_report.md) to share a report with your customer's.
+3. **Free**: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch.
    - Email info@auditops.io for more information.
-5. Paid: Reach out to AuditOps to learn about our vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
+5. **Paid**: Reach out to AuditOps to learn about our vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
    - Email info@auditops.io for more information.
 
 ### How is this different from a vendor’s Trust Center?
