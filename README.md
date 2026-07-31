@@ -18,7 +18,7 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
     python --version
     aws --version
     ```
-4. Install the latest version of the AuditOps-SDK python library
+4. Install the latest version of the AuditOps-SDK python library.
     ```
     pip install -U <package_name>
     ```
