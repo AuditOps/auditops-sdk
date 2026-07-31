@@ -22,22 +22,31 @@
     * NOTE: Access keys can only be viewed once, at the time of creation.  They must be stored securely elsewhere for future use.
 7. Copy the code below and name the file *auditops_example.py*.
     ```
-    from auditops.core.models import Audit, AuditHelpers
-    from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
-    from auditops.core.utils import aws_create_session, run_audit
+   from auditops.core.models import Audit, AuditHelpers
+   from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
+   from auditops.core.utils import aws_create_session
+   import boto3
+   from datetime import datetime
+   
+   def main():
+       session = aws_create_session()
+       aws_config = AWSConfig(in_scope_regions=['us-east-1'])
+       helpers = AuditHelpers.create()
+   
+       audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "AJ Dehn",
+       audit_folder = "aws", delete_cached_evidence=True, summary_mode=True, exclusions=None)
+   
+       audit.run(collector=AWSCollector(session), tester=AWSTester())
 
-    def main():
-        session = aws_create_session()
-        aws_config = AWSConfig(in_scope_regions=['us-east-1'])
-        helpers = AuditHelpers.create()
+       # Upload to AuditOps (for vendor due diligence and/or audit requests)
+       audit.upload(destination="auditops", package="pdf", client_email="john@acme.com")    
 
-        audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config,
-        auditor_name = "AJ Dehn", evidence_folder = "aws")
-
-        run_audit(audit, AWSCollector(session, audit), AWSTester(audit))
-
-    if __name__ == "__main__":
-        main()
+       # OPTIONAL: Upload to S3 (for data retention). NOTE: Please replace the "BUCKET_NAME".
+       bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
+       audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
+   
+   if __name__ == "__main__":
+       main()
     ```
 8. Run the code:
     ```
