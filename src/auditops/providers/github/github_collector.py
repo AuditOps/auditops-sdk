@@ -3,6 +3,12 @@ import requests
 
 class GitHubCollector:
     def __init__(self, token, org_name):
+        if not token or not org_name:
+            raise ValueError("Token and org_name are required.")
+        
+        if not isinstance(token, str) or not isinstance(org_name, str):
+            raise TypeError("Token and org_name must be strings.")
+
         self.token = token
         self.org_name = org_name
 
