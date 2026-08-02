@@ -1,15 +1,16 @@
 # How to Request an AuditOps-SDK Report
 
-Send your vendor an email similar to the example below. Sit back, grab a coffee, and wait for them to share the report. Once you have the report, take a look and see if the vendor is following best practices.
+Send your vendor an email similar to the one below. Sit back, grab a coffee, and wait for them to share the report.
 
 > 💡 **Note for Auditors:** Vendor due diligence is the primary use case of this project. Auditors should modify the language below, ensure the report isn’t using `summary_mode`, and request the supporting evidence as a ZIP file.
 
-### Email Template
+### Email Template 
 
 **To:** `Vendor Sales Team Contact`  
-**From:** `TPRM Contact`
-**CC (Optional):** info@auditops.io (AuditOps will help answer a vendor's setup questions)
+**From:** `TPRM Contact`  
+**CC (Optional):** info@auditops.io  
 **Subject:** Vendor Due Diligence (AuditOps report)
+
 
 ```text
 Hey [Vendor Contact Name],
