@@ -206,7 +206,7 @@ You can customize settings such as:
 - RDS backup retention
 - CloudTrail log retention
 
-For a complete list of configuration options, see the AWSConfig documentation.
+For a complete list of configuration options, see the **[AWSConfig documentation](aws-config.md)**.
 
 ---
 
