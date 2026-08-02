@@ -14,6 +14,7 @@ import json, logging, os, shutil
 from zipfile import ZipFile, ZIP_DEFLATED
 import mimetypes
 import requests
+from importlib.metadata import version
 
 logger = logging.getLogger(__name__)
 
@@ -82,7 +83,8 @@ class Audit:
         return {
             "metadata": {
                 "scope": self.scope,
-                "report_date": self.report_date
+                "report_date": self.report_date,
+                "auditops_version": version('auditops')
             },
             "test_results": [t.to_dict(summary_mode=self.summary_mode) for t in self.test_results]
         }
