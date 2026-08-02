@@ -25,7 +25,7 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
    - Email info@auditops.io for more information.
 
 ### Why should I incorporate AuditOps into my third-party risk process?
-1. **Faster vendor assessments**: Traditional security questionnaires take weeks to complete and the responses may change before you have time to even review the response. An AuditOps scan can be run in ~5 minutes and creates a standardized report that helps your team assess risk.
+1. **Faster vendor assessments**: Traditional security questionnaires take weeks to complete. An AuditOps scan can be run in ~5 minutes and creates a standardized report that helps your team assess risk.
 2. **Encourages stronger security practices**: Vendors receive immediate feedback (ex. missing MFA, public S3 bucket, unencrypted databases, etc). Your vendors want to win (or retain) your business, so they will be motivated to remediate before sharing the report back with you.
 3. **No cost for vendors**: AuditOps is free to run. This reduces friction, and makes it easier to request a technical security assessment.
 
