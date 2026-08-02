@@ -21,19 +21,13 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
    - Check out these [instructions](share_report.md) to share a report with your customer's.
 3. **Free**: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch.
    - Email info@auditops.io for more information.
-5. **Paid**: Reach out to AuditOps to learn about our vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
+4. **Paid**: Reach out to AuditOps to learn about our vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
    - Email info@auditops.io for more information.
 
 ### Why should I incorporate AuditOps into my third-party risk process?
-1. No added cost to your vendors. This is a free way to evaluate risk and the scan can be run in 5 minutes.
-2. Real risk reduction. Following AWS best practices like MFA, access key rotation, etc. decrease the likelihood a vendor has a security incident.
-3. Raising the bar. An AuditOps scan will go into more depth than almost any other due diligence request. If your vendor isn't following best practices, they will either need to share a less than ideal report OR improve their security posture to send you a clean report.
-
-### Why should I incorporate AuditOps into my third-party risk process?
-1. **Faster vendor assessments**: Traditional security questionnaires take weeks to complete and review. An AuditOps scan can be run in ~5 minutes and creates a standardized report that helps your team assess risk.
-2. **Objective technical evidence**: Instead of relying solely on questionnaire responses, AuditOps evaluates your vendor's AWS environment against security best practices.
-3. **Encourages stronger security practices**: Vendors receive immediate feedback (ex. missing MFA, public S3 bucket, unencrypted databases, etc). Your vendors want to win your business, so they will be motivated to remediate before sharing the report back with you.
-4. **No licensing cost for vendors**: AuditOps is free for vendors to run, reducing friction during the due diligence process and making it easier to request a technical security assessment.
+1. **Faster vendor assessments**: Traditional security questionnaires take weeks to complete and the responses may change before you have time to even review the response. An AuditOps scan can be run in ~5 minutes and creates a standardized report that helps your team assess risk.
+2. **Encourages stronger security practices**: Vendors receive immediate feedback (ex. missing MFA, public S3 bucket, unencrypted databases, etc). Your vendors want to win (or retain) your business, so they will be motivated to remediate before sharing the report back with you.
+3. **No cost for vendors**: AuditOps is free to run. This reduces friction, and makes it easier to request a technical security assessment.
 
 ### How is this different from a vendor’s Trust Center?
 When buying a house, you wouldn't let the seller pick the home inspector. The same applies to third-party risk management.
