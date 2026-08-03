@@ -1,3 +1,8 @@
+## Inspiration from Ferris Bueller
+> Life moves pretty fast. If you don't stop using screenshots as audit evidence, you could miss it.
+
+<br>
+
 ## Who should pay for an audit?
 
 | Who Pays                 | Pros                                                                                                                                                                                                                                                                                                                                                                                                                       | Cons                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
