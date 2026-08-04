@@ -46,11 +46,11 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
        audit.run(collector=AWSCollector(session), tester=AWSTester())
 
        # Upload to AuditOps (for vendor due diligence and/or audit requests)
-       audit.upload(destination="auditops", package="pdf", client_email="john@acme.com")    
+       # audit.upload(destination="auditops", package="pdf", client_email="john@acme.com")    
 
        # OPTIONAL: Upload to S3 (for data retention). NOTE: Please replace the "BUCKET_NAME".
-       bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
-       audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
+       # bucket_save_path = datetime.now().strftime("%Y/%m/%d/aws")
+       # audit.upload(destination="s3", package="full", client=boto3.client("s3"), bucket="BUCKET_NAME", key=bucket_save_path)
    
    if __name__ == "__main__":
        main()
