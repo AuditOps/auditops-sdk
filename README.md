@@ -7,7 +7,13 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
 - Vendor Due Diligence: Evaluate your vendors actual security posture using transparent and timely reports.
 - Audits: Automatically collect and share high quality evidence directly to your auditor (no screenshots required).
 
-### Getting Started (AWS Example)
+### Resources:
+- **FAQs**: [Link](/docs/general/faqs.md)
+- **Documentation**:
+   - [AWS](/docs/providers/aws/getting-started.md)
+   - [GitHub](/docs/providers/github/getting-started.md)
+
+### Getting Started (Simple AWS Example)
 1. Install pre-requisites:
     * Python [Tutorial](https://www.youtube.com/watch?v=D2cwvpJSBX4)
     * AWS CLI
