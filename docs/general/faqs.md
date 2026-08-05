@@ -9,6 +9,10 @@ An open-source Python library that proves cloud tools (ex. AWS) are following se
 * Performing testing (ex. MFA, key rotation, encryption, etc)
 * Building transparent audit reports
 
+### Do reports from the AuditOps-SDK contain sensitive data?
+Check out this sample [PDF](../../examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf) report. As long as you're using "summary_mode", the library will anonymize sensitive data (e.g., sample id's are set to "Sample 1", "Sample 2", 
+"Sample 3").
+
 ### Who uses the AuditOps-SDK?
 * **Third-party risk teams:** Review AuditOps reports to verify your vendors are following security best practices.
 * **Auditors:** Rely on AuditOps reports and supporting evidence to evaluate controls.
@@ -42,6 +46,3 @@ This project does not replace SOC 2 or other audit efforts. Think of the AuditOp
 * **Cost:** Free
 * **Setup Time:** Less than 5 minutes
 * **Transparency:** Clear instructions of how testing was performed, and what was excluded.
-
-### Do reports from the AuditOps-SDK contain sensitive data?
-It is completely up to you! Use `summary_mode` to anonymize sensitive data (e.g., changing sample id's to "Sample 1", "Sample 2", etc.).
