@@ -1,0 +1,15 @@
+{
+    "ResponseMetadata": {
+        "RequestId": "e693b116-5572-48a9-8acb-ee2fb4445b2d",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:12 GMT",
+            "content-type": "application/json",
+            "content-length": "11",
+            "connection": "keep-alive",
+            "x-amzn-requestid": "e693b116-5572-48a9-8acb-ee2fb4445b2d"
+        },
+        "RetryAttempts": 0
+    },
+    "Tags": {}
+}

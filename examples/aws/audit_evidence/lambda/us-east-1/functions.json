@@ -1,0 +1,115 @@
+{
+    "Functions": [
+        {
+            "FunctionName": "upload_audit_evidence",
+            "FunctionArn": "arn:aws:lambda:us-east-1:798094440826:function:upload_audit_evidence",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::798094440826:role/service-role/upload_audit_evidence-role-ysukvesu",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 299,
+            "Description": "",
+            "Timeout": 3,
+            "MemorySize": 128,
+            "LastModified": "2026-06-10T23:03:46.975+0000",
+            "CodeSha256": "R6fL2f5y9xHPTo4NojRtY2hz04DlAxWgwXm4xSMnwRQ=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "0db2d4c0-0ae2-4de9-a747-42be193feb5a",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/upload_audit_evidence"
+            }
+        },
+        {
+            "FunctionName": "build_student_accounts",
+            "FunctionArn": "arn:aws:lambda:us-east-1:798094440826:function:build_student_accounts",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::798094440826:role/service-role/build_student_accounts-role-73gq9pn9",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 751,
+            "Description": "",
+            "Timeout": 60,
+            "MemorySize": 128,
+            "LastModified": "2026-05-23T02:25:05.000+0000",
+            "CodeSha256": "cDR/EPVUeVBhBrQD8/7sgXvDZxBe2USjg1nuxivLgVI=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "de422c71-c6a8-49f8-8e5d-da9cbfb92bc9",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/build_student_accounts"
+            }
+        },
+        {
+            "FunctionName": "aws_training_backend",
+            "FunctionArn": "arn:aws:lambda:us-east-1:798094440826:function:aws_training_backend",
+            "Runtime": "python3.14",
+            "Role": "arn:aws:iam::798094440826:role/service-role/aws_training_backend-role-9kgpnpuw",
+            "Handler": "lambda_function.lambda_handler",
+            "CodeSize": 6406,
+            "Description": "Backend for training.itauditguy.com",
+            "Timeout": 15,
+            "MemorySize": 128,
+            "LastModified": "2026-08-04T14:05:48.000+0000",
+            "CodeSha256": "MiAsaA/IfrpSryNFPUveObbAuSLPiK0m0j8BnU6Ev+s=",
+            "Version": "$LATEST",
+            "TracingConfig": {
+                "Mode": "PassThrough"
+            },
+            "RevisionId": "30a5daf0-fd0d-425f-a176-f7734837efa5",
+            "PackageType": "Zip",
+            "Architectures": [
+                "x86_64"
+            ],
+            "EphemeralStorage": {
+                "Size": 512
+            },
+            "SnapStart": {
+                "ApplyOn": "None",
+                "OptimizationStatus": "Off"
+            },
+            "LoggingConfig": {
+                "LogFormat": "Text",
+                "LogGroup": "/aws/lambda/aws_training_backend"
+            }
+        }
+    ],
+    "ResponseMetadata": {
+        "RequestId": "97b10907-f58c-4172-bb30-0cc66f9041b3",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:12 GMT",
+            "content-type": "application/json",
+            "content-length": "3911",
+            "connection": "keep-alive",
+            "x-amzn-requestid": "97b10907-f58c-4172-bb30-0cc66f9041b3"
+        },
+        "RetryAttempts": 0
+    }
+}

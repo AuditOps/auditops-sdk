@@ -1,0 +1,183 @@
+{
+    "metadata": {
+        "scope": [
+            "Organization Name: itauditguy-training"
+        ],
+        "report_date": "2026-08-01",
+        "auditops_version": "0.1.7"
+    },
+    "test_results": [
+        {
+            "test_id": "github-org-001",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "GitHub organization settings require users to enable MFA.",
+            "risk_rating": 3,
+            "comments": "",
+            "test_procedures": [
+                "Obtained the GitHub organization settings by calling: https://api.github.com/orgs/[org_name].",
+                "Saved the GitHub organization settings: orgs/org_settings.json.",
+                "Inspected the organization settings to determine if they comply with the test attribute(s) defined below."
+            ],
+            "test_attributes": [
+                "'two_factor_requirement_enabled' is set to true."
+            ]
+        },
+        {
+            "test_id": "github-org-002",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "GitHub organization settings prevent members from creating public resources.",
+            "risk_rating": 0,
+            "comments": "",
+            "test_procedures": [
+                "Obtained the GitHub organization settings by calling: https://api.github.com/orgs/[org_name].",
+                "Saved the GitHub organization settings: orgs/org_settings.json.",
+                "Inspected the organization settings to determine if they comply with the test attribute(s) defined below."
+            ],
+            "test_attributes": [
+                "'members_can_create_public_repositories' is set to false.",
+                "'members_can_create_public_pages' is set to false."
+            ]
+        },
+        {
+            "test_id": "github-repo-001",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "Repositories in the GitHub organization are set to private.",
+            "risk_rating": 0,
+            "comments": "Exceptions Noted. 6 of 6 repositories were not set to private.",
+            "test_procedures": [
+                "Obtained the GitHub organization settings by calling: https://api.github.com/orgs/[org_name].",
+                "Saved the list of GitHub repos: orgs/repos.json.",
+                "For each repo, inspected the repositories acccess settings to determine if it is set to 'private'"
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": {
+                        "repo_name": "training"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": ""
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "bp-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": ""
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "ruleset-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": ""
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "ruleset-no-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": ""
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "bp-no-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": ""
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "compliant-repo"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": ""
+                }
+            ]
+        },
+        {
+            "test_id": "github-repo-002",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "Repositories are configured to require an approval before the change is merged.",
+            "risk_rating": 3,
+            "comments": "Exceptions Noted. 4 of 6 repositories did not have branch protection enabled.",
+            "test_procedures": [
+                "Obtained a list of all repositories by calling: https://api.github.com/orgs/[org_name]/repos.",
+                "Saved the list of all repositories: orgs/repos.json.",
+                "Obtained the branch protection rules from each repository by calling: https://api.github.com/repos/[org_name]/[repo_name]/branches/main/protection",
+                "Saved the branch protection rules: repos/[repo_name]/branch_protection_rules.json.",
+                "Obtained the rulesets from each repository by calling: https://api.github.com/repos/[org_name]/[repo_name]/rulesets",
+                "Saved the rulesets: repos/[repo_name]/rulesets.json.",
+                "Inspected each repository to determine if it was compliant with the test attributes below.Obtained the settings for each repository ruleset by calling: https://api.github.com/repos/[org_name]/[repo_name]/rulesets/[rule_id]",
+                "Saved the settings from each ruleset: repos/[repo_name]/rulesets/[rule_id].json."
+            ],
+            "test_attributes": [
+                "An active branch protection rule or repository ruleset is enforced.",
+                "Pull requests require at least one approval before merging.",
+                "No unauthorized users, teams, roles, or applications may bypass pull request requirements.",
+                "Administrators are subject to branch protection requirements.",
+                "Direct pushes to protected branches are prevented."
+            ],
+            "samples": [
+                {
+                    "sample_id": {
+                        "repo_name": "training"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Pull request approvals are not required"
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "bp-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Administrators may bypass branch protection. Direct pushes may be permitted"
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "ruleset-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": "Branch protection requires PR approval and no bypass exceptions were identified"
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "ruleset-no-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "No branch protection rules or active rulesets configured. Pull request approvals are not required. Administrators may bypass branch protection"
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "bp-no-bypass"
+                    },
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Administrators may bypass branch protection. Direct pushes may be permitted"
+                },
+                {
+                    "sample_id": {
+                        "repo_name": "compliant-repo"
+                    },
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": "Branch protection requires PR approval and no bypass exceptions were identified"
+                }
+            ]
+        }
+    ]
+}

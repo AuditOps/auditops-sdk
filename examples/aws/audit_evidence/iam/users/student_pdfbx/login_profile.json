@@ -1,0 +1,18 @@
+{
+    "LoginProfile": {
+        "UserName": "student_pdfbx",
+        "CreateDate": "2026-08-04 14:10:43+00:00",
+        "PasswordResetRequired": false
+    },
+    "ResponseMetadata": {
+        "RequestId": "f2885d0e-661b-4b9c-a6da-0688979f6928",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:15 GMT",
+            "x-amzn-requestid": "f2885d0e-661b-4b9c-a6da-0688979f6928",
+            "content-type": "text/xml",
+            "content-length": "454"
+        },
+        "RetryAttempts": 0
+    }
+}

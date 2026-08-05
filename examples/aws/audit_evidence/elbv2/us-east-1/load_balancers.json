@@ -1,0 +1,14 @@
+{
+    "LoadBalancers": [],
+    "ResponseMetadata": {
+        "RequestId": "45749d70-9611-4b3e-8513-23261c3b5322",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "45749d70-9611-4b3e-8513-23261c3b5322",
+            "content-type": "text/xml",
+            "content-length": "324",
+            "date": "Tue, 04 Aug 2026 16:51:19 GMT"
+        },
+        "RetryAttempts": 0
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "MFADevices": [
+        {
+            "UserName": "itauditguy",
+            "SerialNumber": "arn:aws:iam::798094440826:mfa/itauditguy",
+            "EnableDate": "2022-11-11 23:44:35+00:00"
+        }
+    ],
+    "IsTruncated": false,
+    "ResponseMetadata": {
+        "RequestId": "ae2c29a2-4042-4c3c-85dc-0254bae59d79",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:13 GMT",
+            "x-amzn-requestid": "ae2c29a2-4042-4c3c-85dc-0254bae59d79",
+            "content-type": "text/xml",
+            "content-length": "534"
+        },
+        "RetryAttempts": 0
+    }
+}

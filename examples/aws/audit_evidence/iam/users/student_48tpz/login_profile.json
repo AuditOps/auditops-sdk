@@ -1,0 +1,18 @@
+{
+    "LoginProfile": {
+        "UserName": "student_48tpz",
+        "CreateDate": "2026-08-04 13:52:20+00:00",
+        "PasswordResetRequired": false
+    },
+    "ResponseMetadata": {
+        "RequestId": "a34c3432-6123-4deb-a00b-399ba9117c37",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:14 GMT",
+            "x-amzn-requestid": "a34c3432-6123-4deb-a00b-399ba9117c37",
+            "content-type": "text/xml",
+            "content-length": "454"
+        },
+        "RetryAttempts": 0
+    }
+}

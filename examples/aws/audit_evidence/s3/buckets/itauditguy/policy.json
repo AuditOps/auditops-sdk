@@ -1,0 +1,17 @@
+{
+    "ResponseMetadata": {
+        "RequestId": "EY3RXKX6Q67FWXJ4",
+        "HostId": "VBH+EpzI4gQHDEi2E/yemaJfnAUu+cTqSQY7H7kS3XGIvb/JerezgU3VA14Q1U5MVIQ1oPjhIrE=",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amz-id-2": "VBH+EpzI4gQHDEi2E/yemaJfnAUu+cTqSQY7H7kS3XGIvb/JerezgU3VA14Q1U5MVIQ1oPjhIrE=",
+            "x-amz-request-id": "EY3RXKX6Q67FWXJ4",
+            "date": "Tue, 04 Aug 2026 16:51:18 GMT",
+            "content-type": "application/json",
+            "transfer-encoding": "chunked",
+            "server": "AmazonS3"
+        },
+        "RetryAttempts": 0
+    },
+    "Policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Sid\":\"PublicReadGetObject\",\"Effect\":\"Allow\",\"Principal\":\"*\",\"Action\":\"s3:GetObject\",\"Resource\":\"arn:aws:s3:::itauditguy/*\"}]}"
+}

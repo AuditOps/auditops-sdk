@@ -1,0 +1,29 @@
+{
+    "ResponseMetadata": {
+        "RequestId": "7B9FB9YY5XD82GXE",
+        "HostId": "D8yE+zosO7yohMuxN3AOtaT0T2ia+DX4rmWyvhzTAMzZHWp2JO3Vp0ZS/MQQufMZYxp7vLCi3vA=",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amz-id-2": "D8yE+zosO7yohMuxN3AOtaT0T2ia+DX4rmWyvhzTAMzZHWp2JO3Vp0ZS/MQQufMZYxp7vLCi3vA=",
+            "x-amz-request-id": "7B9FB9YY5XD82GXE",
+            "date": "Tue, 04 Aug 2026 16:51:17 GMT",
+            "transfer-encoding": "chunked",
+            "server": "AmazonS3"
+        },
+        "RetryAttempts": 0
+    },
+    "TagSet": [
+        {
+            "Key": "Owner",
+            "Value": "Engineering"
+        },
+        {
+            "Key": "Description",
+            "Value": "Stores CloudTrail logs for the AWS Account."
+        },
+        {
+            "Key": "Data-classification",
+            "Value": "Internal"
+        }
+    ]
+}

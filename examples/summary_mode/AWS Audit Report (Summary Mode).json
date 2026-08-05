@@ -1,0 +1,697 @@
+{
+    "metadata": {
+        "scope": [
+            "AWS Account ID: *0826",
+            "In-Scope Regions: ['us-east-1']"
+        ],
+        "report_date": "2026-08-05",
+        "auditops_version": "0.1.7"
+    },
+    "test_results": [
+        {
+            "test_id": "aws-iam-001",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "Root account does not have any active access keys.",
+            "risk_rating": 3,
+            "comments": "",
+            "test_procedures": [
+                "Obtained the AWS account summary by calling the get_account_summary() boto3 command.",
+                "Saved the account summary: iam/account_summary.json.",
+                "Inspected the account summary to determine if 'AccountAccessKeysPresent' is set to 0."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-iam-003",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "Root account has MFA enabled.",
+            "risk_rating": 3,
+            "comments": "",
+            "test_procedures": [
+                "Obtained the AWS account summary by calling the get_account_summary() boto3 command.",
+                "Saved the account summary: iam/account_summary.json",
+                "Inspected the account summary to determine if 'AccountMFAEnabled' is set to 1."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-iam-004",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "IAM users with an active console password have MFA enabled.",
+            "risk_rating": 3,
+            "comments": "Exceptions Noted. 11 of 12 IAM user(s) have an active console password but do not have MFA enabled.",
+            "test_procedures": [
+                "Obtained a list of IAM users by calling the list_users() boto3 command.",
+                "Saved the list of users: iam/users.json.",
+                "For each user, obtained the login profile by calling the get_login_profile() boto3 command.",
+                "For each user with a login profile, obtained MFA devices by calling the list_mfa_devices() boto3 command.",
+                "Inspected the MFA device configuration to determine if at least one MFA device is assigned."
+            ],
+            "test_attributes": [
+                "Users with a login profile have at least one MFA device."
+            ],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 4",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 5",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 6",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 7",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 8",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 9",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 10",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 11",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                },
+                {
+                    "sample_id": "Sample 12",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Console password enabled but no MFA device assigned."
+                }
+            ]
+        },
+        {
+            "test_id": "aws-iam-005",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "Active IAM user access keys are rotated at least every 90 days.",
+            "risk_rating": 3,
+            "comments": "Exceptions Noted. 1 of 7 IAM key(s) are active and over 90 days old.",
+            "test_procedures": [
+                "Obtained a list of IAM users by calling the list_users() boto3 command.",
+                "Saved the list of IAM users: iam/users.json.",
+                "For each IAM user, obtained access key metadata by calling the list_access_keys() boto3 command.",
+                "For each IAM user, saved access key metadata: iam/users/[user_name]/access_keys.json",
+                "Inspected the 'AccessKeyMetadata' for each user to determine if they comply with the test attribute(s) below."
+            ],
+            "test_attributes": [
+                "'CREATE_DATE <= 90 days ago (for keys with an 'ACTIVE' status)."
+            ],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 4",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Key is 1290 days old."
+                },
+                {
+                    "sample_id": "Sample 5",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 6",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 7",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                }
+            ]
+        },
+        {
+            "test_id": "aws-iam-006",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "IAM passwords comply with the organization's password policy.",
+            "risk_rating": 2,
+            "comments": "",
+            "test_procedures": [
+                "Obtained the IAM password policy by calling the get_account_password_policy() boto3 command.",
+                "Saved the password policy: iam/password_policy.json.",
+                "Inspected the password policy to determine if it complies with the configured requirements."
+            ],
+            "test_attributes": [
+                "Minimum password length >= 14.",
+                "Password history >= 24.",
+                "Passwords require symbols.",
+                "Passwords require numbers.",
+                "Passwords require uppercase letters.",
+                "Passwords require lowercase letters."
+            ]
+        },
+        {
+            "test_id": "aws-s3-001",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "S3 buckets are encrypted at rest.",
+            "risk_rating": 2,
+            "comments": "",
+            "test_procedures": [
+                "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
+                "Saved the list of buckets: s3/buckets.json.",
+                "For each S3 bucket, obtained the encryption settings by calling the get_bucket_encryption() boto3 command.",
+                "For each S3 bucket, saved the encryption settings: s3/buckets/[bucket_name]/encryption.json.",
+                "For each S3 bucket, inspected the encryption settings to determine if they comply with the test attribute(s) below."
+            ],
+            "test_attributes": [
+                "ServerSideEncryptionConfiguration is present."
+            ],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 4",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 5",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                }
+            ]
+        },
+        {
+            "test_id": "aws-s3-002",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "S3 buckets are configured to block public access.",
+            "risk_rating": 2,
+            "comments": "Exceptions Noted. 3 of 5 S3 bucket(s) are not configured to block public access.",
+            "test_procedures": [
+                "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
+                "Saved the list of buckets: s3/buckets.json.",
+                "For each bucket, obtained the public access block settings by calling the get_public_access_block() boto3 command.",
+                "For each bucket, saved the public access block settings: s3/buckets/[bucket_name]/public_access_block.json.",
+                "For each bucket, inspected the public access block settings to determine if they comply with the test attribute(s) below."
+            ],
+            "test_attributes": [
+                "BlockPublicAcls, IgnorePublicAcls, BlockPublicPolicy, and RestrictPublicBuckets are set to true."
+            ],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "No Public Access Block configuration found."
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 4",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "One or more public access settings are disabled."
+                },
+                {
+                    "sample_id": "Sample 5",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "One or more public access settings are disabled."
+                }
+            ]
+        },
+        {
+            "test_id": "aws-s3-003",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "S3 buckets are configured to deny unencrypted data in-transit.",
+            "risk_rating": 0,
+            "comments": "Exceptions Noted. 4 of 5 S3 bucket(s) do not enforce secure transport (HTTPS).",
+            "test_procedures": [
+                "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
+                "Saved the list of buckets: s3/buckets.json.",
+                "For each bucket, obtained the bucket policy by calling the get_bucket_policy() boto3 command.",
+                "For each bucket, saved the bucket policy: s3/buckets/[bucket_name]/bucket_policy.json.",
+                "For each bucket, inspected the bucket policy to determine if a statement exists that denies requests when aws:SecureTransport is false."
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "No bucket policy statement enforcing SecureTransport."
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "No bucket policy statement enforcing SecureTransport."
+                },
+                {
+                    "sample_id": "Sample 4",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "No bucket policy statement enforcing SecureTransport."
+                },
+                {
+                    "sample_id": "Sample 5",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "No bucket policy statement enforcing SecureTransport."
+                }
+            ]
+        },
+        {
+            "test_id": "aws-s3-004",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "S3 buckets must have required tags applied and tag values must not be empty.",
+            "risk_rating": 1,
+            "comments": "Exceptions Noted. 2 of 5 S3 bucket(s) are missing required tags or have empty values.",
+            "test_procedures": [
+                "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
+                "Saved the list of buckets: s3/buckets.json.",
+                "For each bucket, obtained its tags by calling the get_bucket_tagging() boto3 command.",
+                "For each bucket, saved the tags: s3/buckets/[bucket_name]/tags.json.",
+                "For each bucket, inspected the tags to determine if the following tag keys exist and have non-empty values: ['Owner', 'Description', 'Classification']"
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Classification']. "
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Tags not found on this bucket."
+                },
+                {
+                    "sample_id": "Sample 4",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                },
+                {
+                    "sample_id": "Sample 5",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                }
+            ]
+        },
+        {
+            "test_id": "aws-ec2-001",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "EC2 instances must have required tags applied and tag values must not be empty.",
+            "risk_rating": 1,
+            "comments": "Exceptions Noted. 1 of 1 EC2 instance(s) are missing required tags or have empty values.",
+            "test_procedures": [
+                "For each in-scope region, obtained the list of EC2 instances by calling describe_instances() boto3 command.",
+                "For each in-scope AWS region, saved the list of EC2 instances: ec2/[region_name]/instances.json",
+                "For each EC2 instance, reviewed the 'Tags' to determine if the following tag keys exist and have non-empty values: ['Owner', 'Description', 'Classification']"
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'Classification']. "
+                }
+            ]
+        },
+        {
+            "test_id": "aws-ec2-001",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "EC2 security groups have required tags applied and tag values are not empty.",
+            "risk_rating": 1,
+            "comments": "Exceptions Noted. 3 of 3 security group(s) are missing required tags or have empty values.",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of EC2 security groups by calling describe_security_groups() boto3 command.",
+                "For each in-scope region, saved the list of security groups: ec2/[region]/security_groups.json",
+                "Inspected each security group's 'Tags' attribute to determine if the following tag keys exist and have non-empty values: ['Owner', 'Description', 'ReviewedBy', 'LastReviewedDate']"
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['ReviewedBy', 'LastReviewedDate']. "
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'ReviewedBy', 'LastReviewedDate']. "
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'ReviewedBy', 'LastReviewedDate']. "
+                }
+            ]
+        },
+        {
+            "test_id": "aws-ebs-001",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "EBS volumes must have default encryption enabled in each region.",
+            "risk_rating": 2,
+            "comments": "Exceptions Noted. 1 of 1 region(s) do not have EBS default encryption enabled.",
+            "test_procedures": [
+                "For each in-scope region, obtained the EBS default encryption settings by calling get_ebs_encryption_by_default() boto3 command.",
+                "For each in-scope region, saved the EBS default encryption settings: ec2/[region_name]/default_ebs_encryption.json.",
+                "Inspected the configuration for each region to determine if 'EbsEncryptionByDefault' is set to True."
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "EBS default encryption is not enabled in this region."
+                }
+            ]
+        },
+        {
+            "test_id": "aws-ebs-002",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "EBS volumes are encrypted at rest.",
+            "risk_rating": 2,
+            "comments": "Exceptions Noted. 1 of 1 EBS volume(s) are not encrypted.",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of EBS volumes by calling describe_volumes() boto3 command.",
+                "For each in-scope region, saved the list of EBS volumes: ec2/[region_name]/volumes.json.",
+                "For each EBS volume, inspected the 'Encrypted' attribute to determine it is set to 'true'."
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "EBS volume is not encrypted."
+                }
+            ]
+        },
+        {
+            "test_id": "aws-ebs-003",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "EBS volumes must have required tags applied and tag values must not be empty.",
+            "risk_rating": 1,
+            "comments": "Exceptions Noted. 1 of 1 EBS volume(s) are missing required tags or have empty values.",
+            "test_procedures": [
+                "For each in-scope region, obtained the list of EBS volumes by calling describe_volumes() boto3 command.",
+                "Saved the list of volumes in the audit evidence folder (ec2/[region_name]/volumes.json).",
+                "For each volume, obtained its tags from the 'Tags' attribute.",
+                "Inspected each EBS volume to determine if the following tag keys exist and have non-empty values: ['Owner', 'Description', 'Classification']"
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'Classification']. "
+                }
+            ]
+        },
+        {
+            "test_id": "aws-rds-001",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "RDS instances are encrypted at rest.",
+            "risk_rating": 2,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of RDS instances by calling the describe_db_instances() boto3 command.",
+                "For each in-scope region, saved the list of RDS instances: rds/[region_name]/db_instances.json.",
+                "For each RDS instance, inspected the `StorageEncrypted` setting to determine if it was set to `true`."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-rds-004",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "RDS instances have automatic minor version upgrades enabled.",
+            "risk_rating": 1,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of DB instances by calling the describe_db_instances() boto3 command.",
+                "For each in-scope region, saved the list of RDS instances: rds/[region_name]/db_instances.json.",
+                "For each RDS instance, inspected the 'AutoMinorVersionUpgrade' setting to determine if it was set to 'true'."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-rds-003",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "RDS backups are retained for at least 14 days.",
+            "risk_rating": 1,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of RDS instances by calling the describe_db_instances() boto3 command.",
+                "For each in-scope region, saved the list of RDS instances: rds/[region_name]/db_instances.json.",
+                "For each RDS instance, inspected the `BackupRetentionPeriod` to determine if it is greater than or equal to 14 days."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-rds-005",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "RDS instances have deletion protection enabled at the cluster or instance level.",
+            "risk_rating": 2,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of RDS instances and RDS clusters using describe_db_instances() and describe_db_clusters() boto3 commands.",
+                "Saved the list of RDS instances: rds/[region_name]/db_instances.json and DB clusters: rds/[region_name]/db_clusters.json.",
+                "Inspected each RDS instance to determine if 'DeletionProtection' was set to 'true' at the instance or cluster level."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-rds-002",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "RDS instances are configured to block public access.",
+            "risk_rating": 3,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of RDS instances by calling the describe_db_instances() boto3 command.",
+                "For each in-scope region, saved the list of RDS instances: rds/[region_name]/db_instances.json.",
+                "For each RDS instance, inspected the 'PubliclyAccessible' setting to determine if it was set to 'false'."
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-rds-006",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "RDS instances must have required tags applied and tag values must not be empty.",
+            "risk_rating": 1,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of RDS instances by calling describe_db_instances() boto3 command.",
+                "For each in-scope region, saved the list of RDS instances: rds/[region_name]/db_instances.json.",
+                "For each RDS instance, reviewed the `TagList` to determine if the following tag keys exist and have non-empty values: ['Owner', 'Description', 'Classification']"
+            ],
+            "test_attributes": []
+        },
+        {
+            "test_id": "aws-cloudtrail-001",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "At least one multi-region CloudTrail trail has logging enabled.",
+            "risk_rating": 3,
+            "comments": "",
+            "test_procedures": [
+                "Obtained a list of CloudTrail trails by calling the describe_trails() boto3 command.",
+                "Saved the list of CloudTrail trails: cloudtrail/trails.json.",
+                "For each CloudTrail trail, inspected the trail configuration to determine whether 'IsMultiRegionTrail' is set to 'true'.",
+                "For each multi-region trail, obtained the trail status by calling the get_trail_status() boto3 command.",
+                "For each multi-region trail, saved the trail status: cloudtrail/trails/[trail_name]/trail_status.json.",
+                "Inspected the trail configuration and status to determine if at least one trail complies with the test attribute(s) defined below."
+            ],
+            "test_attributes": [
+                "At least one trail must have IsMultiRegionTrail = true and IsLogging = true."
+            ]
+        },
+        {
+            "test_id": "aws-guardduty-001",
+            "is_excluded": false,
+            "is_passing": true,
+            "test_description": "GuardDuty is enabled for all in-scope regions.",
+            "risk_rating": 3,
+            "comments": "",
+            "test_procedures": [
+                "For each in-scope region, obtained a list of GuardDuty detectors by calling the list_detectors() boto3 command.",
+                "For each in-scope region, saved the list of detector IDs: guardduty/[region]/detectors.json.",
+                "For each detector ID, obtained detector configuration by calling the get_detector() boto3 command.",
+                "For each detector ID, saved the detector configuration: guardduty/[region]/[detector_id]/config.json.",
+                "For each detector ID, inspected the detector configuration to determine whether 'Status' is set to 'ENABLED'."
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": true,
+                    "comments": ""
+                }
+            ]
+        },
+        {
+            "test_id": "aws-lambda-001",
+            "is_excluded": false,
+            "is_passing": false,
+            "test_description": "Lambda functions must have required tags applied and tag values must not be empty.",
+            "risk_rating": 1,
+            "comments": "Exceptions Noted. 3 of 3 Lambda function(s) are missing required tags or have empty values.",
+            "test_procedures": [
+                "For each in-scope region, obtained the list of Lambda functions by calling list_functions() boto3 command.",
+                "Saved the list of functions in the audit evidence folder (lambda/[region_name]/functions.json).",
+                "For each function, obtained its tags using list_tags() boto3 command.",
+                "Saved the tags for each function in the audit evidence folder (lambda/[region_name]/functions/[function_name]/tags.json).",
+                "Inspected each Lambda function to determine if the following tag keys exist and have non-empty values: ['Owner', 'Description', 'Classification']"
+            ],
+            "test_attributes": [],
+            "samples": [
+                {
+                    "sample_id": "Sample 1",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'Classification']. "
+                },
+                {
+                    "sample_id": "Sample 2",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'Classification']. "
+                },
+                {
+                    "sample_id": "Sample 3",
+                    "is_excluded": false,
+                    "is_passing": false,
+                    "comments": "Missing tags: ['Owner', 'Description', 'Classification']. "
+                }
+            ]
+        }
+    ]
+}

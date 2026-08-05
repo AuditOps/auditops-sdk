@@ -1,0 +1,22 @@
+{
+    "IsLogging": true,
+    "LatestDeliveryTime": "2026-08-04 11:51:14.842000-05:00",
+    "StartLoggingTime": "2022-08-18 20:45:54.957000-05:00",
+    "LatestDeliveryAttemptTime": "2026-08-04T16:51:14Z",
+    "LatestNotificationAttemptTime": "",
+    "LatestNotificationAttemptSucceeded": "",
+    "LatestDeliveryAttemptSucceeded": "2026-08-04T16:51:14Z",
+    "TimeLoggingStarted": "2022-08-19T01:45:54Z",
+    "TimeLoggingStopped": "",
+    "ResponseMetadata": {
+        "RequestId": "78c5d1fd-5d4a-4797-a645-044479b8ad89",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "78c5d1fd-5d4a-4797-a645-044479b8ad89",
+            "content-type": "application/x-amz-json-1.1",
+            "content-length": "342",
+            "date": "Tue, 04 Aug 2026 16:51:18 GMT"
+        },
+        "RetryAttempts": 0
+    }
+}

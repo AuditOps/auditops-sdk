@@ -1,0 +1,22 @@
+{
+    "AccessKeyMetadata": [
+        {
+            "UserName": "github-actions-itauditguy-deploy",
+            "AccessKeyId": "AKIA3TURCXF5DT3R57CB",
+            "Status": "Active",
+            "CreateDate": "2026-06-18 15:11:48+00:00"
+        }
+    ],
+    "IsTruncated": false,
+    "ResponseMetadata": {
+        "RequestId": "39a55cae-6adc-48ea-b5b9-0516f2695cfd",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:13 GMT",
+            "x-amzn-requestid": "39a55cae-6adc-48ea-b5b9-0516f2695cfd",
+            "content-type": "text/xml",
+            "content-length": "580"
+        },
+        "RetryAttempts": 0
+    }
+}

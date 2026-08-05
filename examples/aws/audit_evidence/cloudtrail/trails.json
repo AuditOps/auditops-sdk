@@ -1,0 +1,27 @@
+{
+    "trailList": [
+        {
+            "Name": "management-events",
+            "S3BucketName": "aws-cloudtrail-logs-798094440826-aa81e64c",
+            "IncludeGlobalServiceEvents": true,
+            "IsMultiRegionTrail": true,
+            "HomeRegion": "us-east-1",
+            "TrailARN": "arn:aws:cloudtrail:us-east-1:798094440826:trail/management-events",
+            "LogFileValidationEnabled": false,
+            "HasCustomEventSelectors": true,
+            "HasInsightSelectors": false,
+            "IsOrganizationTrail": false
+        }
+    ],
+    "ResponseMetadata": {
+        "RequestId": "af96fb5f-2cda-4003-a763-db156ba71b27",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "af96fb5f-2cda-4003-a763-db156ba71b27",
+            "content-type": "application/x-amz-json-1.1",
+            "content-length": "387",
+            "date": "Tue, 04 Aug 2026 16:51:18 GMT"
+        },
+        "RetryAttempts": 0
+    }
+}
