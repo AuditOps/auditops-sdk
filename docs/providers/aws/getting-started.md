@@ -17,6 +17,7 @@ Before you begin, you'll need:
 
 - An AWS account
 - An IAM user (or an IAM Identity Center user) with the required permissions
+    - Feel free to use [training.itauditguy.com](https://training.itauditguy.com). Using this form creates an IAM user in the IT Audit Guy sandbox AWS account.
 - Python 3.11 or later
 
 ---
