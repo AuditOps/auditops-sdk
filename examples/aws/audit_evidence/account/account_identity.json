@@ -1,0 +1,17 @@
+{
+    "UserId": "AIDA3TURCXF5GV7J5NW6Z",
+    "Account": "798094440826",
+    "Arn": "arn:aws:iam::798094440826:user/student_48tpz",
+    "ResponseMetadata": {
+        "RequestId": "69870330-a6b7-40a5-8851-7e69c66b71d5",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "69870330-a6b7-40a5-8851-7e69c66b71d5",
+            "x-amz-sts-extended-request-id": "MTp1cy1lYXN0LTE6UzoxNzg1ODYyMjcyNTIzOlI6Ums2dGdLSFE=",
+            "content-type": "text/xml",
+            "content-length": "410",
+            "date": "Tue, 04 Aug 2026 16:51:12 GMT"
+        },
+        "RetryAttempts": 0
+    }
+}

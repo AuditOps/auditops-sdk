@@ -1,0 +1,15 @@
+{
+    "AccessKeyMetadata": [],
+    "IsTruncated": false,
+    "ResponseMetadata": {
+        "RequestId": "1ca3cd46-bffc-4f09-8d51-e948aa3d43a3",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:14 GMT",
+            "x-amzn-requestid": "1ca3cd46-bffc-4f09-8d51-e948aa3d43a3",
+            "content-type": "text/xml",
+            "content-length": "321"
+        },
+        "RetryAttempts": 0
+    }
+}

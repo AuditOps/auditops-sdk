@@ -1,0 +1,47 @@
+{
+    "Volumes": [
+        {
+            "AvailabilityZoneId": "use1-az5",
+            "Iops": 3000,
+            "VolumeType": "gp3",
+            "MultiAttachEnabled": false,
+            "Throughput": 125,
+            "Operator": {
+                "Managed": false,
+                "HiddenByDefault": false
+            },
+            "VolumeId": "vol-0fad5b6c1c9198060",
+            "Size": 8,
+            "SnapshotId": "snap-09c6080e76e2ee4fc",
+            "AvailabilityZone": "us-east-1f",
+            "State": "in-use",
+            "CreateTime": "2026-02-06 16:22:35.188000+00:00",
+            "Attachments": [
+                {
+                    "DeleteOnTermination": true,
+                    "EbsCardIndex": 0,
+                    "VolumeId": "vol-0fad5b6c1c9198060",
+                    "InstanceId": "i-00ad64923065104d8",
+                    "Device": "/dev/xvda",
+                    "State": "attached",
+                    "AttachTime": "2026-02-06 16:22:35+00:00"
+                }
+            ],
+            "Encrypted": false
+        }
+    ],
+    "ResponseMetadata": {
+        "RequestId": "04829939-7bd1-4895-bde8-e3c673873688",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amzn-requestid": "04829939-7bd1-4895-bde8-e3c673873688",
+            "cache-control": "no-cache, no-store",
+            "strict-transport-security": "max-age=31536000; includeSubDomains",
+            "content-type": "text/xml;charset=UTF-8",
+            "content-length": "1161",
+            "date": "Tue, 04 Aug 2026 16:51:18 GMT",
+            "server": "AmazonEC2"
+        },
+        "RetryAttempts": 0
+    }
+}

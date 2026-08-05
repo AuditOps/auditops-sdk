@@ -1,0 +1,28 @@
+{
+    "AccessKeyMetadata": [
+        {
+            "UserName": "audit-user",
+            "AccessKeyId": "AKIA3TURCXF5DUSNOI7O",
+            "Status": "Active",
+            "CreateDate": "2026-07-31 15:58:50+00:00"
+        },
+        {
+            "UserName": "audit-user",
+            "AccessKeyId": "AKIA3TURCXF5GOCH6KMT",
+            "Status": "Active",
+            "CreateDate": "2026-07-29 11:24:58+00:00"
+        }
+    ],
+    "IsTruncated": false,
+    "ResponseMetadata": {
+        "RequestId": "08cfe820-0cb0-4c05-a068-8b48e073d2e4",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:13 GMT",
+            "x-amzn-requestid": "08cfe820-0cb0-4c05-a068-8b48e073d2e4",
+            "content-type": "text/xml",
+            "content-length": "771"
+        },
+        "RetryAttempts": 0
+    }
+}

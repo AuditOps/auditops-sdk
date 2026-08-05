@@ -1,0 +1,16 @@
+{
+    "items": [],
+    "ResponseMetadata": {
+        "RequestId": "c6726594-cd40-4b99-aec1-786e9dd738dc",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:19 GMT",
+            "content-type": "application/json",
+            "content-length": "12",
+            "connection": "keep-alive",
+            "x-amzn-requestid": "c6726594-cd40-4b99-aec1-786e9dd738dc",
+            "x-amz-apigw-id": "BljFOJONoAMEd7A="
+        },
+        "RetryAttempts": 0
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "ResponseMetadata": {
+        "RequestId": "EY3RD34MRDATHCZJ",
+        "HostId": "Aw3mdKGjzpSsObAlEZusyYRGiEoNC5wVi3qshFIJWVlYLhQ6lVL7RnJ9mqk7lLcyvHZitWh29BQ=",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "x-amz-id-2": "Aw3mdKGjzpSsObAlEZusyYRGiEoNC5wVi3qshFIJWVlYLhQ6lVL7RnJ9mqk7lLcyvHZitWh29BQ=",
+            "x-amz-request-id": "EY3RD34MRDATHCZJ",
+            "date": "Tue, 04 Aug 2026 16:51:18 GMT",
+            "transfer-encoding": "chunked",
+            "server": "AmazonS3"
+        },
+        "RetryAttempts": 0
+    },
+    "TagSet": [
+        {
+            "Key": "Owner",
+            "Value": "Engineering"
+        },
+        {
+            "Key": "Description",
+            "Value": "Hosts IT Audit Guy Website"
+        },
+        {
+            "Key": "Classification",
+            "Value": "Public"
+        }
+    ]
+}

@@ -1,0 +1,116 @@
+{
+    "Users": [
+        {
+            "Path": "/",
+            "UserName": "audit-user",
+            "UserId": "AIDA3TURCXF5H5HTX6BT3",
+            "Arn": "arn:aws:iam::798094440826:user/audit-user",
+            "CreateDate": "2026-04-10 15:15:56+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "github-actions-itauditguy-deploy",
+            "UserId": "AIDA3TURCXF5P3JRVG55R",
+            "Arn": "arn:aws:iam::798094440826:user/github-actions-itauditguy-deploy",
+            "CreateDate": "2026-06-18 14:52:18+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "goose",
+            "UserId": "AIDA3TURCXF5KWFDYXPDC",
+            "Arn": "arn:aws:iam::798094440826:user/goose",
+            "CreateDate": "2025-11-03 00:38:00+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "iceman",
+            "UserId": "AIDA3TURCXF5NGTHI54WF",
+            "Arn": "arn:aws:iam::798094440826:user/iceman",
+            "CreateDate": "2025-11-03 00:38:24+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "itauditguy",
+            "UserId": "AIDA3TURCXF5MUI5NKMTI",
+            "Arn": "arn:aws:iam::798094440826:user/itauditguy",
+            "CreateDate": "2022-11-11 23:41:41+00:00",
+            "PasswordLastUsed": "2026-04-11 21:13:05+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "maverick",
+            "UserId": "AIDA3TURCXF5LJC66ABNT",
+            "Arn": "arn:aws:iam::798094440826:user/maverick",
+            "CreateDate": "2025-11-03 00:36:06+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "slider",
+            "UserId": "AIDA3TURCXF5LJGCKJSJ2",
+            "Arn": "arn:aws:iam::798094440826:user/slider",
+            "CreateDate": "2025-11-03 00:54:42+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_1",
+            "UserId": "AIDA3TURCXF5NUGJJVYXK",
+            "Arn": "arn:aws:iam::798094440826:user/student_1",
+            "CreateDate": "2026-05-23 14:35:53+00:00",
+            "PasswordLastUsed": "2026-05-23 15:23:45+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_2",
+            "UserId": "AIDA3TURCXF5AGWWHVBGR",
+            "Arn": "arn:aws:iam::798094440826:user/student_2",
+            "CreateDate": "2026-05-23 14:35:53+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_2qu2i",
+            "UserId": "AIDA3TURCXF5ORBBC2QGH",
+            "Arn": "arn:aws:iam::798094440826:user/student_2qu2i",
+            "CreateDate": "2026-08-04 12:58:35+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_48tpz",
+            "UserId": "AIDA3TURCXF5GV7J5NW6Z",
+            "Arn": "arn:aws:iam::798094440826:user/student_48tpz",
+            "CreateDate": "2026-08-04 13:52:20+00:00",
+            "PasswordLastUsed": "2026-08-04 14:11:16+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_hx8sc",
+            "UserId": "AIDA3TURCXF5NVE4TSJVZ",
+            "Arn": "arn:aws:iam::798094440826:user/student_hx8sc",
+            "CreateDate": "2026-08-04 13:49:10+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_p6qiq",
+            "UserId": "AIDA3TURCXF5BHJB4FHFJ",
+            "Arn": "arn:aws:iam::798094440826:user/student_p6qiq",
+            "CreateDate": "2026-08-04 12:37:01+00:00"
+        },
+        {
+            "Path": "/",
+            "UserName": "student_pdfbx",
+            "UserId": "AIDA3TURCXF5OLJQ2IN56",
+            "Arn": "arn:aws:iam::798094440826:user/student_pdfbx",
+            "CreateDate": "2026-08-04 14:10:42+00:00"
+        }
+    ],
+    "ResponseMetadata": {
+        "RequestId": "263e81c1-7658-4af4-a3d3-2eb84b153662",
+        "HTTPStatusCode": 200,
+        "HTTPHeaders": {
+            "date": "Tue, 04 Aug 2026 16:51:12 GMT",
+            "x-amzn-requestid": "263e81c1-7658-4af4-a3d3-2eb84b153662",
+            "content-type": "text/xml",
+            "content-length": "4123"
+        },
+        "RetryAttempts": 0
+    }
+}
