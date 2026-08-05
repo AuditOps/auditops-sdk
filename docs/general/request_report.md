@@ -21,8 +21,8 @@ AuditOps is an open-source Python library that generates an anonymized scan of y
 
 Below are some resources to explain more about AuditOps, and help you generate the report:
 - AuditOps GitHub Project: https://github.com/AuditOps/auditops-sdk
-- AuditOps FAQs: https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/github.md
-- AWS Setup Instructions: https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws.md
+- AuditOps FAQs: https://github.com/AuditOps/auditops-sdk/blob/main/docs/general/faqs.md
+- AWS Setup Instructions: https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws/getting-started.md
 
 I've CC'ed the AuditOps support team if you have any questions! You can use their upload.auditops.io API / portal, or feel free to just email us a copy of the PDF report.
 
