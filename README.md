@@ -8,6 +8,7 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
 - Audits: Automatically collect and share high quality evidence directly to your auditor (no screenshots required).
 
 ### Resources:
+- **Example Report (in summary_mode)**: [Link](/examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf)
 - **FAQs**: [Link](/docs/general/faqs.md)
 - **Documentation**:
    - [AWS](/docs/providers/aws/getting-started.md)
