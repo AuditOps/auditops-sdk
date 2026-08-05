@@ -1,13 +1,19 @@
+# Resources
+- **Example Report**: [Link](/examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf)
+- **FAQs**: [Link](/docs/general/faqs.md)
+
 # AWS Setup Guide
 
 This guide walks you through running your first AWS audit with AuditOps.
 
 The setup consists of four steps:
 
-1. Install the required software
+1. Environment Setup (install Python, Pip, and AWS CLI)
 2. Configure AWS access
 3. Run your first audit
 4. Review the generated reports
+
+Once you've run your fist scan, try customizing the audit (adding exclusions, uploading to audit servers, etc)
 
 ---
 
@@ -22,31 +28,22 @@ Before you begin, you'll need:
 
 ---
 
-# 1. Install the Required Software
+# 1. Environment Setup
 
-## Install Python
+## Verify Python, Pip, and AWS CLI is installed
+If any of the verification steps below fail, please check out the [Prerequisite Instruction](/docs/general/prerequisites.md).
 
-If Python is not already installed, follow one of the tutorials below:
-
-- [Python Installation Tutorial](https://www.youtube.com/watch?v=D2cwvpJSBX4)
-
-Verify the installation:
-
+Verify Python is installed:
 ```bash
 python --version
 ```
 
----
+Verify Pip is installed:
+```bash
+pip --version
+```
 
-## Install the AWS CLI
-
-Install the AWS CLI for your operating system.
-
-- [Windows Installation Tutorial](https://www.youtube.com/watch?v=jCHOsMPbcV0)
-- [Mac Installation Tutorial](https://www.youtube.com/watch?v=U0AmeqL4DfE)
-
-Verify the installation:
-
+Verify AWS CLI is installed:
 ```bash
 aws --version
 ```
@@ -58,7 +55,7 @@ aws --version
 Install the latest AuditOps package from PyPI.
 
 ```bash
-pip install auditops
+pip install -U auditops
 ```
 
 ---
@@ -69,8 +66,10 @@ AuditOps uses the AWS credentials configured on your local machine to collect ev
 
 ## Create an AWS User
 
-Work with your engineering / DevOps team to create either:
+Option 1 (Sandbox Environment):
 
+
+Option 2 (Production Scan): Work with your engineering / DevOps team to create either:
 - An IAM User, or
 - An IAM Identity Center User
 
@@ -84,7 +83,7 @@ https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SecurityAudit.ht
 
 ## Create Access Keys (IAM Users Only)
 
-If you're using an IAM user, create an access key.
+If you're using an IAM user, create an access key (IAM > Users > [YOUR USER] > Security Credentials > Create Access Key.
 
 > **Note**
 >
@@ -184,7 +183,7 @@ The **audit_evidence** directory contains the raw AWS evidence collected during 
 
 ---
 
-# Customizing the Audit
+# 5. Customizing the Audit
 
 The `AWSConfig` object defines your organization's expected security baseline.
 
