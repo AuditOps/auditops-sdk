@@ -1,36 +1,23 @@
-# Resources
+# AWS Setup Guide
+This guide walks you through how to run your first AWS audit using the AuditOps-SDK.
+
+## Resources
 - **Example Report**: [Link](/examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf)
 - **FAQs**: [Link](/docs/general/faqs.md)
 
-# AWS Setup Guide
-
-This guide walks you through running your first AWS audit with AuditOps.
-
-The setup consists of four steps:
-
-1. Environment Setup (install Python, Pip, and AWS CLI)
-2. Configure AWS access
-3. Run your first audit
-4. Review the generated reports
-
-Once you've run your fist scan, try customizing the audit (adding exclusions, uploading to audit servers, etc)
-
----
-
-# Prerequisites
-
+## Prerequisites
 Before you begin, you'll need:
-
-- An AWS account
-- An IAM user (or an IAM Identity Center user) with the required permissions
-    - Feel free to use [training.itauditguy.com](https://training.itauditguy.com). Using this form creates an IAM user in the IT Audit Guy sandbox AWS account.
-- Python 3.11 or later
+- Required: Python 3.11 or later
+- Optional: An AWS account
+- Optional: An IAM user (or an IAM Identity Center user) with the required permissions
+- **NOTE:** If you don't have an AWS account, you can create an IAM user in the IT Audit Guy sandbox environment.
+    - Use [training.itauditguy.com](https://training.itauditguy.com) to receive your credentials!
 
 ---
 
-# 1. Environment Setup
+## 1. Environment Setup
 
-## Verify Python, Pip, and AWS CLI is installed
+### Verify Python, Pip, and AWS CLI is installed
 If any of the verification steps below fail, please check out the [Prerequisite Instruction](/docs/general/prerequisites.md).
 
 Verify Python is installed:
@@ -48,9 +35,7 @@ Verify AWS CLI is installed:
 aws --version
 ```
 
----
-
-## Install AuditOps
+### Install AuditOps
 
 Install the latest AuditOps package from PyPI.
 
@@ -60,38 +45,31 @@ pip install -U auditops
 
 ---
 
-# 2. Configure AWS Access
+## 2. Configure AWS Access
 
 AuditOps uses the AWS credentials configured on your local machine to collect evidence from your AWS account.
 
-## Create an AWS User
+### Create an AWS User
 
 Option 1 (Sandbox Environment):
-
+- Use [training.itauditguy.com](https://training.itauditguy.com) to create an AWS IAM user. Once you submit the form, you will receive login instructions to the IT Audit Guy sandbox account.
 
 Option 2 (Production Scan): Work with your engineering / DevOps team to create either:
 - An IAM User, or
 - An IAM Identity Center User
 
-Attach the AWS managed **SecurityAudit** policy to the user.
+Attach the AWS managed **SecurityAudit** policy to the user. For more information on this policy, see the [AWS documentation](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SecurityAudit.html)
 
-For more information, see the AWS documentation:
-
-https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SecurityAudit.html
-
----
-
-## Create Access Keys (IAM Users Only)
+### Create Access Keys (IAM Users Only)
 
 If you're using an IAM user, create an access key (IAM > Users > [YOUR USER] > Security Credentials > Create Access Key.
 
 > **Note**
->
 > Access keys are only shown once when they are created. Store them securely.
 
 ---
 
-## Configure Local Credentials
+### Configure Local Credentials
 
 Configure your credentials using the AWS CLI.
 
@@ -106,13 +84,11 @@ You'll be prompted for:
 - Default Region
 - Output Format
 
-If you need help, see:
-
-https://youtu.be/RLx5qVZSTyE?si=7fqyxFzThDaB-mGQ
+If you need help, check out this [tutorial](https://youtu.be/RLx5qVZSTyE?si=7fqyxFzThDaB-mGQ)
 
 ---
 
-# 3. Run Your First Audit
+## 3. Run Your First Audit
 
 Create a file named **auditops_example.py**.
 
@@ -164,7 +140,7 @@ Most audits complete within a few minutes, depending on the size of your AWS env
 
 ---
 
-# 4. Review the Results
+## 4. Review the Results
 
 AuditOps creates a `tmp` directory containing the collected evidence and generated reports.
 
@@ -183,7 +159,7 @@ The **audit_evidence** directory contains the raw AWS evidence collected during 
 
 ---
 
-# 5. Customizing the Audit
+## 5. Customizing the Audit
 
 The `AWSConfig` object defines your organization's expected security baseline.
 
@@ -210,7 +186,7 @@ For a complete list of configuration options, see the AWSConfig documentation (*
 
 ---
 
-# Optional: Upload Reports to AuditOps
+## Optional: Upload Reports to AuditOps
 
 Upload the generated report directly to AuditOps for vendor due diligence or audit requests.
 
@@ -224,7 +200,7 @@ audit.upload(
 
 ---
 
-# Optional: Archive Results in Amazon S3
+## Optional: Archive Results in Amazon S3
 
 Store the complete audit package in an Amazon S3 bucket for long-term retention.
 
@@ -254,7 +230,7 @@ A common folder structure is:
 
 ---
 
-# Next Steps
+## Next Steps
 
 Once you've successfully completed your first audit, you can:
 
