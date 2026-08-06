@@ -231,7 +231,10 @@ class PDFReportBuilder:
     def _create_test_summary_formatted(self, test):
         test_summary = ""
 
-        if test.total_population > 0:
+        if test.total_population == 0:
+            return test.comments if not test.is_passing else ""
+        else:
+            test_summary = ""
             test_summary += f"- Population: {test.total_population}"
             passing_pct = self._format_pct(test.num_passing, test.total_population)
             test_summary += f"<br/>- Passing: {test.num_passing} ({passing_pct})"
@@ -241,5 +244,5 @@ class PDFReportBuilder:
             if test.num_exclusions > 0:
                 exclusion_pct = self._format_pct(test.num_exclusions, test.total_population)
                 test_summary += f"<br/>- Excluded: {test.num_exclusions} ({exclusion_pct})"
-        
-        return test_summary
+            
+            return test_summary
