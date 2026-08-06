@@ -1,4 +1,4 @@
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test
 
 
 def check_orgs_mfa_settings(tester):

@@ -1,5 +1,5 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test
 
 
 def check_cloudtrail_multi_region(tester):
@@ -24,7 +24,7 @@ def check_cloudtrail_multi_region(tester):
     trails = tester.read("cloudtrail/trails.json").get("trailList", [])
 
     if not trails:
-        return fail_test(test, "Exceptions Noted. No CloudTrail trail was found.")
+        return test.fail("Exceptions Noted. No CloudTrail trail was found.")
 
     found_valid_trail = False
     for trail in trails:
@@ -38,6 +38,6 @@ def check_cloudtrail_multi_region(tester):
     if found_valid_trail:
         test.is_passing = True
     else:
-        return fail_test(test, "Exceptions Noted. No multi-region CloudTrail trail with active logging was found.")
+        return test.fail("Exceptions Noted. No multi-region CloudTrail trail with active logging was found.")
 
     return test

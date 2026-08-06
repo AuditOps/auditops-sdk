@@ -1,4 +1,4 @@
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test
 
 
 def check_iam_root_access_key(tester):
@@ -19,13 +19,13 @@ def check_iam_root_access_key(tester):
     summary = tester.read("iam/account_summary.json")
 
     if not summary:
-        return fail_test(test, "Unable to retrieve AWS account summary.")
+        return test.fail("Unable to retrieve AWS account summary.")
 
     root_keys = summary.get("SummaryMap", {}).get("AccountAccessKeysPresent", 0)
 
     if root_keys == 0:
         test.is_passing = True
     else:
-        return fail_test(test, f"Exception Noted. Root account has {root_keys} active access key(s).")
+        return test.fail(f"Exception Noted. Root account has {root_keys} active access key(s).")
 
     return test

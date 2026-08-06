@@ -1,5 +1,5 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test, fail_test, evaluate_tags
+from auditops.core.utils import create_test, evaluate_tags
 
 
 def check_lambda_tags(tester):

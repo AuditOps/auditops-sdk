@@ -1,5 +1,5 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test
 import json
 
 

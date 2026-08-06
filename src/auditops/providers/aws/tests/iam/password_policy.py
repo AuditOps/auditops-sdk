@@ -1,5 +1,5 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test
 
 
 def check_iam_password_policy(tester):
@@ -35,7 +35,7 @@ def check_iam_password_policy(tester):
     policy = tester.read("iam/password_policy.json")
 
     if not policy:
-        return fail_test(test, "No password policy configured.")
+        return test.fail("No password policy configured.")
 
     password_policy = policy.get("PasswordPolicy", {})
 
