@@ -1,5 +1,5 @@
 from auditops.core.models import Sample
-from auditops.core.utils import create_test, fail_test
+from auditops.core.utils import create_test
 
 
 def check_s3_public_access(tester):

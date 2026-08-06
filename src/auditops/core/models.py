@@ -19,6 +19,15 @@ from importlib.metadata import version
 logger = logging.getLogger(__name__)
 
 
+def get_risk_rating_str(risk_rating):
+    if risk_rating == 0: return "Informational"
+    elif risk_rating == 1: return "Low"
+    elif risk_rating == 2: return "Medium"
+    elif risk_rating == 3: return "High"
+    else:
+        raise ValueError(f"Invalid risk rating: {risk_rating}. Accepted values are 0 - 3.")
+
+
 @dataclass
 class AuditHelpers:
     reader: EvidenceReader
@@ -89,13 +98,13 @@ class Audit:
             "test_results": [t.to_dict(summary_mode=self.summary_mode) for t in self.test_results]
         }
     
-    def run(self, collector, tester):
+    def run(self, collector, tester, min_risk_rating: int | None = 0):
         # NOTE: Creating folders is prioritized for demonstrations.
         self.report_dir.mkdir(parents=True, exist_ok=True)
         self.evidence_dir.mkdir(parents=True, exist_ok=True)
         
         self.collect_evidence(collector)
-        self.perform_testing(tester)
+        self.perform_testing(tester, min_risk_rating)
         self.save_reports()
 
     def collect_evidence(self, collector):
@@ -121,11 +130,22 @@ class Audit:
         
         collector.gather_evidence(self)
 
-    def perform_testing(self, tester):
+    def perform_testing(self, tester, min_risk_rating: int | None = 0):
         logger.info(f"Performing testing for: {self.report_name}")
 
-        self.test_results = tester.run_tests(self)
-        self.scope = tester.get_scope()        
+        all_tests = tester.run_tests(self)
+        in_scope_tests = []
+        for test in all_tests:
+            # Filter out tests below specified risk rating.
+            if test.risk_rating >= min_risk_rating:
+                in_scope_tests.append(test)
+        
+        self.test_results = in_scope_tests
+        self.scope = tester.get_scope()
+
+        if min_risk_rating > 0:
+            rating_str = get_risk_rating_str(min_risk_rating)
+            self.scope.append(f"Minimum risk rating: {rating_str}")
 
     def save_reports(self):
         # Saves a JSON and PDF report to the "reports" folder.
@@ -268,12 +288,7 @@ class Test:
         return result
 
     def get_risk_rating_str(self):
-        if self.risk_rating == 0: return "Informational"
-        elif self.risk_rating == 1: return "Low"
-        elif self.risk_rating == 2: return "Medium"
-        elif self.risk_rating == 3: return "High"
-        else:
-            raise ValueError(f"Invalid risk rating: {self.risk_rating}. Accepted values are 0 - 3.")
+        return get_risk_rating_str(self.risk_rating)
 
     def add_sample(self, sample):
         self.samples.append(sample)
@@ -304,6 +319,11 @@ class Test:
 
         if failure_message:
             self.set_failure_summary(failure_message)
+
+    def fail(self, message: str):
+        self.is_passing = False
+        self.comments = message
+        return self
 
     def set_failure_summary(self, message: str):
         if self.is_passing:

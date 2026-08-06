@@ -4,11 +4,6 @@ import boto3, os, shutil, json, logging
 logger = logging.getLogger(__name__)
 
 
-def fail_test(test, message):
-    test.is_passing = False
-    test.comments = message
-    return test
-
 def create_test(tester, metadata):
     test = Test(**metadata)
 
