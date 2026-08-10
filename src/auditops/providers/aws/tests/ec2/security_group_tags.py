@@ -6,7 +6,7 @@ def check_ec2_security_group_tags(tester):
     required_tags = tester.config.ec2_security_group_required_tags
 
     metadata = {
-        "test_id": "aws-ec2-001",
+        "test_id": "aws-ec2-002",
         "test_description": (
             "EC2 security groups have required tags applied and tag values are not empty."
         ),
