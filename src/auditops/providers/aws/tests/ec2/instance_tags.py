@@ -10,7 +10,7 @@ def check_ec2_instance_tags(tester):
         "test_description": (
             "EC2 instances must have required tags applied and tag values must not be empty."
         ),
-        "risk_rating": 1,
+        "risk_rating": 0,
         "test_procedures": [
             "For each in-scope region, obtained the list of EC2 instances by calling describe_instances() boto3 command.",
             "For each in-scope AWS region, saved the list of EC2 instances: ec2/[region_name]/instances.json",

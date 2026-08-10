@@ -6,11 +6,11 @@ def check_ec2_security_group_tags(tester):
     required_tags = tester.config.ec2_security_group_required_tags
 
     metadata = {
-        "test_id": "aws-ec2-001",
+        "test_id": "aws-ec2-002",
         "test_description": (
             "EC2 security groups have required tags applied and tag values are not empty."
         ),
-        "risk_rating": 1,
+        "risk_rating": 0,
         "test_procedures": [
             "For each in-scope region, obtained a list of EC2 security groups by calling describe_security_groups() boto3 command.",
             "For each in-scope region, saved the list of security groups: ec2/[region]/security_groups.json",

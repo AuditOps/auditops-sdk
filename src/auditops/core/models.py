@@ -56,7 +56,8 @@ class Audit:
     exclusions: ExclusionManager = field(default_factory=ExclusionManager)
 
     # Report metadata
-    auditor_name: str = "AuditOps"
+    auditor_name: str | None = None
+    company_name: str | None = None
     report_name: str | None = None          # Defines the file name of the PDF and JSON report (ex. "aws_us_prod").
     report_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).strftime("%Y-%m-%d")
@@ -98,11 +99,7 @@ class Audit:
             "test_results": [t.to_dict(summary_mode=self.summary_mode) for t in self.test_results]
         }
     
-    def run(self, collector, tester, min_risk_rating: int | None = 0):
-        # NOTE: Creating folders is prioritized for demonstrations.
-        self.report_dir.mkdir(parents=True, exist_ok=True)
-        self.evidence_dir.mkdir(parents=True, exist_ok=True)
-        
+    def run(self, collector, tester, min_risk_rating: int | None = 0):        
         self.collect_evidence(collector)
         self.perform_testing(tester, min_risk_rating)
         self.save_reports()
@@ -122,11 +119,16 @@ class Audit:
                         shutil.rmtree(audit_folder)
                 except FileNotFoundError as e:
                     logger.error("Error: %s : %s" % (audit_folder, e.strerror))
-
+                
+                logger.info(f"Gathering evidence for: {self.report_name}")
         elif audit_folder.exists():
             logger.info(f"Using cached evidence in: {audit_folder}")
+        else:
+            logger.info(f"Gathering evidence for: {self.report_name}")
         
-        logger.info(f"Gathering evidence for: {self.report_name}")
+        # NOTE: Creating folders is prioritized for demonstrations.
+        self.report_dir.mkdir(parents=True, exist_ok=True)
+        self.evidence_dir.mkdir(parents=True, exist_ok=True)
         
         collector.gather_evidence(self)
 

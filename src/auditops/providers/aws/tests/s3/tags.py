@@ -10,7 +10,7 @@ def check_s3_tags(tester):
         "test_description": (
             "S3 buckets must have required tags applied and tag values must not be empty."
         ),
-        "risk_rating": 1,
+        "risk_rating": 0,
         "test_procedures": [
             "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
             "Saved the list of buckets: s3/buckets.json.",

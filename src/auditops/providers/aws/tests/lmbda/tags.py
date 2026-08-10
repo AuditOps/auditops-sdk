@@ -10,7 +10,7 @@ def check_lambda_tags(tester):
         "test_description": (
             "Lambda functions must have required tags applied and tag values must not be empty."
         ),
-        "risk_rating": 1,
+        "risk_rating": 0,
         "test_procedures": [
             "For each in-scope region, obtained the list of Lambda functions by calling list_functions() boto3 command.",
             "Saved the list of functions in the audit evidence folder (lambda/[region_name]/functions.json).",

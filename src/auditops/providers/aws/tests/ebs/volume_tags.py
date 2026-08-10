@@ -10,7 +10,7 @@ def check_ebs_volume_tags(tester):
         "test_description": (
             "EBS volumes must have required tags applied and tag values must not be empty."
         ),
-        "risk_rating": 1,
+        "risk_rating": 0,
         "test_procedures": [
             "For each in-scope region, obtained the list of EBS volumes by calling describe_volumes() boto3 command.",
             "Saved the list of volumes in the audit evidence folder (ec2/[region_name]/volumes.json).",

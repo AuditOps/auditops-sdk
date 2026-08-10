@@ -10,7 +10,7 @@ def check_rds_tags(tester):
         "test_description": (
             "RDS instances must have required tags applied and tag values must not be empty."
         ),
-        "risk_rating": 1,
+        "risk_rating": 0,
         "test_procedures": [
             "For each in-scope region, obtained a list of RDS instances by calling describe_db_instances() boto3 command.",
             "For each in-scope region, saved the list of RDS instances: rds/[region_name]/db_instances.json.",
