@@ -62,7 +62,7 @@ class PDFReportBuilder:
             filename,
             pagesize= LETTER,
             title= audit.title,
-            author= audit.auditor_name,
+            author= audit.auditor_name or "",
             subject= f"Audit report findings and testing instruction for reperformance.",
         )
 
@@ -96,18 +96,16 @@ class PDFReportBuilder:
         elements.append(PageBreak())
 
         for test in tests:
-            # Internal link definition using href="#anchor_name"
-            # Anchor for this test
-            anchor = test.test_id.replace(" ", "_")
-            link_text = (
-                f'<a name="{anchor}"/>'
-                f'<a href="#test_summary_header" color="blue">'
-                f'<b>BACK TO TEST SUMMARY</b></a>'
-            )
-            #link_text = f'<a href="#test_summary_header" name="{anchor}" color="blue"><b>BACK TO TEST SUMMARY</b></a>'
-            elements.append(Paragraph(link_text, self.styles['Normal']))
-
             if not test.is_excluded:
+                # Add internal link definition using href="#anchor_name"
+                anchor = test.test_id.replace(" ", "_")
+                link_text = (
+                    f'<a name="{anchor}"/>'
+                    f'<a href="#test_summary_header" color="blue">'
+                    f'<b>BACK TO TEST SUMMARY</b></a>'
+                )
+                elements.append(Paragraph(link_text, self.styles['Normal']))
+                
                 # Build individual test summary
                 elements.append(Spacer(1, 18))
                 elements.append(KeepTogether(self._render_test_details_table(test)))
@@ -115,7 +113,7 @@ class PDFReportBuilder:
                 if test.table_headers:
                     # Build sample table
                     elements.append(self._render_test_sample_table(test, summary_mode=summary_mode))
-                    elements.append(PageBreak())
+                elements.append(PageBreak())
 
         doc.build(elements)
 
@@ -124,13 +122,19 @@ class PDFReportBuilder:
         failed = sum(not t.is_passing for t in audit.test_results)
         passed = test_count - failed
         rows = [
-            ("Prepared By", audit.auditor_name),
             ("Report Date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
             ("Tests", test_count),
             ("Passed", f"{passed} ({self._format_pct(passed, test_count)})"),
             ("Failed", f"{failed} ({self._format_pct(failed, test_count)})"),
             ("Scope", audit.get_scope_formatted()),
         ]
+
+        if audit.auditor_name is not None:
+            rows.insert(0, ("Prepared By", audit.auditor_name))
+
+        if audit.company_name is not None:
+            rows.insert(1, ("Company Name", audit.company_name))
+
         metadata = [
             [self._label(k), self._value(v)]
             for k, v in rows
