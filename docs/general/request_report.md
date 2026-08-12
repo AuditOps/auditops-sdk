@@ -24,7 +24,7 @@ Below are some resources to explain more about AuditOps, and help you generate t
 - AuditOps FAQs: https://github.com/AuditOps/auditops-sdk/blob/main/docs/general/faqs.md
 - AWS Setup Instructions: https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws/getting-started.md
 
-I've CC'ed the AuditOps support team if you have any questions! You can use their upload.auditops.io API / portal, or feel free to just email us a copy of the PDF report.
+I've CC'ed the AuditOps support team if you have any questions!
 
 We really appreciate your help here. Please let us know if you need anything from us.
 
