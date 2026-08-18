@@ -27,7 +27,7 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
     ```
 4. Install the latest version of the AuditOps-SDK python library.
     ```
-    pip install -U <package_name>
+    pip install -U auditops
     ```
 5. Create an IAM user (or Identity Center user) in the AWS management console.
     * The user needs [Security Audit](https://docs.aws.amazon.com/aws-managed-policy/latest/reference/SecurityAudit.html) permissions.
