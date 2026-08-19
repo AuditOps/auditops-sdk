@@ -1,6 +1,6 @@
 import json
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
+from .collectors import collect_admin_evidence
+
 
 class GoogleWorkspaceCollector:
     def __init__(self, credentials_file_path, admin_email):
@@ -16,52 +16,25 @@ class GoogleWorkspaceCollector:
         self.writer = audit.writer
         self.reader = audit.reader
 
-        self._collect_org_settings()
+        collect_admin_evidence(self)
 
-    def _collect_org_settings(self):
-        scopes = [
-            "https://www.googleapis.com/auth/admin.directory.user.readonly",
-            "https://www.googleapis.com/auth/admin.directory.group.readonly",
-            "https://www.googleapis.com/auth/admin.directory.group.member.readonly",
-        ]
-
-        # Authenticate using the service account credentials
-        creds = service_account.Credentials.from_service_account_file(
-            self.credentials_file, scopes=scopes
+    def collect(self, evidence_path, api_call):
+        # Check if evidence already exists.
+        evidence = self.reader.read_json(
+            f"{self.audit_folder}/audit_evidence/{evidence_path}",
+            optional=True,
         )
-        delegated_creds = creds.with_subject(self.admin_email)
 
-        # Build the Directory API client
-        service = build("admin", "directory_v1", credentials=delegated_creds)
+        if evidence is not None:
+            return evidence
 
-        self._save_google_users(service)
-        self._save_google_groups(service)
+        # Call API.
+        evidence = api_call()
 
-    def _save_google_users(self, service):
-        # Save Users File
-        response = service.users().list(customer="my_customer").execute()
-        users_list = response.get("users", [])
-        self.writer.save_json(f"{self.audit_folder}/audit_evidence/admin/users.json", users_list)
+        # Save evidence.
+        self.writer.save_json(
+            f"{self.audit_folder}/audit_evidence/{evidence_path}",
+            evidence,
+        )
 
-    def _save_google_groups(self, service):
-        groups = []
-        page_token = None
-
-        while True:
-            response = (
-                service.groups()
-                .list(
-                    customer="my_customer",
-                    maxResults=200,
-                    pageToken=page_token,
-                )
-                .execute()
-            )
-
-            groups.extend(response.get("groups", []))
-
-            page_token = response.get("nextPageToken")
-            if not page_token:
-                break
-        
-        self.writer.save_json(f"{self.audit_folder}/audit_evidence/admin/groups.json", groups)
+        return evidence
