@@ -129,7 +129,7 @@ class PDFReportBuilder:
         ]
         
         if len(audit.scope) > 0:
-            rows.append("Scope", audit.get_scope_formatted())
+            rows.append(("Scope", audit.get_scope_formatted()))
 
         if audit.auditor_name is not None:
             rows.insert(0, ("Prepared By", audit.auditor_name))

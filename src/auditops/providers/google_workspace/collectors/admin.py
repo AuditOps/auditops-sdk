@@ -7,6 +7,7 @@ def collect_admin_evidence(collector):
         "https://www.googleapis.com/auth/admin.directory.user.readonly",
         "https://www.googleapis.com/auth/admin.directory.group.readonly",
         "https://www.googleapis.com/auth/admin.directory.group.member.readonly",
+        "https://www.googleapis.com/auth/admin.directory.rolemanagement.readonly",
     ]
 
     # Authenticate using the service account credentials
@@ -15,12 +16,18 @@ def collect_admin_evidence(collector):
     )
     delegated_creds = creds.with_subject(collector.admin_email)
 
-    # Build the Directory API client
-    service = build("admin", "directory_v1", credentials=delegated_creds)
+    # Build the Directory API clients
+    directory_service = build("admin", "directory_v1", credentials=delegated_creds)
+    report_service = build("admin", "reports_v1", credentials=delegated_creds)
 
-    collect_google_users(collector, service)
-    collect_google_groups(collector, service)
+    collect_google_users(collector, directory_service)
+    collect_google_groups(collector, directory_service)
+    collect_google_roles(collector, directory_service)
+    collect_google_role_assignments(collector, directory_service)
 
+# ==============================================================================
+# USERS
+# ==============================================================================
 
 def collect_google_users(collector, service):
     collector.collect(
@@ -29,6 +36,10 @@ def collect_google_users(collector, service):
             customer="my_customer"
         ).execute()
     )
+
+# ==============================================================================
+# GROUPS
+# ==============================================================================
 
 def collect_google_groups(collector, service):
     # Check if evidence already exists.
@@ -70,4 +81,29 @@ def collect_google_groups(collector, service):
     collector.writer.save_json(
         f"{collector.audit_folder}/audit_evidence/admin/groups.json",
         evidence,
+    )
+
+# ==============================================================================
+# ROLES
+# ==============================================================================
+
+def collect_google_roles(collector, service):
+    collector.collect(
+        evidence_path="admin/roles.json",
+        api_call=lambda: service.roles()
+        .list(
+            customer="my_customer",
+        )
+        .execute(),
+    )
+
+def collect_google_role_assignments(collector, service):
+    collector.collect(
+        evidence_path="admin/role_assignments.json",
+        api_call=lambda: service.roleAssignments()
+        .list(
+            customer="my_customer",
+            maxResults=200,
+        )
+        .execute(),
     )
