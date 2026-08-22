@@ -25,6 +25,9 @@ def check_rds_tags(tester):
     for region in tester.config.in_scope_regions:
         instances = tester.read(f"rds/{region}/db_instances.json")
 
+        if not instances:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (rds/{region}/db_instances.json).")
+        
         for db in instances.get("DBInstances", []):
             sample = Sample(
                 sample_id={

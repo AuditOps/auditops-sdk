@@ -27,6 +27,9 @@ def check_lambda_tags(tester):
     for region in tester.config.in_scope_regions:
         functions = tester.read(f"lambda/{region}/functions.json")
 
+        if not functions:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (lambda/{region}/functions.json).")
+
         for fn in functions.get("Functions", []):
             function_name = fn["FunctionName"]
 

@@ -23,6 +23,10 @@ def check_rds_deletion_protection(tester):
     for region in tester.config.in_scope_regions:
         clusters = tester.read(f"rds/{region}/db_clusters.json")
 
+        if not clusters:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (rds/{region}/db_clusters.json).")
+
+
         cluster_maps[region] = {
             cluster["DBClusterIdentifier"]: cluster.get("DeletionProtection", False)
             for cluster in clusters.get("DBClusters", [])
@@ -30,6 +34,10 @@ def check_rds_deletion_protection(tester):
 
     for region in tester.config.in_scope_regions:
         instances = tester.read(f"rds/{region}/db_instances.json")
+
+        if not instances:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (rds/{region}/db_instances.json).")
+
 
         for db_instance in instances.get("DBInstances", []):
             sample = Sample(

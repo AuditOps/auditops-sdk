@@ -26,6 +26,9 @@ def check_ebs_volume_tags(tester):
     for region in tester.config.in_scope_regions:
         volumes = tester.read(f"ec2/{region}/volumes.json")
 
+        if not volumes:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (ec2/{region}/volumes.json).")
+
         for volume in volumes.get("Volumes", []):
             sample = Sample(
                 sample_id={

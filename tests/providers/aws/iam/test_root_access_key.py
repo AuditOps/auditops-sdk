@@ -10,7 +10,7 @@ def test_fail_missing_evidence(tester):
     result = check_iam_root_access_key(tester)
 
     assert result.is_passing is False
-    assert result.comments == "Unable to retrieve AWS account summary."
+    assert result.comments == "ERROR: Unable to retrieve required evidence (iam/account_summary.json)."
 
 def test_fail_access_key_present(tester):
     example_evidence = {

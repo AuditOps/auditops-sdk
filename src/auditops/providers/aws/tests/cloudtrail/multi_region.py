@@ -21,13 +21,14 @@ def check_cloudtrail_multi_region(tester):
     }
     test = create_test(tester, metadata)
 
-    trails = tester.read("cloudtrail/trails.json").get("trailList", [])
+    trails = tester.read("cloudtrail/trails.json")
 
     if not trails:
-        return test.fail("Exceptions Noted. No CloudTrail trail was found.")
+        return test.fail("ERROR: Unable to retrieve required evidence (cloudtrail/trails.json).")        
 
     found_valid_trail = False
-    for trail in trails:
+    
+    for trail in trails.get("trailList", []):
         if not trail.get("IsMultiRegionTrail", False):
             continue
         status = tester.read(f"cloudtrail/trails/{trail['Name']}/trail_status.json")
