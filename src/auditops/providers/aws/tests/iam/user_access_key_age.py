@@ -29,10 +29,8 @@ def check_iam_user_access_key_age(tester):
     users = tester.read("iam/users.json")
 
     if not users:
-        test.is_passing = False
-        test.comments = "Unable to retrieve IAM users."
-        return test
-
+        return test.fail("ERROR: Unable to retrieve required evidence (iam/users.json).")
+    
     now = datetime.now(timezone.utc)
 
     for user in users.get("Users", []):

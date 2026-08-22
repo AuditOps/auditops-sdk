@@ -24,6 +24,9 @@ def check_iam_user_mfa(tester):
     test = create_test(tester, metadata)
 
     users = tester.read("iam/users.json")
+    
+    if not users:
+        return test.fail("ERROR: Unable to retrieve required evidence (iam/users.json).")
 
     for user in users.get("Users", []):
         username = user["UserName"]

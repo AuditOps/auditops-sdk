@@ -19,7 +19,7 @@ def check_iam_root_access_key(tester):
     summary = tester.read("iam/account_summary.json")
 
     if not summary:
-        return test.fail("Unable to retrieve AWS account summary.")
+        return test.fail("ERROR: Unable to retrieve required evidence (iam/account_summary.json).")
 
     root_keys = summary.get("SummaryMap", {}).get("AccountAccessKeysPresent", 0)
 
