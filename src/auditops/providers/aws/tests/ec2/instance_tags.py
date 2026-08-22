@@ -25,6 +25,9 @@ def check_ec2_instance_tags(tester):
     for region in tester.config.in_scope_regions:
         instances = tester.read(f"ec2/{region}/instances.json")
 
+        if not instances:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (ec2/{region}/instances.json).")
+        
         for reservation in instances.get("Reservations", []):
             for instance in reservation.get("Instances", []):
                 sample = Sample(

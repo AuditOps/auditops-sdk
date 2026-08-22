@@ -25,6 +25,9 @@ def check_ec2_security_group_tags(tester):
     for region in tester.config.in_scope_regions:
         security_groups = tester.read(f"ec2/{region}/security_groups.json")
 
+        if not security_groups:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (ec2/{region}/security_groups.json).")
+        
         for sg in security_groups.get("SecurityGroups", []):
             sample = Sample(
                 sample_id={
