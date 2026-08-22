@@ -28,6 +28,9 @@ def check_guardduty_enabled(tester):
         )
 
         if not detectors:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (guardduty/{region}/detectors.json).")
+
+        if len(detectors.get("DetectorIds", [])) == 0:
             sample.is_passing = False
             sample.comments = "No GuardDuty detectors in region."
             test.samples.append(sample)
