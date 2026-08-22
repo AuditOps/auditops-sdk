@@ -22,6 +22,9 @@ def check_ebs_default_encryption(tester):
     for region in tester.config.in_scope_regions:
         default_encryption = tester.read(f"ec2/{region}/ebs_encryption_by_default.json")
 
+        if not default_encryption:
+            return test.fail(f"ERROR: Unable to retrieve required evidence (ec2/{region}/ebs_encryption_by_default.json).")
+
         sample = Sample(sample_id={"region": region})
 
         sample.is_passing = default_encryption.get("EbsEncryptionByDefault")
