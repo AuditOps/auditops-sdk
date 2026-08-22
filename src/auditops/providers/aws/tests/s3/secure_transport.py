@@ -22,6 +22,9 @@ def check_s3_secure_transport(tester):
     test = create_test(tester, metadata)
 
     buckets = tester.read("s3/buckets.json")
+    
+    if not buckets:
+        return test.fail("ERROR: Unable to retrieve required evidence (s3/buckets.json).")
 
     for bucket in buckets.get("Buckets", []):
         bucket_name = bucket["Name"]

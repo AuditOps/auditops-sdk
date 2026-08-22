@@ -23,6 +23,9 @@ def check_s3_public_access(tester):
 
     buckets = tester.read("s3/buckets.json")
 
+    if not buckets:
+        return test.fail("ERROR: Unable to retrieve required evidence (s3/buckets.json).")
+
     for bucket in buckets.get("Buckets", []):
         bucket_name = bucket["Name"]
         sample = Sample(sample_id={"bucket_name": bucket_name})
