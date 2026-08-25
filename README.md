@@ -47,8 +47,8 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
        aws_config = AWSConfig(in_scope_regions=['us-east-1'])
        helpers = AuditHelpers.create()
    
-       audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "Happy Gilmore",
-       audit_folder = "aws", delete_cached_evidence=True, summary_mode=True, exclusions=None)
+       audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "Peter Gibbons",
+       audit_folder = "aws", delete_cached_evidence=True, summary_mode=False, exclusions=None)
    
        audit.run(collector=AWSCollector(session), tester=AWSTester())
    
