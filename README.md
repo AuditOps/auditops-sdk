@@ -39,22 +39,28 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
    from auditops.core.models import Audit, AuditHelpers
    from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
    from auditops.core.utils import aws_create_session
-   import boto3
    from datetime import datetime
    
    def main():
-       session = aws_create_session()
-       aws_config = AWSConfig(in_scope_regions=['us-east-1'])
-       helpers = AuditHelpers.create()
+      session = aws_create_session()
+      aws_config = AWSConfig(in_scope_regions=['us-east-1'])
+      helpers = AuditHelpers.create()
    
-       audit = Audit(helpers = helpers, title = "AWS Audit Report", config=aws_config, auditor_name = "Peter Gibbons",
-       audit_folder = "aws", delete_cached_evidence=True, summary_mode=False, exclusions=None)
+      audit = Audit(
+         helpers = helpers,
+         title = "AWS Audit Report",
+         config=aws_config,
+         auditor_name = "Peter Gibbons",
+         audit_folder = "aws",
+         delete_cached_evidence=True,
+         summary_mode=False,
+         exclusions=None
+      )
    
-       audit.run(collector=AWSCollector(session), tester=AWSTester())
+      audit.run(collector=AWSCollector(session), tester=AWSTester(), min_risk_rating=0)
    
    if __name__ == "__main__":
-       main()
-
+      main()
     ```
 7. Run the code:
     ```
