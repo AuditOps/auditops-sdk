@@ -36,7 +36,7 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
     * NOTE: Access keys can only be viewed once, at the time of creation.  They must be stored securely elsewhere for future use.
 7. Copy the code below and name the file *auditops_example.py*.
     ```
-   from auditops.core.models import Audit, AuditHelpers
+   from auditops.core.models import Audit, AuditHelpers, ExclusionManager
    from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
    from auditops.core.utils import aws_create_session
    from datetime import datetime
