@@ -39,7 +39,6 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
    from auditops.core.models import Audit, AuditHelpers, ExclusionManager
    from auditops.providers.aws import AWSCollector, AWSTester, AWSConfig
    from auditops.core.utils import aws_create_session
-   from datetime import datetime
    
    def main():
       session = aws_create_session()
