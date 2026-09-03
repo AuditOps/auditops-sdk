@@ -4,7 +4,7 @@ from auditops.core.utils import create_test
 
 def check_iam_password_policy(tester):
     metadata = {
-        "test_id": "aws-iam-006",
+        "test_id": "aws-iam-005",
         "test_description": "IAM passwords comply with the organization's password policy.",
         "risk_rating": 2,
         "test_procedures": [

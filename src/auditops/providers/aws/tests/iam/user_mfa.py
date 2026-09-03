@@ -5,7 +5,7 @@ from auditops.core.utils import create_test
 
 def check_iam_user_mfa(tester):
     metadata = {
-        "test_id": "aws-iam-004",
+        "test_id": "aws-iam-003",
         "test_description": "IAM users with an active console password have MFA enabled.",
         "risk_rating": 3,
         "table_headers": ["User Name", "Result", "Comments"],
