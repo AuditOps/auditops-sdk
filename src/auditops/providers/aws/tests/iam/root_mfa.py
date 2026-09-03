@@ -3,7 +3,7 @@ from auditops.core.utils import create_test
 
 def check_iam_root_mfa(tester):
     metadata = {
-        "test_id": "aws-iam-003",
+        "test_id": "aws-iam-002",
         "test_description": "Root account has MFA enabled.",
         "risk_rating": 3,
         "test_procedures": [

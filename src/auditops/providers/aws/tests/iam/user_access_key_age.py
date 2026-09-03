@@ -8,7 +8,7 @@ def check_iam_user_access_key_age(tester):
     max_age_days = tester.config.iam_access_key_max_age
 
     metadata = {
-        "test_id": "aws-iam-005",
+        "test_id": "aws-iam-004",
         "test_description": f"Active IAM user access keys are rotated at least every {max_age_days} days.",
         "risk_rating": 3,
         "test_procedures": [
