@@ -1,8 +1,29 @@
 from auditops.providers.aws import AWSConfig
 from auditops.providers.aws.tests.iam import check_iam_password_policy
-
-#from conftest import load_evidence
 from utils.evidence import load_evidence
+
+
+def test_metadata(tester):
+    load_evidence(tester, {}, missing_required={"iam/password_policy.json"})
+
+    result = check_iam_password_policy(tester)
+
+    assert result.test_id == "aws-iam-005"
+    assert result.test_description == "IAM passwords comply with the organization's password policy."
+    assert result.risk_rating == 2
+    assert result.test_procedures == [
+        "Obtained the IAM password policy by calling the get_account_password_policy() boto3 command.",
+        "Saved the password policy: iam/password_policy.json.",
+        "Inspected the password policy to determine if it complies with the configured requirements."
+    ]
+    assert result.test_attributes == [
+        "Minimum password length >= 14.",
+        "Password history >= 24.",
+        "Passwords require symbols.",
+        "Passwords require numbers.",
+        "Passwords require uppercase letters.",
+        "Passwords require lowercase letters."
+    ]
 
 
 def test_fail_missing_evidence(tester):
