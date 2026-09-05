@@ -1,10 +1,10 @@
 # Frequently Asked Questions (FAQs)
 
 ### Who is AuditOps?
-[AuditOps.io](https://auditops.io) is a cyber security company that performs in-depth vendor security reviews. We help companies answer one question: **Are my vendors secure?**
+[AuditOps.io](https://auditops.io) is a cyber security company that performs continuous monitoring and in-depth vendor security reviews.
 
 ### What is the AuditOps-SDK?
-An open-source Python library that proves cloud tools (ex. AWS) are following security best practices. It does this by:
+An open-source Python library that proves cloud tools (ex. AWS, GitHub, and Google Workspace) are following security best practices. It does this by:
 * Automatically collecting evidence
 * Performing testing (ex. MFA, key rotation, encryption, etc)
 * Building transparent audit reports
@@ -14,8 +14,8 @@ Check out this sample [PDF](../../examples/summary_mode/AWS%20Audit%20Report%20(
 "Sample 3").
 
 ### Who uses the AuditOps-SDK?
-* **Third-party risk teams:** Review AuditOps reports to verify your vendors are following security best practices.
 * **Auditors:** Rely on AuditOps reports and supporting evidence to evaluate controls.
+* **Third-party risk teams:** Review AuditOps reports to verify your vendors are following security best practices.
 * **Sales teams:** Share reports that build trust with prospective customers and demonstrate your commitment to security & compliance.
 
 ### How can I support this project?
@@ -25,7 +25,7 @@ Check out this sample [PDF](../../examples/summary_mode/AWS%20Audit%20Report%20(
    - Check out these [instructions](share_report.md) to share a report with your customer's.
 3. **Free**: Schedule a training for your non-profit (ISACA, IIA, etc), TPRM team, or audit firm. We want to spread the word, and won't make it a sales pitch.
    - Email info@auditops.io for more information.
-4. **Paid**: Reach out to AuditOps to learn about our vendor monitoring service! We will keep an eye on your vendors, and make sure they are compliant **every day**, not just once per year.
+4. **Paid**: Reach out to AuditOps to learn about our continuous monitoring service! We will keep an eye on your environment, and make sure it is compliant **every day**, not just once per year.
    - Email info@auditops.io for more information.
 
 ### Why should I incorporate AuditOps into my third-party risk process?
