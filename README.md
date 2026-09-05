@@ -1,11 +1,12 @@
 # Project Description
-Gathers evidence, performs testing, and creates audit reports in ~25 lines of code per provider (AWS, GitHub, etc).
+The AuditOps-SDK is an open-source Python library that gathers audit evidence, performs testing, and creates actionable reports in ~25 lines of code per cloud provider (AWS, GitHub, etc).
 
 This project is maintained and published by [AuditOps.io](https://www.auditops.io).
 
 ### Use cases:
-- Vendor Due Diligence: Evaluate your vendors actual security posture using transparent and timely reports.
-- Audits: Automatically collect and share high quality evidence directly to your auditor (no screenshots required).
+- External Audit: Obtain high quality, consistent audit evidence without requesting screenshots.
+- Internal Audit: Continuously monitor your organization's cloud configurations.
+- Vendor Due Diligence: Evaluate a vendor's actual security posture with transparent and timely reports.
 
 ### Resources:
 - **Example Report**: [Link](/examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf)
