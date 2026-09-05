@@ -36,10 +36,10 @@ class AuditHelpers:
     publisher: Publisher
 
     @classmethod
-    def create(cls, exclusions_file: str | None = None):
+    def create(cls, root_dir="tmp"):
         return cls(
-            reader=EvidenceReader(),
-            writer=EvidenceWriter(),
+            reader=EvidenceReader(root_dir=root_dir),
+            writer=EvidenceWriter(root_dir=root_dir),
             report_builder=PDFReportBuilder(),
             publisher=Publisher(),
         )
