@@ -204,7 +204,10 @@ class Audit:
     @property
     def pdf_report_path(self) -> Path:
         return self.report_dir / f"{self.report_name}.pdf"
-
+    
+    @property
+    def python_version(self):
+        return version('auditops')
 
 @dataclass
 class Sample:

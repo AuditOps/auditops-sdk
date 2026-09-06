@@ -123,6 +123,7 @@ class PDFReportBuilder:
         passed = test_count - failed
         rows = [
             ("Report Date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
+            ("AuditOps Version", audit.python_version),
             ("Tests", test_count),
             ("Passed", f"{passed} ({self._format_pct(passed, test_count)})"),
             ("Failed", f"{failed} ({self._format_pct(failed, test_count)})"),
