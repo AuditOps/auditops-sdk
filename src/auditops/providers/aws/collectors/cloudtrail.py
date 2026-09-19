@@ -10,10 +10,16 @@ def collect_cloudtrail_evidence(collector):
 
     for trail in trails.get("trailList", []):
         trail_name = trail["Name"]
+        home_region = trail["HomeRegion"]
+
+        region_specific_client = collector.session.client(
+            "cloudtrail",
+            region_name=home_region,
+        )             
 
         collector.collect(
             evidence_path=f"cloudtrail/trails/{trail_name}/trail_status.json",
-            client=cloudtrail_client,
+            client=region_specific_client,
             method="get_trail_status",
             method_kwargs={
                 "Name": trail_name,

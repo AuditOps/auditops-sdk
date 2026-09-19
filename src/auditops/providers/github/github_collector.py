@@ -24,6 +24,7 @@ class GitHubCollector:
         # NOTE: Consider moving this to multiple collector files (similar to AWS) as this gets more complex.
         self._collect_org_settings()
         self._collect_repo_info()
+        self._collect_access_info()
 
     def _call_api(self, evidence_path, github_url, params=None, paginate=False, handle_404=False):
         # Check if evidence already exists
@@ -92,3 +93,89 @@ class GitHubCollector:
                     f"repos/{repo_name}/rulesets/{rule_id}.json",
                     f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets/{rule_id}"
                 )
+
+    def _collect_access_info(self):
+        """
+        Collect GitHub organization users, administrators, teams,
+        outside collaborators, and repository access.
+        """
+
+        # ---------------------------------------------------------
+        # Organization members
+        # ---------------------------------------------------------
+
+        members = self._call_api(
+            "orgs/members.json",
+            f"https://api.github.com/orgs/{self.org_name}/members",
+            params={"role": "all"},
+            paginate=True,
+        )
+
+        # Organization owners/admins
+        admins = self._call_api(
+            "orgs/admins.json",
+            f"https://api.github.com/orgs/{self.org_name}/members",
+            params={"role": "admin"},
+            paginate=True,
+        )
+
+        # ---------------------------------------------------------
+        # Outside collaborators
+        # ---------------------------------------------------------
+
+        outside_collaborators = self._call_api(
+            "orgs/outside_collaborators.json",
+            f"https://api.github.com/orgs/{self.org_name}/outside_collaborators",
+            paginate=True,
+        )
+
+        # ---------------------------------------------------------
+        # Teams
+        # ---------------------------------------------------------
+
+        teams = self._call_api(
+            "orgs/teams.json",
+            f"https://api.github.com/orgs/{self.org_name}/teams",
+            paginate=True,
+        )
+
+        for team in teams:
+            team_slug = team["slug"]
+
+            # Team members
+            self._call_api(
+                f"orgs/teams/{team_slug}/members.json",
+                f"https://api.github.com/orgs/{self.org_name}/teams/{team_slug}/members",
+                paginate=True,
+            )
+
+            # Repositories assigned to team
+            self._call_api(
+                f"teams/{team_slug}/repositories.json",
+                f"https://api.github.com/orgs/{self.org_name}/teams/{team_slug}/repos",
+                paginate=True,
+            )
+
+        # ---------------------------------------------------------
+        # Repository access
+        # ---------------------------------------------------------
+
+        repos = self._call_api(
+            "orgs/repos.json",
+            f"https://api.github.com/orgs/{self.org_name}/repos",
+            paginate=True,
+        )
+
+        for repo in repos:
+            repo_name = repo["name"]
+
+            # This is extremely useful for auditing because GitHub
+            # calculates the effective permission from all sources:
+            # direct repo access, teams, organization permissions,
+            # and enterprise permissions.
+            self._call_api(
+                f"repos/{repo_name}/collaborators.json",
+                f"https://api.github.com/repos/"
+                f"{self.org_name}/{repo_name}/collaborators",
+                paginate=True,
+            )

@@ -19,21 +19,25 @@ class GoogleWorkspaceCollector:
         collect_admin_evidence(self)
 
     def collect(self, evidence_path, api_call):
-        # Check if evidence already exists.
+        """
+        Return existing evidence if available.
+        Otherwise, call the Google Workspace API and save the evidence.
+        """
+
+        full_path = f"{self.audit_folder}/audit_evidence/{evidence_path}"
+
         evidence = self.reader.read_json(
-            f"{self.audit_folder}/audit_evidence/{evidence_path}",
+            full_path,
             optional=True,
         )
 
         if evidence is not None:
             return evidence
 
-        # Call API.
         evidence = api_call()
 
-        # Save evidence.
         self.writer.save_json(
-            f"{self.audit_folder}/audit_evidence/{evidence_path}",
+            full_path,
             evidence,
         )
 
