@@ -87,7 +87,17 @@ class ExclusionManager:
             parse_exclusion(item)
 
         for item in data.get("sample_exclusions", []):
-            parse_exclusion(item, item["sample_id"])
+            if "sample_id" in item and "bulk_sample_ids" in item:
+                raise ValueError(
+                    "Sample exclusion cannot contain both 'sample_id' and 'bulk_sample_ids'."
+                )
+
+            # Handle bulk sample id's
+            if "bulk_sample_ids" in item:
+                for sample_id in item["bulk_sample_ids"]:
+                    parse_exclusion(item, sample_id)
+            else:
+                parse_exclusion(item, item["sample_id"])
 
         return cls(exclusions)
 
