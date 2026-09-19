@@ -4,7 +4,8 @@ from datetime import datetime, timedelta, timezone
 
 
 def check_user_mfa(tester):
-    # NOTE: Update grace period with a config value.
+    mfa_grace_period = tester.config.mfa_grace_period
+
     metadata = {
         "test_id": "google-auth-001",
         "test_description": "Google users with an active console password have MFA enabled.",
@@ -16,7 +17,7 @@ def check_user_mfa(tester):
             "For each user, verified the following attributes", 
         ],
         "test_attributes": [
-            "The user is at least 7 days old (grace period for enabling MFA). See 'creationTime' in users.json.",
+            f"The user is at least {mfa_grace_period} days old. See 'creationTime' in users.json.",
             "User is enrolled in two-step verification ('isEnrolledIn2Sv': true)"
         ]
     }
@@ -29,9 +30,8 @@ def check_user_mfa(tester):
         return test.fail("ERROR: Unable to retrieve list of Google Users.")
 
 
-    # NOTE: Update grace period with a config value.
-    grace_period = timedelta(days=7)
-    grace_period_cutoff = datetime.now(timezone.utc) - grace_period
+    grace_period_days = timedelta(days=mfa_grace_period)
+    grace_period_cutoff = datetime.now(timezone.utc) - grace_period_days
 
     for user in users.get("users", []):
         username = user["primaryEmail"]
@@ -52,7 +52,7 @@ def check_user_mfa(tester):
                 sample.is_passing = True
                 # NOTE: Update grace period with a config value.
                 sample.comments = (
-                    f"User was created less than 7 days ago. Still within the grace period."
+                    f"User was created less than {mfa_grace_period} days ago. Still within the grace period."
                 )
 
             else:

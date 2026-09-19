@@ -1,6 +1,6 @@
 from auditops.core.models import Test, Sample
 from auditops.core.exclusions import ExclusionManager
-from .tests.admin import check_user_mfa
+from .tests.admin import check_user_mfa, check_security_email
 
 
 class GoogleWorkpaceTester:
@@ -8,10 +8,12 @@ class GoogleWorkpaceTester:
         self.reader = None
         self.exclusions = None
         self.audit_folder = None
+        self.config = None
 
     GOOGLE_WORKSPACE_TESTS = [
         # Organization Settings
-        check_user_mfa
+        check_user_mfa,
+        check_security_email
     ]
 
     def get_scope(self):
@@ -25,6 +27,7 @@ class GoogleWorkpaceTester:
         self.reader = audit.reader
         self.exclusions = audit.exclusions
         self.audit_folder = audit.audit_folder
+        self.config = audit.config
 
         all_tests = []
         
