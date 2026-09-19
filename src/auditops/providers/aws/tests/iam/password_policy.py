@@ -32,7 +32,7 @@ def check_iam_password_policy(tester):
 
     test = create_test(tester, metadata)
 
-    policy = tester.read("iam/password_policy.json")
+    policy = tester.read("iam/password_policy.json", optional=True)
 
     if not policy:
         return test.fail("No password policy configured.")
