@@ -80,6 +80,7 @@ def collect_google_groups(collector, service, groups_settings_service):
 
     for group in groups["groups"]:
         group_id = group["id"]
+        group_email = group["email"]
 
         collector.collect(
             evidence_path=f"admin/groups/{group_id}/members.json",
@@ -91,11 +92,11 @@ def collect_google_groups(collector, service, groups_settings_service):
 
         collector.collect(
             evidence_path=f"admin/groups/{group_id}/settings.json",
-            api_call=lambda group_id=group_id: get_group_settings(
+            api_call=lambda group_email=group_email: get_group_settings(
                 groups_settings_service,
-                group_id,
+                group_email,
             ),
-        )
+        )        
 
     return groups
 
@@ -150,11 +151,11 @@ def get_group_members(service, group_id):
         "members": members,
     }
 
-def get_group_settings(groups_settings_service, group_id):
+def get_group_settings(groups_settings_service, group_email):
     return (
         groups_settings_service.groups()
         .get(
-            groupUniqueId=group_id,
+            groupUniqueId=group_email,
         )
         .execute()
     )
@@ -172,7 +173,7 @@ def get_roles(service):
             service.roles()
             .list(
                 customer="my_customer",
-                maxResults=200,
+                maxResults=100,
                 pageToken=page_token,
             )
             .execute()
