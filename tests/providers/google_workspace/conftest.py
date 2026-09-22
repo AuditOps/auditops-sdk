@@ -1,9 +1,9 @@
 import pytest
-from auditops.providers.google_workspace import GoogleWorkpaceTester, GoogleWorkspaceConfig
+from auditops.providers.google_workspace import GoogleWorkspaceTester, GoogleWorkspaceConfig
 
 @pytest.fixture
 def tester():
-    tester = GoogleWorkpaceTester()
+    tester = GoogleWorkspaceTester()
     gw_config = GoogleWorkspaceConfig()
     gw_config.required_group_emails = ["required@example.com"]
 
