@@ -17,6 +17,25 @@ def test_fail_missing_evidence(tester):
     )
 
 
+def test_not_applicable_root_user_without_password(tester):
+    example_evidence = {
+        "iam/account_summary.json": {
+            "SummaryMap": {
+                "AccountPasswordPresent": 0,
+                "AccountMFAEnabled": 0,
+            }
+        }
+    }
+
+    load_evidence(tester, example_evidence)
+
+    result = check_iam_root_mfa(tester)
+
+    assert result.is_passing is True
+    assert result.comments == (
+        "Not applicable. Root account does not have a password."
+    )
+
 def test_fail_root_user_without_mfa(tester):
     example_evidence = {
         "iam/account_summary.json": {
