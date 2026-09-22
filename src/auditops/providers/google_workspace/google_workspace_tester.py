@@ -3,7 +3,7 @@ from auditops.core.exclusions import ExclusionManager
 from .tests.admin import check_user_mfa, check_security_email
 
 
-class GoogleWorkpaceTester:
+class GoogleWorkspaceTester:
     def __init__(self):
         self.reader = None
         self.exclusions = None
