@@ -12,8 +12,8 @@ def collect_admin_evidence(collector):
     ]
 
     # Authenticate using the service account credentials
-    creds = service_account.Credentials.from_service_account_file(
-        collector.credentials_file, scopes=scopes
+    creds = service_account.Credentials.from_service_account_info(
+        collector.credentials, scopes=scopes
     )
 
     delegated_creds = creds.with_subject(collector.admin_email)

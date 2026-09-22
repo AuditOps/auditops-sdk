@@ -3,8 +3,8 @@ from .collectors import collect_admin_evidence
 
 
 class GoogleWorkspaceCollector:
-    def __init__(self, credentials_file_path, admin_email):
-        self.credentials_file = credentials_file_path
+    def __init__(self, credentials, admin_email):
+        self.credentials = credentials
         self.admin_email = admin_email
 
         self.audit_folder = None
