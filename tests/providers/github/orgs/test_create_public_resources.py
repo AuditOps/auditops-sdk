@@ -55,4 +55,5 @@ def test_fail_missing_org_settings_fails(tester):
 
     result = check_orgs_members_create_public_resources(tester)
 
+    assert result.comments == ("ERROR: Unable to retrieve required evidence (orgs/org_settings.json).")
     assert result.is_passing is False

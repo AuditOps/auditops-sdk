@@ -21,7 +21,7 @@ def check_orgs_members_create_public_resources(tester):
     org_settings = tester.read("orgs/org_settings.json")
 
     if not org_settings:
-        return test.fail("Missing required evidence: 'orgs/org_settings.json'.")
+        return test.fail("ERROR: Unable to retrieve required evidence (orgs/org_settings.json).")
 
     test.is_passing = (
         not org_settings.get("members_can_create_public_repositories", True)
