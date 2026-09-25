@@ -18,6 +18,10 @@ def check_orgs_mfa_settings(tester):
 
     test = create_test(tester, metadata)
     org_settings = tester.read("orgs/org_settings.json")
-    test.is_passing = org_settings.get("two_factor_requirement_enabled")
-    
+
+    if not org_settings:
+        return test.fail("ERROR: Unable to retrieve required evidence (orgs/org_settings.json).")
+
+    test.is_passing = org_settings.get("two_factor_requirement_enabled", False)
+
     return test
