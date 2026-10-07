@@ -1,7 +1,8 @@
 from auditops.core.models import Test, Sample
 from auditops.core.exclusions import ExclusionManager
-from .tests.orgs import (check_orgs_mfa_settings, check_orgs_members_create_public_resources)
-from .tests.repos import (check_repos_visibility, check_branch_protection_rules)
+from .tests.orgs import (check_orgs_mfa_settings, check_orgs_members_create_public_repos,
+check_orgs_members_create_public_pages)
+from .tests.repos import (check_repos_visibility, check_branch_protection_rules, check_branch_protection_admins)
 
 
 class GitHubTester:
@@ -13,11 +14,13 @@ class GitHubTester:
     GITHUB_TESTS = [
         # Organization Settings
         check_orgs_mfa_settings,
-        check_orgs_members_create_public_resources,
+        check_orgs_members_create_public_repos,
+        check_orgs_members_create_public_pages,
 
         # Repos
         check_repos_visibility,
-        check_branch_protection_rules
+        check_branch_protection_rules,
+        check_branch_protection_admins
     ]
 
     def get_scope(self):
