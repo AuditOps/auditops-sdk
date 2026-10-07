@@ -154,12 +154,18 @@ class PDFReportBuilder:
         ]]
 
         for test in tests:
-            # Creates a link to each test summary.
-            anchor = test.test_id.replace(" ", "_")
-            test_desc_str = (
-                f'<a href="#{anchor}" color="blue"><b>{test.test_id}</b></a>: '
-                f'{test.test_description}'
-            )
+            if test.is_excluded:
+                test_desc_str = (
+                    f'<b>{test.test_id}</b>: '
+                    f'{test.test_description}'
+                )
+            # Create a link to the test summary.
+            else:
+                anchor = test.test_id.replace(" ", "_")
+                test_desc_str = (
+                    f'<a href="#{anchor}" color="blue"><b>{test.test_id}</b></a>: '
+                    f'{test.test_description}'
+                )
 
             new_row = [
                 self._value(test_desc_str),
