@@ -50,9 +50,18 @@ class Publisher:
             self._upload_portal(upload_file, **kwargs)
 
         elif destination == "auditops":
-            # NOTE: Avoid collision if upload_url was passed.
-            kwargs.pop("upload_url", None)
-            self._upload_portal(upload_file, upload_url="https://upload.auditops.io", **kwargs)
+            payload = kwargs.get("payload", {})
+
+            if not payload and kwargs.get("client_email"):
+                payload = {
+                    "client_email": kwargs["client_email"],
+                }
+
+            self._upload_portal(
+                upload_file,
+                upload_url="https://upload.auditops.io",
+                payload=payload
+            )
 
     def _get_upload_file(self, audit, package: str) -> Path:
         """Return the file that should be uploaded."""
@@ -119,7 +128,7 @@ class Publisher:
             "key": key,
         }
 
-    def _upload_portal(self, file_path: Path, *, upload_url: str, client_email: str, timeout: int = 30,):
+    def _upload_portal(self, file_path: Path, *, upload_url: str, payload: dict, timeout: int = 30):
         """Upload a report to an auditor portal."""
 
         content_type = (
@@ -130,9 +139,7 @@ class Publisher:
         with file_path.open("rb") as f:
             response = requests.post(
                 upload_url,
-                data={
-                    "client_email": client_email,
-                },
+                data=payload,
                 files={
                     "file": (
                         file_path.name,

@@ -1,5 +1,5 @@
 import requests
-
+from datetime import datetime, timedelta, timezone
 
 class GitHubCollector:
     def __init__(self, token, org_name):
@@ -25,6 +25,7 @@ class GitHubCollector:
         self._collect_org_settings()
         self._collect_repo_info()
         self._collect_access_info()
+        self._collect_branch_protection_bypasses()
 
     def _call_api(self, evidence_path, github_url, params=None, paginate=False, handle_404=False):
         # Check if evidence already exists
@@ -77,11 +78,14 @@ class GitHubCollector:
 
         for repo in repos:
             repo_name = repo["name"]
-            # TODO: Make dynamic based on the name of the default branch.
+            default_branch = repo["default_branch"]
 
             # Gather evidence for each repo's branch protection rules.
-            url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/branches/main/protection"
+            url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/branches/{default_branch}/protection"
             branch_protection_rules = self._call_api(f"repos/{repo_name}/branch_protection_rules.json", url, handle_404=True)
+
+            url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/branches/{default_branch}/protection/restrictions"
+            branch_protection_rules = self._call_api(f"repos/{repo_name}/bp_restrictions.json", url, handle_404=True)
 
             # Gather evidence for each repo ruleset.
             url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets"
@@ -93,6 +97,31 @@ class GitHubCollector:
                     f"repos/{repo_name}/rulesets/{rule_id}.json",
                     f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets/{rule_id}"
                 )
+
+    def _collect_branch_protection_bypasses(self, look_back_days = 90):
+        """
+        Collect GitHub organization audit-log events related to
+        branch protection and ruleset bypasses from the last 90 days.
+
+        NOTE: These logs are only available for clients on the "Enterprise" plan. 
+        """
+
+        end_time = datetime.now(timezone.utc)
+        start_time = end_time - timedelta(days=90)
+
+        # GitHub audit-log search syntax.
+        events = self._call_api(
+            "audit/branch_protection_bypasses.json",
+            f"https://api.github.com/orgs/{self.org_name}/audit-log",
+            params = {
+                "phrase": "action:protected_branch.policy_override",
+                "per_page": 10,
+            },
+            paginate=False,
+            handle_404=True,
+        )
+
+        return events
 
     def _collect_access_info(self):
         """
