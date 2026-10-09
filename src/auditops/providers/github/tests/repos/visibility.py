@@ -9,9 +9,9 @@ def check_repos_visibility(tester):
         "risk_rating": 0,
         "table_headers": ["Repository Name", "Conclusion", "Comments"],
         "test_procedures": [
-            f"Obtained the GitHub organization settings by calling: https://api.github.com/orgs/[org_name].",
-            "Saved the list of GitHub repos: orgs/repos.json.",
-            "For each repo, inspected the repositories acccess settings to determine if it is set to 'private'"        
+            "Called the GitHub API (https://api.github.com/orgs/[ORG_NAME]/repos) to obtain a list of all repositories.",
+            "Saved the GitHub API response: orgs/repos.json.",
+            "Inspected the settings for each repository if 'private' is set to true.",
         ],
         "test_attributes": []
     }
