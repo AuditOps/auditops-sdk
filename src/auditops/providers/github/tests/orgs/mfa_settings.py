@@ -10,9 +10,12 @@ def check_orgs_mfa_settings(tester):
             "'two_factor_requirement_enabled' is set to true."
         ],
         "test_procedures": [
-            f"Obtained the GitHub organization settings by calling: https://api.github.com/orgs/[org_name].",
-            "Saved the GitHub organization settings: orgs/org_settings.json.",
-            "Inspected the organization settings to determine if they comply with the test attribute(s) defined below."        
+            "Called the GitHub API (https://api.github.com/orgs/[ORG_NAME]) to obtain information about the GitHub organization.",
+            "Saved the GitHub API response: orgs/org_settings.json.",
+            "Inspected the evidence (orgs/org_settings.json) to determine if the GitHub organization is compliant with the test attribute(s) below.",
+        ],
+        "test_attributes": [
+            "'two_factor_requirement_enabled' is set to true.",
         ]
     }
 

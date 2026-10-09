@@ -15,15 +15,19 @@ def check_branch_protection_rules(tester):
             "Comments",
         ],
         "test_procedures": [
-            f"Obtained a list of all repositories by calling: https://api.github.com/orgs/[org_name]/repos.",
-            "Saved the list of all repositories: orgs/repos.json.",
-            "Obtained the branch protection rules from each repository by calling: https://api.github.com/repos/[org_name]/[repo_name]/branches/[default_branch]/protection",
-            "Saved the branch protection rules: repos/[repo_name]/branch_protection_rules.json.",
-            "Obtained the rulesets from each repository by calling: https://api.github.com/repos/[org_name]/[repo_name]/rulesets",
-            "Saved the rulesets: repos/[repo_name]/rulesets.json.",
-            "Obtained the settings for each repository ruleset by calling: https://api.github.com/repos/[org_name]/[repo_name]/rulesets/[rule_id]",
-            "Saved the settings from each ruleset: repos/[repo_name]/rulesets/[rule_id].json.",       
-            "Inspected each repository to determine if it was compliant with the test attributes below."
+            "Called the GitHub API (https://api.github.com/orgs/[ORG_NAME]/repos) to obtain a list of all repositories.",
+            "Saved the GitHub API response: orgs/repos.json.",
+            "For each repository, called the GitHub API (https://api.github.com/repos/[ORG_NAME]/[REPO_NAME]/branches/[DEFAULT_BRANCH]/protection) "
+            "to obtain the branch protection rules for each repository.",
+            "Saved the GitHub API responses for each repository: repos/[REPO_NAME]/branch_protection_rules.json.",
+            "For each repository, called the GitHub API (https://api.github.com/repos/[ORG_NAME]/[REPO_NAME]/rulesets) "
+            "to obtain the rulesets for each repository.",
+            "Saved the GitHub API responses for each repository: repos/[REPO_NAME]/rulesets.json.",
+            "For each repository, called the GitHub API (https://api.github.com/repos/[ORG_NAME]/[REPO_NAME]/rulesets/[rule_id]) "
+            "to obtain the settings for each repository ruleset.",
+            "Saved the GitHub API responses for each ruleset: repos/[REPO_NAME]/rulesets/[RULE_ID].json.",
+            "For each repository, inspected the branch protection rules and rulesets to determine if it was compliant "
+            "with the test attributes below.",
         ],
         "test_attributes": [
             "Pull requests require at least one approval before merging.",
