@@ -12,13 +12,11 @@ def check_orgs_members_create_public_pages(tester):
         "test_description": "GitHub organization settings prevent members from creating public pages.",
         "risk_rating": 0,
         "test_procedures": [
-            "Called the GitHub API (https://api.github.com/orgs/[ORG_NAME]) to retrieve information about the GitHub organization.",
-            "Saved the GitHub API response: orgs/org_settings.json.",
-            "Inspected the evidence (orgs/org_settings.json) to determine if the GitHub organization is compliant with the test attribute(s) below.",
+            "Called the [GitHub API](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) to obtain information about the GitHub organization.",
+            "Saved the API response: orgs/org_settings.json.",
+            "Inspected the evidence (orgs/org_settings.json) to determine whether the 'members_can_create_public_pages' property was set to 'false'."
         ],
-        "test_attributes": [
-            "'members_can_create_public_pages' is set to false."
-        ]
+        "test_attributes": [],  
     }
 
     test = create_test(tester, metadata)
