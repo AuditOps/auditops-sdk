@@ -98,6 +98,47 @@ class GitHubCollector:
                     f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets/{rule_id}"
                 )
 
+            # TODO: Refactor how I'm checking branch-protection for the non-default branch.
+            # NOTE: Code below (lines 102 - 140 are experiments of how this could be accomplished).
+            # NOTE: Non of this evidence collection is currently used in the workflow as of 10/20/2026.
+            # Collect evidence for deployments. Will help determine which branches are in-scope.
+            # url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/deployments"
+            # deployments = self._call_api(f"repos/{repo_name}/deployments.json", url, handle_404=True)
+
+            query = """
+            query($owner: String!, $repo: String!) {
+            repository(owner: $owner, name: $repo) {
+                branchProtectionRules(first: 100) {
+                nodes {
+                    pattern
+                    isAdminEnforced
+                    requiredApprovingReviewCount
+                    allowsForcePushes
+                    allowsDeletions
+                }
+                }
+            }
+            }
+            """
+            """
+            response = requests.post(
+                "https://api.github.com/graphql",
+                headers={"Authorization": f"Bearer {self.token}"},
+                json={
+                    "query": query,
+                    "variables": {
+                        "owner": self.org_name,
+                        "repo": repo_name,
+                    },
+                },
+                timeout=30,
+            )
+            response.raise_for_status()
+
+            evidence_path = f"repos/{repo_name}/classic_bp_rules.json"
+            self.writer.save_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", response.json())
+            """
+
     def _collect_branch_protection_bypasses(self, look_back_days = 90):
         """
         Collect GitHub organization audit-log events related to
