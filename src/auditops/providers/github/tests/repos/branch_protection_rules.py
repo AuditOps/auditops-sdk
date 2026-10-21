@@ -14,24 +14,25 @@ def check_branch_protection_rules(tester):
             "Conclusion",
             "Comments",
         ],
-        "test_procedures": [
-            "Called the GitHub API (https://api.github.com/orgs/[ORG_NAME]/repos) to obtain a list of all repositories.",
-            "Saved the GitHub API response: orgs/repos.json.",
-            "For each repository, called the GitHub API (https://api.github.com/repos/[ORG_NAME]/[REPO_NAME]/branches/[DEFAULT_BRANCH]/protection) "
-            "to obtain the branch protection rules for each repository.",
-            "Saved the GitHub API responses for each repository: repos/[REPO_NAME]/branch_protection_rules.json.",
-            "For each repository, called the GitHub API (https://api.github.com/repos/[ORG_NAME]/[REPO_NAME]/rulesets) "
+        "test_procedures":[
+            "Called the [List organization repositories](https://docs.github.com/en/rest/repos/repos#list-organization-repositories) "
+            "endpoint to obtain a list of all repositories.",
+            "Saved the API response: orgs/repos.json.",
+            "For each repository, performed the following steps:",
+            "- Called the [Get branch protection](https://docs.github.com/en/rest/branches/branch-protection#get-branch-protection) "
+            "endpoint to obtain the classic branch protection configuration for the repository's default branch.",
+            "- Saved the API response: repos/[REPO_NAME]/branch_protection_rules.json.",
+            "- Called the [List repository rulesets](https://docs.github.com/en/rest/repos/rules#list-repository-rulesets) endpoint "
             "to obtain the rulesets for each repository.",
-            "Saved the GitHub API responses for each repository: repos/[REPO_NAME]/rulesets.json.",
-            "For each repository, called the GitHub API (https://api.github.com/repos/[ORG_NAME]/[REPO_NAME]/rulesets/[rule_id]) "
-            "to obtain the settings for each repository ruleset.",
-            "Saved the GitHub API responses for each ruleset: repos/[REPO_NAME]/rulesets/[RULE_ID].json.",
-            "For each repository, inspected the branch protection rules and rulesets to determine if it was compliant "
-            "with the test attributes below.",
+            "- Saved the API response: repos/[REPO_NAME]/rulesets.json.",
+            "For each repository ruleset, performed the following steps:",
+            "- Called the [Get repository ruleset](https://docs.github.com/en/rest/repos/rules#get-repository-ruleset) endpoint "
+            "to obtain the ruleset's settings.",
+            "- Saved the API response: repos/[REPO_NAME]/rulesets/[RULE_ID].json.",
+            "For each repository, inspected the classic branch protection configuration and applicable rulesets to determine "
+            "whether the default branch required changes to be approved before the pull request can be merged."
         ],
-        "test_attributes": [
-            "Pull requests require at least one approval before merging.",
-        ],
+        "test_attributes": [],
     }
 
     test = create_test(tester, metadata)

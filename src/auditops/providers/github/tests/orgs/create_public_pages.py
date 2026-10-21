@@ -12,7 +12,8 @@ def check_orgs_members_create_public_pages(tester):
         "test_description": "GitHub organization settings prevent members from creating public pages.",
         "risk_rating": 0,
         "test_procedures": [
-            "Called the [GitHub API](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) to obtain information about the GitHub organization.",
+            "Called the [Get an organization](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) endpoint "
+            "to obtain information about the GitHub organization.",
             "Saved the API response: orgs/org_settings.json.",
             "Inspected the evidence (orgs/org_settings.json) to determine whether the 'members_can_create_public_pages' property was set to 'false'."
         ],

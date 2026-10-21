@@ -7,7 +7,8 @@ def check_orgs_mfa_settings(tester):
         "test_description": "GitHub organization settings require users to enable MFA.",
         "risk_rating": 3,
         "test_procedures": [
-            "Called the [GitHub API](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) to obtain information about the GitHub organization.",
+            "Called the [Get an organization](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) endpoint "
+            "to obtain information about the GitHub organization.",
             "Saved the API response: orgs/org_settings.json.",
             "Inspected the evidence (orgs/org_settings.json) to determine whether the 'two_factor_requirement_enabled' property was set to 'true'."
         ],
