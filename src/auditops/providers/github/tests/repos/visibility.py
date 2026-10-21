@@ -12,7 +12,7 @@ def check_repos_visibility(tester):
             "Called the [List organization repositories](https://docs.github.com/en/rest/repos/repos#list-organization-repositories) "
             "endpoint to obtain a list of all repositories.",
             "Saved the API response: orgs/repos.json.",
-            "For each repository, inspected the 'private' property to determine whether setting was set to 'true'."
+            "For each repository, inspected the 'private' property to determine whether the setting was set to 'true'."
         ],
         "test_attributes": []
     }
