@@ -57,7 +57,7 @@ class PDFReportBuilder:
         """Generate a PDF audit report."""
 
         # Sort test results based on risk-rating.
-        tests = sorted(audit.test_results, key=lambda t: (t.is_passing, -t.risk_rating))
+        tests = sorted(audit.test_results, key=lambda t: (t.is_excluded, t.is_passing, -t.risk_rating))
         elements = []
         doc = SimpleDocTemplate(
             filename,
