@@ -59,3 +59,11 @@ TABLE_STYLE_HIGHLIGHT_COLUMN = TableStyle([
     ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.grey),
     ("PADDING", (0, 0), (-1, -1), 6),
 ])
+
+SUB_BULLET_STYLE = ParagraphStyle(
+    name="SubBullet",
+    parent=VALUE_STYLE,
+    leftIndent=18,
+    firstLineIndent=0,
+    spaceAfter=4,
+)

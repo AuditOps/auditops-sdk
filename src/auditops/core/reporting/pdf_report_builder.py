@@ -5,9 +5,10 @@ from reportlab.platypus import (
     SimpleDocTemplate, Table, Paragraph, Spacer, PageBreak, KeepTogether, Image)
 from reportlab.lib.styles import getSampleStyleSheet
 from .styles import (LABEL_STYLE, VALUE_STYLE, LIST_STYLE, CENTER_STYLE, PASS_COLOR,
-    FAIL_COLOR, TABLE_STYLE_HIGHLIGHT_ROW, TABLE_STYLE_HIGHLIGHT_COLUMN)
+    FAIL_COLOR, TABLE_STYLE_HIGHLIGHT_ROW, TABLE_STYLE_HIGHLIGHT_COLUMN, SUB_BULLET_STYLE)
 from importlib.resources import files
-import logging
+import logging, re
+from html import escape
 
 logger = logging.getLogger(__name__)
 
@@ -56,7 +57,7 @@ class PDFReportBuilder:
         """Generate a PDF audit report."""
 
         # Sort test results based on risk-rating.
-        tests = sorted(audit.test_results, key=lambda t: (t.is_passing, -t.risk_rating))
+        tests = sorted(audit.test_results, key=lambda t: (t.is_excluded, t.is_passing, -t.risk_rating))
         elements = []
         doc = SimpleDocTemplate(
             filename,
@@ -178,10 +179,23 @@ class PDFReportBuilder:
         return self._table(rows, col_widths=[220, 60, 70, 140], style=TABLE_STYLE_HIGHLIGHT_ROW)
 
     def _render_test_details_table(self, test):
-        test_procedures = [
-            self._value(f"{i+1}. {item}", LIST_STYLE)
-            for i, item in enumerate(test.test_procedures)
-        ]
+        test_procedures = []
+        procedure_number = 0
+
+        for item in test.test_procedures:
+            if item.lstrip().startswith("- "):
+                text = self._format_procedure(item.lstrip()[2:])
+
+                test_procedures.append(
+                    Paragraph(f"• {text}", SUB_BULLET_STYLE,)
+                )
+            else:
+                procedure_number += 1
+                text = self._format_procedure(f"{procedure_number}. {item}")
+
+                test_procedures.append(
+                    Paragraph(text, LIST_STYLE)
+                )
         
         # Build summary table
         table_data = [
@@ -259,3 +273,25 @@ class PDFReportBuilder:
                 test_summary += f"<br/>- Excluded: {test.num_exclusions} ({exclusion_pct})"
             
             return test_summary
+    
+    def _format_procedure(self, text):
+        pattern = r"\[([^\]]+)\]\((https?://[^)]+)\)"
+
+        parts = []
+        last_position = 0
+
+        for match in re.finditer(pattern, text):
+            parts.append(escape(text[last_position:match.start()]))
+
+            label = escape(match.group(1))
+            url = escape(match.group(2), quote=True)
+
+            parts.append(
+                f'<link href="{url}" color="blue"><u>{label}</u></link>'
+            )
+
+            last_position = match.end()
+
+        parts.append(escape(text[last_position:]))
+
+        return "".join(parts)

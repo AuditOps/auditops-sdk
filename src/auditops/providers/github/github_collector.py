@@ -97,6 +97,47 @@ class GitHubCollector:
                     f"repos/{repo_name}/rulesets/{rule_id}.json",
                     f"https://api.github.com/repos/{self.org_name}/{repo_name}/rulesets/{rule_id}"
                 )
+            
+            """
+            # TODO: Enhance branch-protection checks to include more than just the default branch.
+            # NOTE: Code below (currently lines 101 - 140 is used only for manual evidence collection.
+            Once I have a consistent manual process to check this configuration, I will incorporate into
+            the monitoring tests.
+            """
+
+            # Gather the classic branch protection rules on all branches (not just the default).
+            query = """
+            query($owner: String!, $repo: String!) {
+                repository(owner: $owner, name: $repo) {
+                    branchProtectionRules(first: 100) {
+                    nodes {
+                        pattern
+                        isAdminEnforced
+                        requiredApprovingReviewCount
+                        allowsForcePushes
+                        allowsDeletions
+                    }
+                    }
+                }
+            }
+            """
+
+            response = requests.post(
+                "https://api.github.com/graphql",
+                headers={"Authorization": f"Bearer {self.token}"},
+                json={
+                    "query": query,
+                    "variables": {
+                        "owner": self.org_name,
+                        "repo": repo_name,
+                    },
+                },
+                timeout=30,
+            )
+            response.raise_for_status()
+
+            evidence_path = f"repos/{repo_name}/all_classic_bp_rules.json"
+            self.writer.save_json(f"{self.audit_folder}/audit_evidence/{evidence_path}", response.json())
 
     def _collect_branch_protection_bypasses(self, look_back_days = 90):
         """
