@@ -147,7 +147,7 @@ class Audit:
 
         if min_risk_rating > 0:
             rating_str = get_risk_rating_str(min_risk_rating)
-            self.scope.append(f"Minimum risk rating: {rating_str}")
+            self.scope.append(f"Minimum Risk Rating: {rating_str}")
 
     def save_reports(self):
         # Saves a JSON and PDF report to the "reports" folder.
