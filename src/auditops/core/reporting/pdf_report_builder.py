@@ -53,18 +53,29 @@ class PDFReportBuilder:
         text = "Pass" if passed else "Fail"
         return self._value(f"<font color='{color}'>{text}</font>", style=style)
 
-    def build(self, audit, filename, summary_mode=False):
+
+    def build(self, audit, filename, summary_mode=False, hide_test_tables=False):
         """Generate a PDF audit report."""
 
-        # Sort test results based on risk-rating.
-        tests = sorted(audit.test_results, key=lambda t: (t.is_excluded, t.is_passing, -t.risk_rating))
+        tests = sorted(
+            audit.test_results,
+            key=lambda t: (t.is_excluded, t.is_passing, -t.risk_rating),
+        )
         elements = []
+
+        # Generate safe, consistent anchors for tests with detail pages.
+        test_anchors = {
+            id(test): f"test_{i}"
+            for i, test in enumerate(tests)
+            if not test.is_excluded
+        }
+
         doc = SimpleDocTemplate(
             filename,
-            pagesize= LETTER,
-            title= audit.title,
-            author= audit.auditor_name or "",
-            subject= f"Audit report findings and testing instruction for reperformance.",
+            pagesize=LETTER,
+            title=audit.title,
+            author=audit.auditor_name or "",
+            subject="Audit report findings and testing instruction for reperformance.",
         )
 
         # Add logo
@@ -75,47 +86,65 @@ class PDFReportBuilder:
                 elements.append(self._logo(logo_path))
                 elements.append(Spacer(1, 18))
         except (ModuleNotFoundError, FileNotFoundError):
-            # Note: Logo is optional.
-            logger.warning(f"Unable to add AuditOps logo.")
-            pass
+            logger.warning("Unable to add AuditOps logo.")
 
         # Add title
-        elements.append(self._value(f"{audit.title}", style=self.styles["Title"]))
+        elements.append(self._value(audit.title, style=self.styles["Title"]))
         elements.append(Spacer(1, 18))
 
         # Add cover page table
         elements.append(self._render_cover_page_table(audit))
         elements.append(Spacer(1, 18))
 
-        # Add test results summary (includes all tests in the audit)
-        header_text = '<a name="test_summary_header"/>Test Summary'
-        elements.append(Paragraph(header_text, self.styles['Heading1']))
-
-        #elements.append(Paragraph("Test Summary", self.styles["Heading1"]))
+        # Add test results summary
+        elements.append(
+            Paragraph(
+                '<a name="test_summary_header"/>Test Summary',
+                self.styles["Heading1"],
+            )
+        )
         elements.append(Spacer(1, 12))
-        elements.append(self._render_test_summary_table(tests))
-        elements.append(PageBreak())
+        elements.append(
+            self._render_test_summary_table(
+                tests,
+                test_anchors=test_anchors,
+                link_to_details=not hide_test_tables,
+            )
+        )
 
-        for test in tests:
-            if not test.is_excluded:
-                # Add internal link definition using href="#anchor_name"
-                anchor = test.test_id.replace(" ", "_")
+        # Add detailed test tables only when requested.
+        if not hide_test_tables:
+            elements.append(PageBreak())
+
+            for test in tests:
+                if test.is_excluded:
+                    continue
+
+                anchor = test_anchors[id(test)]
                 link_text = (
                     f'<a name="{anchor}"/>'
-                    f'<a href="#test_summary_header" color="blue">'
-                    f'<b>BACK TO TEST SUMMARY</b></a>'
+                    '<a href="#test_summary_header" color="blue">'
+                    '<b>BACK TO TEST SUMMARY</b></a>'
                 )
-                elements.append(Paragraph(link_text, self.styles['Normal']))
-                
-                # Build individual test summary
+
+                elements.append(Paragraph(link_text, self.styles["Normal"]))
                 elements.append(Spacer(1, 18))
-                elements.append(KeepTogether(self._render_test_details_table(test)))
+                elements.append(
+                    KeepTogether(self._render_test_details_table(test))
+                )
                 elements.append(Spacer(1, 12))
+
                 if test.table_headers:
-                    # Build sample table
-                    elements.append(self._render_test_sample_table(test, summary_mode=summary_mode))
+                    elements.append(
+                        self._render_test_sample_table(
+                            test,
+                            summary_mode=summary_mode,
+                        )
+                    )
+
                 elements.append(PageBreak())
 
+        # Build the PDF once, regardless of the selected layout.
         doc.build(elements)
 
     def _render_cover_page_table(self, audit):
@@ -145,8 +174,10 @@ class PDFReportBuilder:
         ]
         return self._table(metadata, col_widths=[150, 200], style=TABLE_STYLE_HIGHLIGHT_COLUMN, h_align="CENTER")
 
-    def _render_test_summary_table(self, tests):
-        # Creates a table summarizing the results of all tests performed in the audit.
+    def _render_test_summary_table(self, tests,
+        test_anchors=None, link_to_details=True):
+        """Create a summary of all test results."""
+
         rows = [[
             self._label("Test"),
             self._label("Result"),
@@ -154,29 +185,35 @@ class PDFReportBuilder:
             self._label("Comments"),
         ]]
 
+        test_anchors = test_anchors or {}
+
         for test in tests:
-            if test.is_excluded:
+            if test.is_excluded or not link_to_details:
                 test_desc_str = (
-                    f'<b>{test.test_id}</b>: '
-                    f'{test.test_description}'
+                    f"<b>{test.test_id}</b>: {test.test_description}"
                 )
-            # Create a link to the test summary.
             else:
-                anchor = test.test_id.replace(" ", "_")
+                anchor = test_anchors[id(test)]
                 test_desc_str = (
-                    f'<a href="#{anchor}" color="blue"><b>{test.test_id}</b></a>: '
-                    f'{test.test_description}'
+                    f'<a href="#{anchor}" color="blue">'
+                    f"<b>{test.test_id}</b></a>: "
+                    f"{test.test_description}"
                 )
 
             new_row = [
                 self._value(test_desc_str),
                 self._value("Excluded") if test.is_excluded else self._status_paragraph(test.is_passing),
                 self._value(test.get_risk_rating_str()),
-                self._value(self._create_test_summary_formatted(test))
+                self._value(self._create_test_summary_formatted(test)),
             ]
+
             rows.append(new_row)
-        
-        return self._table(rows, col_widths=[220, 60, 70, 140], style=TABLE_STYLE_HIGHLIGHT_ROW)
+
+        return self._table(
+            rows,
+            col_widths=[220, 60, 70, 140],
+            style=TABLE_STYLE_HIGHLIGHT_ROW,
+        )
 
     def _render_test_details_table(self, test):
         test_procedures = []
