@@ -13,6 +13,7 @@ def check_orgs_mfa_settings(tester):
             "Inspected the evidence (orgs/org_settings.json) to determine whether the 'two_factor_requirement_enabled' property was set to 'true'."
         ],
         "test_attributes": [],
+        "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-org-001#remediation-guidance"
     }
 
     test = create_test(tester, metadata)

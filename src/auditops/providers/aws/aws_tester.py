@@ -13,6 +13,7 @@ from .tests.guardduty import (check_guardduty_enabled)
 from .tests.ebs import (check_ebs_default_encryption, check_ebs_volume_encryption, check_ebs_volume_tags)
 from .tests.ec2 import (check_ec2_instance_tags, check_ec2_security_group_tags)
 from .tests.s3 import (check_s3_encryption, check_s3_public_access, check_s3_secure_transport, check_s3_tags)
+from .tests.inspector import (check_inspector_enabled, check_inspector_findings)
 # NOTE: Named this 'lmbda' to avoid conflicts with python 'lambda' functionality.
 from .tests.lmbda import (check_lambda_tags)
 
@@ -47,6 +48,10 @@ class AWSTester:
         check_ebs_default_encryption,
         check_ebs_volume_encryption,
         check_ebs_volume_tags,
+
+        # Inspector
+        check_inspector_enabled,
+        check_inspector_findings,
 
         # RDS
         check_rds_encryption,

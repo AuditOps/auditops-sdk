@@ -23,6 +23,11 @@ class AWSConfig:
     lambda_required_tags: list[str] | None = None
     rds_required_tags: list[str] | None = None
 
+    # Inspector
+    inspector_sla_days = {
+        "CRITICAL": 7
+    }
+
     # IAM Password Policy
     iam_minimum_password_length: int = 14
     iam_require_uppercase: bool = True

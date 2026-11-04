@@ -14,7 +14,8 @@ def check_repos_visibility(tester):
             "Saved the API response: orgs/repos.json.",
             "For each repository, inspected the 'private' property to determine whether the setting was set to 'true'."
         ],
-        "test_attributes": []
+        "test_attributes": [],
+        "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-repo-001#remediation-guidance"
     }
 
     test = create_test(tester, metadata)

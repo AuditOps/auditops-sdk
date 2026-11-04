@@ -71,6 +71,7 @@ class Audit:
     # Results
     scope: list[str] = field(default_factory=list)
     test_results: list[Test] = field(default_factory=list)
+    additional_scoping_notes: list[str] = field(default_factory=list)   # Allows end users to add notes for each audit.
 
     def __post_init__(self):
         self.report_name = self.report_name or self.title
@@ -99,10 +100,10 @@ class Audit:
             "test_results": [t.to_dict(summary_mode=self.summary_mode) for t in self.test_results]
         }
     
-    def run(self, collector, tester, min_risk_rating: int | None = 0):        
+    def run(self, collector, tester, min_risk_rating: int | None = 0, hide_test_tables=False):        
         self.collect_evidence(collector)
         self.perform_testing(tester, min_risk_rating)
-        self.save_reports()
+        self.save_reports(hide_test_tables)
 
     def collect_evidence(self, collector):
         audit_folder = self.reader.root_dir / self.audit_folder
@@ -147,9 +148,11 @@ class Audit:
 
         if min_risk_rating > 0:
             rating_str = get_risk_rating_str(min_risk_rating)
-            self.scope.append(f"Minimum risk rating: {rating_str}")
+            self.scope.append(f"Minimum Risk Rating: {rating_str}")
+        
+        self.scope.extend(self.additional_scoping_notes)
 
-    def save_reports(self):
+    def save_reports(self, hide_test_tables=False):
         # Saves a JSON and PDF report to the "reports" folder.
         self.report_dir.mkdir(parents=True, exist_ok=True)
 
@@ -160,6 +163,7 @@ class Audit:
             self,
             str(self.pdf_report_path),
             summary_mode=self.summary_mode,
+            hide_test_tables=hide_test_tables
         )
 
     def upload(self, destination: str, **kwargs):
@@ -258,6 +262,7 @@ class Test:
     num_exclusions: int = 0
     num_passing: int = 0
     total_population: int = 0
+    remediation_url: str = ""
 
     def __str__(self):
         return (
@@ -278,6 +283,7 @@ class Test:
             "comments": self.comments,
             "test_procedures": self.test_procedures,
             "test_attributes": self.test_attributes,
+            "remediation_url": self.remediation_url,
         }
         # Include samples, if present.
         if self.samples:          
