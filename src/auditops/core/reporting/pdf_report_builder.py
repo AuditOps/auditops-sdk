@@ -255,6 +255,14 @@ class PDFReportBuilder:
         if not test.is_passing and test.comments:
             table_data.append([self._label("Comments"), self._value(test.comments)])
 
+        if test.remediation_url:
+            url = escape(test.remediation_url.strip(), quote=True)
+            hyperlink = f'<link href="{url}" color="blue"><u>View Remediation Guidance</u></link>'
+            table_data.append([
+                self._label("Remediation Guidance"),
+                Paragraph(hyperlink, VALUE_STYLE),
+            ]) 
+
         table_width = self.page_width - 2 * 72
         return self._table(table_data, col_widths=[table_width * 0.25, table_width * 0.75],
          style=TABLE_STYLE_HIGHLIGHT_COLUMN)

@@ -17,7 +17,8 @@ def check_orgs_members_create_public_pages(tester):
             "Saved the API response: orgs/org_settings.json.",
             "Inspected the evidence (orgs/org_settings.json) to determine whether the 'members_can_create_public_pages' property was set to 'false'."
         ],
-        "test_attributes": [],  
+        "test_attributes": [],
+        "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-org-003#remediation-guidance"
     }
 
     test = create_test(tester, metadata)

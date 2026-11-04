@@ -32,6 +32,7 @@ def check_branch_protection_admins(tester):
             "For each repository, inspected the branch protection rules and ruleset(s) to determine whether Administrators were subject to branch protection rules / ruleset requirements.",
         ],
         "test_attributes": [],
+        "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-repo-003#remediation-guidance"
     }
 
     test = create_test(tester, metadata)

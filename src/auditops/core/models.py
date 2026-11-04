@@ -262,6 +262,7 @@ class Test:
     num_exclusions: int = 0
     num_passing: int = 0
     total_population: int = 0
+    remediation_url: str = ""
 
     def __str__(self):
         return (
@@ -282,6 +283,7 @@ class Test:
             "comments": self.comments,
             "test_procedures": self.test_procedures,
             "test_attributes": self.test_attributes,
+            "remediation_url": self.remediation_url,
         }
         # Include samples, if present.
         if self.samples:          

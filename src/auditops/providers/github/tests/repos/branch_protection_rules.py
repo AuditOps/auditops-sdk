@@ -33,6 +33,7 @@ def check_branch_protection_rules(tester):
             "whether the default branch required changes to be approved before the pull request can be merged."
         ],
         "test_attributes": [],
+        "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-repo-002#remediation-guidance"
     }
 
     test = create_test(tester, metadata)
