@@ -9,7 +9,8 @@ from .elbv2 import collect_elbv2_evidence
 from .wafv2 import collect_wafv2_evidence
 from .apigateway import collect_apigateway_evidence
 from .guardduty import collect_guardduty_evidence
+from .inspector import collect_inspector_evidence
 
 __all__ = ["collect_iam_evidence", "collect_s3_evidence", "collect_lambda_evidence", "collect_account_identity",
     "collect_ec2_ebs_evidence", "collect_rds_evidence", "collect_cloudtrail_evidence", "collect_elbv2_evidence",
-    "collect_wafv2_evidence", "collect_apigateway_evidence", "collect_guardduty_evidence",]
+    "collect_wafv2_evidence", "collect_apigateway_evidence", "collect_guardduty_evidence", "collect_inspector_evidence"]

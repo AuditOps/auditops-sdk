@@ -2,7 +2,8 @@ from botocore.exceptions import ClientError
 from .collectors import (collect_account_identity, collect_iam_evidence,
     collect_s3_evidence, collect_lambda_evidence, collect_ec2_ebs_evidence,
     collect_rds_evidence, collect_cloudtrail_evidence, collect_elbv2_evidence,
-    collect_wafv2_evidence, collect_apigateway_evidence, collect_guardduty_evidence)
+    collect_wafv2_evidence, collect_apigateway_evidence, collect_guardduty_evidence,
+    collect_inspector_evidence)
 from pathlib import Path
 import logging
 
@@ -34,6 +35,7 @@ class AWSCollector:
         collect_apigateway_evidence(self)
         collect_wafv2_evidence(self)
         collect_guardduty_evidence(self)
+        collect_inspector_evidence(self)
 
     def collect(self, evidence_path, client, *, method=None, method_kwargs=None, paginator_params=None,
     ignore_codes=None, warn_codes=None):
