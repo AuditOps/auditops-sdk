@@ -11,7 +11,8 @@ def check_iam_root_access_key(tester):
             "Saved the account summary: iam/account_summary.json.",
             "Inspected the account summary to determine if 'AccountAccessKeysPresent' is set to 0."
         ],
-        "test_attributes": []
+        "test_attributes": [],
+        "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/aws/aws-iam-001#remediation-guidance"
     }
 
     test = create_test(tester, metadata)

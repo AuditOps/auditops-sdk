@@ -117,10 +117,16 @@ class Publisher:
         if not file_path.exists():
             raise FileNotFoundError(f"Upload file does not exist: {file_path}")
 
+        content_type = (
+            mimetypes.guess_type(file_path)[0]
+            or "application/octet-stream"
+        )
+
         client.upload_file(
             Filename=str(file_path),
             Bucket=bucket,
-            Key=key
+            Key=key,
+            ExtraArgs={"ContentType": content_type},
         )
 
         return {
