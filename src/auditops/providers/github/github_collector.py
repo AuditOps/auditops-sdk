@@ -80,6 +80,10 @@ class GitHubCollector:
             repo_name = repo["name"]
             default_branch = repo["default_branch"]
 
+            if repo["archived"]:
+                # Archived repository, no additional collection required.
+                continue
+
             # Gather evidence for each repo's branch protection rules.
             url = f"https://api.github.com/repos/{self.org_name}/{repo_name}/branches/{default_branch}/protection"
             branch_protection_rules = self._call_api(f"repos/{repo_name}/branch_protection_rules.json", url, handle_404=True)
