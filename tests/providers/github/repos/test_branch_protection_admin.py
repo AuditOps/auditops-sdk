@@ -10,6 +10,7 @@ def test_pass_classic_branch_protection_enforces_admins(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/branch_protection_rules.json": {
@@ -34,6 +35,7 @@ def test_fail_classic_branch_protection_does_not_enforce_admins(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/branch_protection_rules.json": {
@@ -58,6 +60,7 @@ def test_pass_active_ruleset_protects_admins(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -69,9 +72,7 @@ def test_pass_active_ruleset_protects_admins(tester):
             "repos/test-repo/rulesets/123.json": {
                 "conditions": {
                     "ref_name": {
-                        "include": [
-                            "~DEFAULT_BRANCH",
-                        ],
+                        "include": ["~DEFAULT_BRANCH"],
                         "exclude": [],
                     }
                 },
@@ -94,6 +95,7 @@ def test_fail_active_ruleset_allows_admin_bypass(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -105,9 +107,7 @@ def test_fail_active_ruleset_allows_admin_bypass(tester):
             "repos/test-repo/rulesets/123.json": {
                 "conditions": {
                     "ref_name": {
-                        "include": [
-                            "~DEFAULT_BRANCH",
-                        ],
+                        "include": ["~DEFAULT_BRANCH"],
                         "exclude": [],
                     }
                 },
@@ -136,6 +136,7 @@ def test_fail_ruleset_does_not_apply_to_default_branch(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -147,9 +148,7 @@ def test_fail_ruleset_does_not_apply_to_default_branch(tester):
             "repos/test-repo/rulesets/123.json": {
                 "conditions": {
                     "ref_name": {
-                        "include": [
-                            "develop",
-                        ],
+                        "include": ["develop"],
                         "exclude": [],
                     }
                 },
@@ -172,6 +171,7 @@ def test_fail_ruleset_excludes_default_branch(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -183,12 +183,8 @@ def test_fail_ruleset_excludes_default_branch(tester):
             "repos/test-repo/rulesets/123.json": {
                 "conditions": {
                     "ref_name": {
-                        "include": [
-                            "~DEFAULT_BRANCH",
-                        ],
-                        "exclude": [
-                            "main",
-                        ],
+                        "include": ["~DEFAULT_BRANCH"],
+                        "exclude": ["main"],
                     }
                 },
                 "bypass_actors": [],
@@ -210,6 +206,7 @@ def test_fail_no_branch_protection_or_rulesets(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
         },
@@ -223,6 +220,7 @@ def test_fail_no_branch_protection_or_rulesets(tester):
         "No branch protection rules or repository rulesets were identified."
     )
 
+
 def test_pass_ruleset_admin_bypass_mode_never(tester):
     load_evidence(
         tester,
@@ -231,6 +229,7 @@ def test_pass_ruleset_admin_bypass_mode_never(tester):
                 {
                     "name": "test-repo",
                     "default_branch": "main",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -242,9 +241,7 @@ def test_pass_ruleset_admin_bypass_mode_never(tester):
             "repos/test-repo/rulesets/123.json": {
                 "conditions": {
                     "ref_name": {
-                        "include": [
-                            "~DEFAULT_BRANCH",
-                        ],
+                        "include": ["~DEFAULT_BRANCH"],
                         "exclude": [],
                     }
                 },
@@ -263,3 +260,60 @@ def test_pass_ruleset_admin_bypass_mode_never(tester):
 
     assert result.is_passing is True
     assert result.samples[0].is_passing is True
+
+
+# Archived repository tests
+
+def test_pass_archived_repository(tester):
+    load_evidence(
+        tester,
+        {
+            "orgs/repos.json": [
+                {
+                    "name": "test-repo",
+                    "default_branch": "main",
+                    "archived": True,
+                }
+            ],
+        },
+    )
+
+    result = check_branch_protection_admins(tester)
+
+    assert result.is_passing is True
+    assert result.samples[0].is_passing is True
+    assert result.samples[0].comments == (
+        "This repository is archived; branch protection testing is not applicable."
+    )
+
+
+def test_archived_repository_excluded_from_testing(tester):
+    load_evidence(
+        tester,
+        {
+            "orgs/repos.json": [
+                {
+                    "name": "archived-repo",
+                    "default_branch": "main",
+                    "archived": True,
+                },
+                {
+                    "name": "active-repo",
+                    "default_branch": "main",
+                    "archived": False,
+                },
+            ],
+        },
+    )
+
+    result = check_branch_protection_admins(tester)
+
+    assert result.is_passing is False
+    assert len(result.samples) == 2
+
+    assert result.samples[0].is_passing is True
+    assert result.samples[0].comments == (
+        "This repository is archived; branch protection testing is not applicable."
+    )
+
+    assert result.samples[1].is_passing is False

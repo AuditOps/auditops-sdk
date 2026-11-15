@@ -6,7 +6,7 @@ def check_branch_protection_rules(tester):
     metadata = {
         "test_id": "github-repo-002",
         "test_description": (
-            "Repositories are configured to require an approval before a pull request is merged."
+            "Active repositories are configured to require an approval before a pull request is merged."
         ),
         "risk_rating": 3,
         "table_headers": [
@@ -19,6 +19,7 @@ def check_branch_protection_rules(tester):
             "endpoint to obtain a list of all repositories.",
             "Saved the API response: orgs/repos.json.",
             "For each repository, performed the following steps:",
+            "- Checked if the repository was archived. Archived repositories were excluded from branch protection testing because they are not actively maintained.",
             "- Called the [Get branch protection](https://docs.github.com/en/rest/branches/branch-protection#get-branch-protection) "
             "endpoint to obtain the classic branch protection configuration for the repository's default branch.",
             "- Saved the API response: repos/[REPO_NAME]/branch_protection_rules.json.",
@@ -42,6 +43,19 @@ def check_branch_protection_rules(tester):
 
     for repo in repos:
         repo_name = repo["name"]
+        sample = Sample(
+            sample_id={
+                "repo_name": repo_name,
+            }
+        )
+
+        if repo["archived"]:
+            sample.is_passing = True
+            sample.comments = (
+                "This repository is archived; branch protection testing is not applicable."
+            )
+            test.samples.append(sample)
+            continue               
 
         branch_protection = tester.read(
             f"repos/{repo_name}/branch_protection_rules.json",
@@ -51,12 +65,6 @@ def check_branch_protection_rules(tester):
         rulesets = tester.read(
             f"repos/{repo_name}/rulesets.json",
             optional=True,
-        )
-
-        sample = Sample(
-            sample_id={
-                "repo_name": repo_name,
-            }
         )
 
         pull_request_required = False

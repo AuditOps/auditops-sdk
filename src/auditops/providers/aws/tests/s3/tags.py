@@ -3,7 +3,10 @@ from auditops.core.utils import create_test, evaluate_tags
 
 
 def check_s3_tags(tester):
-    required_tags = tester.config.required_tags
+    if tester.config.s3_required_tags is None:
+        required_tags = tester.config.required_tags
+    else:
+        required_tags = tester.config.s3_required_tags
 
     metadata = {
         "test_id": "aws-s3-004",
@@ -12,11 +15,14 @@ def check_s3_tags(tester):
         ),
         "risk_rating": 0,
         "test_procedures": [
-            "Obtained a list of S3 buckets by calling the list_buckets() boto3 command.",
-            "Saved the list of buckets: s3/buckets.json.",
-            "For each bucket, obtained its tags by calling the get_bucket_tagging() boto3 command.",
-            "For each bucket, saved the tags: s3/buckets/[bucket_name]/tags.json.",
-            f"For each bucket, inspected the tags to determine if the following tag keys exist and have non-empty values: {required_tags}"
+            "Called the [list_buckets()](https://docs.aws.amazon.com/boto3/latest/reference/services/s3/client/list_buckets.html#) "
+            "boto3 command to obtain a list of all S3 buckets.",
+            "Saved the API response: s3/buckets.json.",
+            "For each bucket, performed the following steps:",
+            "- Called the [get_bucket_tagging()](https://docs.aws.amazon.com/boto3/latest/reference/services/s3/client/get_bucket_tagging.html#) "
+            " boto3 command to obtain the bucket's tags",
+            "- Saved the API response: s3/buckets/[bucket_name]/tags.json.",
+            f"- Inspected the tags to determine if the following tag keys exist and have non-empty values: {required_tags}"
         ],
         "test_attributes": [],
         "table_headers": ["Bucket Name", "Result", "Comments"],

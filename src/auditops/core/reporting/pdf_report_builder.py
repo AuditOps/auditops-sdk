@@ -96,6 +96,10 @@ class PDFReportBuilder:
         elements.append(self._render_cover_page_table(audit))
         elements.append(Spacer(1, 18))
 
+        # Add executive summary
+        if audit.executive_summary:
+            elements.extend(self._render_executive_summary(audit.executive_summary))        
+
         # Add test results summary
         elements.append(
             Paragraph(
@@ -340,3 +344,10 @@ class PDFReportBuilder:
         parts.append(escape(text[last_position:]))
 
         return "".join(parts)
+
+    def _render_executive_summary(self, summary):
+        return [
+            Paragraph("Executive Summary", self.styles["Heading1"]),
+            Paragraph(summary, VALUE_STYLE),
+            Spacer(1, 18),
+        ]

@@ -1,3 +1,4 @@
+
 from auditops.providers.github.tests.repos import check_branch_protection_rules
 from utils.evidence import load_evidence
 
@@ -9,6 +10,7 @@ def test_pass_classic_branch_protection_requires_approval(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/branch_protection_rules.json": {
@@ -32,6 +34,7 @@ def test_fail_classic_branch_protection_does_not_require_approval(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/branch_protection_rules.json": {
@@ -55,6 +58,7 @@ def test_pass_active_ruleset_requires_approval(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -89,6 +93,7 @@ def test_fail_inactive_ruleset_does_not_require_approval(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -123,6 +128,7 @@ def test_fail_ruleset_without_required_approval(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/rulesets.json": [
@@ -157,6 +163,7 @@ def test_fail_no_branch_protection_or_rulesets(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
         },
@@ -178,6 +185,7 @@ def test_pass_classic_branch_protection_takes_precedence(tester):
             "orgs/repos.json": [
                 {
                     "name": "test-repo",
+                    "archived": False,
                 }
             ],
             "repos/test-repo/branch_protection_rules.json": {
@@ -212,3 +220,57 @@ def test_pass_classic_branch_protection_takes_precedence(tester):
         "Classic branch protection requires at least 2 approved "
         "pull request review before changes can be merged."
     )
+
+
+# Archived repository tests
+
+def test_pass_archived_repository(tester):
+    load_evidence(
+        tester,
+        {
+            "orgs/repos.json": [
+                {
+                    "name": "test-repo",
+                    "archived": True,
+                }
+            ],
+        },
+    )
+
+    result = check_branch_protection_rules(tester)
+
+    assert result.is_passing is True
+    assert result.samples[0].is_passing is True
+    assert result.samples[0].comments == (
+        "This repository is archived; branch protection testing is not applicable."
+    )
+
+
+def test_archived_repository_excluded_from_testing(tester):
+    load_evidence(
+        tester,
+        {
+            "orgs/repos.json": [
+                {
+                    "name": "archived-repo",
+                    "archived": True,
+                },
+                {
+                    "name": "active-repo",
+                    "archived": False,
+                },
+            ],
+        },
+    )
+
+    result = check_branch_protection_rules(tester)
+
+    assert result.is_passing is False
+    assert len(result.samples) == 2
+
+    assert result.samples[0].is_passing is True
+    assert result.samples[0].comments == (
+        "This repository is archived; branch protection testing is not applicable."
+    )
+
+    assert result.samples[1].is_passing is False

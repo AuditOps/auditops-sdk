@@ -59,6 +59,7 @@ class Audit:
     auditor_name: str | None = None
     company_name: str | None = None
     report_name: str | None = None          # Defines the file name of the PDF and JSON report (ex. "aws_us_prod").
+    executive_summary: str | None = None
     report_date: str = field(
         default_factory=lambda: datetime.now(timezone.utc).strftime("%Y-%m-%d")
     )
