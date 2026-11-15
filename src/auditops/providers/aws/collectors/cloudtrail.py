@@ -24,4 +24,5 @@ def collect_cloudtrail_evidence(collector):
             method_kwargs={
                 "Name": trail_name,
             },
+            ignore_codes = ["TrailNotFoundException"],
         )
