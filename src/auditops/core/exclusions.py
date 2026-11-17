@@ -1,9 +1,11 @@
-import json
 from collections import defaultdict
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-import fnmatch
+import fnmatch, logging, json
+
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(slots=True)
@@ -62,6 +64,7 @@ class ExclusionManager:
         filename = Path(filename)
 
         if not filename.exists():
+            logger.warning(f"Exclusion file not found: ({filename})")
             return cls()
 
         with filename.open() as f:

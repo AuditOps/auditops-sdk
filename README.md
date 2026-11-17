@@ -1,5 +1,5 @@
 # Project Description
-The AuditOps-SDK is an open-source Python library that gathers audit evidence, performs testing, and creates actionable reports in ~25 lines of code per cloud provider (AWS, GitHub, etc).
+The AuditOps-SDK is an open-source Python library that gathers audit evidence, performs testing, and creates actionable reports in ~25 lines of code per cloud provider (AWS, GitHub, Google Workspace, etc).
 
 This project is maintained and published by [AuditOps.io](https://www.auditops.io).
 
@@ -9,11 +9,11 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
 - Vendor Due Diligence: Evaluate a vendor's actual security posture with transparent and timely reports.
 
 ### Resources:
-- **Example Report**: [Link](/examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf)
-- **FAQs**: [Link](/docs/general/faqs.md)
+- **Example Report**: [Link](https://github.com/AuditOps/auditops-sdk/blob/main/examples/summary_mode/AWS%20Audit%20Report%20(Summary%20Mode).pdf)
+- **FAQs**: [Link](https://github.com/AuditOps/auditops-sdk/blob/main/docs/general/faqs.md)
 - **Documentation**:
-   - [AWS](/docs/providers/aws/getting-started.md)
-   - [GitHub](/docs/providers/github/getting-started.md)
+   - [AWS](https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws/getting-started.md)
+   - [GitHub](https://github.com/AuditOps/auditops-sdk/blob/main/docs/providers/aws/github/getting-started.md)
 
 ### Getting Started (Simple AWS Example)
 1. Install pre-requisites:
@@ -67,9 +67,3 @@ This project is maintained and published by [AuditOps.io](https://www.auditops.i
         python auditops_example.py
     ```
 8. A new folder will be created for the audit. Within that folder, the library will collect and store the evidence in the 'audit_evidence' folder. Once collected, it will begin performing the testing and the audit reports will be stored in the 'reports' folder.
-
-
-## Design Philosophy:
-1. **Lightweight:** You can setup this library in minutes, and it doesn't require intensive integrations with your cloud providers. This eliminates vendor lock-in and gives you control over how your data is processed.
-2. **Repeatability:** Clear instructions explain how evidence was gathered and describes the test procedures that were performed. Share your AuditOps report + supporting evidence, and kindly ask your auditor to re-perform the work that was already done.
-3. **Anti-Checkbox:** We all know that compliance has become a check-box exercise. We hope you'll use this library to fight against it and start holding everyone to higher standard.
