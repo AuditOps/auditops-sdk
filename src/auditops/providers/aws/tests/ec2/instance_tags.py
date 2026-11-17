@@ -3,7 +3,10 @@ from auditops.core.utils import create_test, evaluate_tags
 
 
 def check_ec2_instance_tags(tester):
-    required_tags = tester.config.required_tags
+    if tester.config.ec2_required_tags is None:
+        required_tags = tester.config.required_tags
+    else:
+        required_tags = tester.config.ec2_required_tags
 
     metadata = {
         "test_id": "aws-ec2-001",
