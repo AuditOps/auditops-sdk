@@ -15,23 +15,22 @@ def check_branch_protection_rules(tester):
             "Comments",
         ],
         "test_procedures":[
-            "Called the [List organization repositories](https://docs.github.com/en/rest/repos/repos#list-organization-repositories) "
-            "endpoint to obtain a list of all repositories.",
-            "Saved the API response: orgs/repos.json.",
+            "Obtained a list of repositories by calling the "
+            "[List organization repositories](https://docs.github.com/en/rest/repos/repos#list-organization-repositories) GitHub endpoint.",
+            "Saved the list of repositories: orgs/repos.json.",
             "For each repository, performed the following steps:",
-            "- Checked if the repository was archived. Archived repositories were excluded from branch protection testing because they are not actively maintained.",
-            "- Called the [Get branch protection](https://docs.github.com/en/rest/branches/branch-protection#get-branch-protection) "
-            "endpoint to obtain the classic branch protection configuration for the repository's default branch.",
-            "- Saved the API response: repos/[REPO_NAME]/branch_protection_rules.json.",
-            "- Called the [List repository rulesets](https://docs.github.com/en/rest/repos/rules#list-repository-rulesets) endpoint "
-            "to obtain the rulesets for each repository.",
-            "- Saved the API response: repos/[REPO_NAME]/rulesets.json.",
+            "- Checked if the repository was archived. Archived repositories were excluded from branch protection requirements because they are not actively maintained.",
+            "- Obtained the branch protection configuration for the repository's default branch by calling the "
+            "[Get branch protection](https://docs.github.com/en/rest/branches/branch-protection#get-branch-protection) GitHub endpoint.",
+            "- Saved the branch protection rules: repos/[REPO_NAME]/branch_protection_rules.json",
+            "- Obtained the rulesets associated with the repository by calling the "
+            "[List repository rulesets](https://docs.github.com/en/rest/repos/rules#list-repository-rulesets) GitHub endpoint.",
+            "- Saved the rulesets associated with the repository: repos/[REPO_NAME]/rulesets.json",
             "For each repository ruleset, performed the following steps:",
-            "- Called the [Get repository ruleset](https://docs.github.com/en/rest/repos/rules#get-repository-ruleset) endpoint "
-            "to obtain the ruleset's settings.",
-            "- Saved the API response: repos/[REPO_NAME]/rulesets/[RULE_ID].json.",
-            "For each repository, inspected the classic branch protection configuration and applicable rulesets to determine "
-            "whether the default branch required changes to be approved before the pull request can be merged."
+            "- Obtained the ruleset's configuration by calling the [Get a repository ruleset](https://docs.github.com/en/rest/repos/rules#get-repository-ruleset) GitHub endpoint.",
+            "- Saved the ruleset's configuration: repos/[REPO_NAME]/rulesets/[RULE_ID].json",
+            "For each repository, inspected the branch protection rules and rulesets to determine whether "
+            "the default branch requires changes to be approved before a pull request can be merged."
         ],
         "test_attributes": [],
         "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-repo-002#remediation-guidance"

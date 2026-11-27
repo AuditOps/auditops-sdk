@@ -54,7 +54,8 @@ class PDFReportBuilder:
         return self._value(f"<font color='{color}'>{text}</font>", style=style)
 
 
-    def build(self, audit, filename, summary_mode=False, hide_test_tables=False):
+    def build(self, audit, filename, summary_mode=False, hide_test_tables=False,
+    hide_sample_tables=False):
         """Generate a PDF audit report."""
 
         tests = sorted(
@@ -138,7 +139,7 @@ class PDFReportBuilder:
                 )
                 elements.append(Spacer(1, 12))
 
-                if test.table_headers:
+                if not hide_sample_tables and test.table_headers:
                     elements.append(
                         self._render_test_sample_table(
                             test,
@@ -151,16 +152,24 @@ class PDFReportBuilder:
         # Build the PDF once, regardless of the selected layout.
         doc.build(elements)
 
-    def _render_cover_page_table(self, audit):
-        test_count = len(audit.test_results)
-        failed = sum(not t.is_passing for t in audit.test_results)
-        passed = test_count - failed
+    def _render_cover_page_table(self, audit, hide_excluded_tests=True):
+        tests = audit.test_results
+        excluded = sum(t.is_excluded for t in tests)
+        test_count = len(tests) - excluded
+        passed = sum(t.is_passing for t in tests if not t.is_excluded)
+
+        conclusion = (
+            f"{'Exceptions Noted.' if passed < test_count else 'No Exceptions Noted.'} "
+            f"{passed} of {test_count} monitoring tests passed ({self._format_pct(passed, test_count)})."
+        )
+
+        if excluded and not hide_excluded_tests:
+            conclusion += f" {excluded} tests excluded."
+
         rows = [
             ("Report Date", datetime.now(timezone.utc).strftime("%Y-%m-%d")),
             ("AuditOps Version", audit.python_version),
-            ("Tests", test_count),
-            ("Passed", f"{passed} ({self._format_pct(passed, test_count)})"),
-            ("Failed", f"{failed} ({self._format_pct(failed, test_count)})"),
+            ("Conclusion", conclusion),
         ]
         
         if len(audit.scope) > 0:
@@ -178,8 +187,7 @@ class PDFReportBuilder:
         ]
         return self._table(metadata, col_widths=[150, 200], style=TABLE_STYLE_HIGHLIGHT_COLUMN, h_align="CENTER")
 
-    def _render_test_summary_table(self, tests,
-        test_anchors=None, link_to_details=True):
+    def _render_test_summary_table(self, tests, test_anchors=None, link_to_details=True, hide_excluded_tests=True):
         """Create a summary of all test results."""
 
         rows = [[
@@ -211,7 +219,8 @@ class PDFReportBuilder:
                 self._value(self._create_test_summary_formatted(test)),
             ]
 
-            rows.append(new_row)
+            if not test.is_excluded or not hide_excluded_tests:
+                rows.append(new_row)
 
         return self._table(
             rows,

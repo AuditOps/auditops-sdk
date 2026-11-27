@@ -7,10 +7,10 @@ def check_orgs_mfa_settings(tester):
         "test_description": "GitHub organization settings require users to enable MFA.",
         "risk_rating": 3,
         "test_procedures": [
-            "Called the [Get an organization](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) endpoint "
-            "to obtain information about the GitHub organization.",
-            "Saved the API response: orgs/org_settings.json.",
-            "Inspected the evidence (orgs/org_settings.json) to determine whether the 'two_factor_requirement_enabled' property was set to 'true'."
+            "Obtained the GitHub organization metadata by calling the [Get an organization](https://docs.github.com/en/rest/orgs/orgs#get-an-organization) "
+            "GitHub endpoint.",
+            "Saved the GitHub organization metadata: orgs/org_settings.json.",
+            "Inspected the GitHub organization metadata to determine whether the 'two_factor_requirement_enabled' property was set to 'true'."
         ],
         "test_attributes": [],
         "remediation_url": "https://github.com/ajdehn/AWS-Audit-Playbook/tree/main/test_library/github/github-org-001#remediation-guidance"

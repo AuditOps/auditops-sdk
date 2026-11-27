@@ -153,7 +153,7 @@ class Audit:
         
         self.scope.extend(self.additional_scoping_notes)
 
-    def save_reports(self, hide_test_tables=False):
+    def save_reports(self, hide_test_tables=False, hide_sample_tables=False):
         # Saves a JSON and PDF report to the "reports" folder.
         self.report_dir.mkdir(parents=True, exist_ok=True)
 
@@ -164,7 +164,8 @@ class Audit:
             self,
             str(self.pdf_report_path),
             summary_mode=self.summary_mode,
-            hide_test_tables=hide_test_tables
+            hide_test_tables=hide_test_tables,
+            hide_sample_tables=hide_sample_tables
         )
 
     def upload(self, destination: str, **kwargs):
